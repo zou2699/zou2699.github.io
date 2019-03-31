@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Test Tag on 易来易碎</title>
+    <link>https://blog.zouhl.com/tags/test-tag/</link>
+    <description>Recent content in Test Tag on 易来易碎</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
+    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
+    <lastBuildDate>Thu, 11 Oct 2018 20:48:05 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.zouhl.com/tags/test-tag/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First Post</title>
+      <link>https://blog.zouhl.com/post/first-post/</link>
+      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/post/first-post/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

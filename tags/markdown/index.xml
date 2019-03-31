@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Markdown on 易来易碎</title>
+    <link>https://blog.zouhl.com/tags/markdown/</link>
+    <description>Recent content in Markdown on 易来易碎</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
+    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
+    <lastBuildDate>Thu, 11 Oct 2018 20:48:05 +0800</lastBuildDate>
+    
+	<atom:link href="https://blog.zouhl.com/tags/markdown/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First Post</title>
+      <link>https://blog.zouhl.com/post/first-post/</link>
+      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/post/first-post/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Test markdown</title>
+      <link>https://blog.zouhl.com/post/2015-02-20-test-markdown/</link>
+      <pubDate>Fri, 20 Feb 2015 00:00:00 +0000</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/post/2015-02-20-test-markdown/</guid>
+      <description>You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&amp;rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
+Here is some bold text
+Here is a secondary heading Here&amp;rsquo;s a useless table:
+   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?</description>
+    </item>
+    
+  </channel>
+</rss>

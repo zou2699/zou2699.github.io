@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on 易来易碎</title>
+    <link>https://blog.zouhl.com/tags/</link>
+    <description>Recent content in Tags on 易来易碎</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
+    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
+    <lastBuildDate>Tue, 07 Mar 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.zouhl.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bigimg</title>
+      <link>https://blog.zouhl.com/tags/bigimg/</link>
+      <pubDate>Tue, 07 Mar 2017 00:00:00 +0000</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/bigimg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Code</title>
+      <link>https://blog.zouhl.com/tags/code/</link>
+      <pubDate>Tue, 08 Mar 2016 00:00:00 +0000</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/code/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Example</title>
+      <link>https://blog.zouhl.com/tags/example/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/example/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>https://blog.zouhl.com/tags/golang/</link>
+      <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hexo</title>
+      <link>https://blog.zouhl.com/tags/hexo/</link>
+      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/hexo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo</title>
+      <link>https://blog.zouhl.com/tags/hugo/</link>
+      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Markdown</title>
+      <link>https://blog.zouhl.com/tags/markdown/</link>
+      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/markdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Math</title>
+      <link>https://blog.zouhl.com/tags/math/</link>
+      <pubDate>Sun, 05 Mar 2017 00:00:00 +0000</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/math/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Photoswipe</title>
+      <link>https://blog.zouhl.com/tags/photoswipe/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/photoswipe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Test Tag</title>
+      <link>https://blog.zouhl.com/tags/test-tag/</link>
+      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/test-tag/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>图床</title>
+      <link>https://blog.zouhl.com/tags/%E5%9B%BE%E5%BA%8A/</link>
+      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/%E5%9B%BE%E5%BA%8A/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>常用链接</title>
+      <link>https://blog.zouhl.com/tags/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</link>
+      <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
+      <author>rootzouhl@gmail.com (zouhl)</author>
+      <guid>https://blog.zouhl.com/tags/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

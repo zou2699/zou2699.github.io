@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <meta name="description" content="zouhl&#39;s blog" />
+  <meta property="og:title" content="易来易碎" />
+  <meta name="twitter:title" content="易来易碎" />
+  <meta name="description" content="title: elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。 date: 2019-01-16 15:19:16 updated: 2019-03-16 08:32:56 tags: - elasticsearch - elk - logstash
+permalink: /articles/2019/01/16/1547623156236 elasticsearch &#43; logstash &#43; kafka &#43; filebeat 简介 graph TD A[logFile] --&gt;|filebeat| B(kafka) B --&gt; C{logstash} C --&gt;|index1| D C --&gt;|index2| D C --&gt;|index3| D[Elasticsearch]  Elasticsearch是一个基于Lucene的搜索引擎。它提供了一个分布式，多租户 -能够全文搜索与发动机HTTP Web界面和无架构JSON文件。
+Elasticsearch与名为Logstash的数据收集和日志解析引擎以及名为Kibana的分析和可视化平台一起开发。这三种产品设计用作集成解决方案，称为“弹性堆栈”（以前称为“ELK堆栈”）。
+Elasticsearch可用于搜索各种文档。它提供可扩展的搜索，近实时搜索，并支持多租户。[2] “Elasticsearch是分布式的，这意味着索引可以分为多个分片，每个分片可以有零个或多个副本。每个节点托管一个或多个分片，并充当协调器，将操作委托给正确的分片。重新平衡和路由是自动完成的“。[2]相关数据通常存储在同一索引中，该索引由一个或多个主分片和零个或多个副本分片组成。创建索引后，无法更改主分片的数量
+Elasticsearch cluster status: http://172.18.4.42:9200/_cluster/health  配置详解
+data node 如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器 node.master: false node.data: true">
+  <meta property="og:description" content="title: elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。 date: 2019-01-16 15:19:16 updated: 2019-03-16 08:32:56 tags: - elasticsearch - elk - logstash
+permalink: /articles/2019/01/16/1547623156236 elasticsearch &#43; logstash &#43; kafka &#43; filebeat 简介 graph TD A[logFile] --&gt;|filebeat| B(kafka) B --&gt; C{logstash} C --&gt;|index1| D C --&gt;|index2| D C --&gt;|index3| D[Elasticsearch]  Elasticsearch是一个基于Lucene的搜索引擎。它提供了一个分布式，多租户 -能够全文搜索与发动机HTTP Web界面和无架构JSON文件。
+Elasticsearch与名为Logstash的数据收集和日志解析引擎以及名为Kibana的分析和可视化平台一起开发。这三种产品设计用作集成解决方案，称为“弹性堆栈”（以前称为“ELK堆栈”）。
+Elasticsearch可用于搜索各种文档。它提供可扩展的搜索，近实时搜索，并支持多租户。[2] “Elasticsearch是分布式的，这意味着索引可以分为多个分片，每个分片可以有零个或多个副本。每个节点托管一个或多个分片，并充当协调器，将操作委托给正确的分片。重新平衡和路由是自动完成的“。[2]相关数据通常存储在同一索引中，该索引由一个或多个主分片和零个或多个副本分片组成。创建索引后，无法更改主分片的数量
+Elasticsearch cluster status: http://172.18.4.42:9200/_cluster/health  配置详解
+data node 如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器 node.master: false node.data: true">
+  <meta name="twitter:description" content="title: elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。 date: 2019-01-16 15:19:16 updated: 2019-03-16 08:32:56 tags: - elasticsearch - elk - logstash
+permalink: …">
+  <meta name="author" content="zouhl"/>
+  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="易来易碎" />
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="canonical" href="https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" />
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
+  
+  
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="POSTS" href="/post">POSTS</a>
+              
+              
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="易来易碎" href="https://blog.zouhl.com/">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索 易来易碎</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  <div class="intro-header"></div>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<p>title: elasticsearch + logstash + kafka + filebeat 的集群搭建及相关优化。
+date: 2019-01-16 15:19:16
+updated: 2019-03-16 08:32:56
+tags:
+- elasticsearch
+- elk
+- logstash</p>
+
+<h2 id="permalink-articles-2019-01-16-1547623156236">permalink: /articles/2019/01/16/1547623156236</h2>
+
+<p><img src="https://img.hacpai.com/bing/20180512.jpg?imageView2/1/w/960/h/520/interlace/1/q/100" alt="" /></p>
+
+<h1 id="elasticsearch-logstash-kafka-filebeat">elasticsearch + logstash + kafka + filebeat</h1>
+
+<h2 id="简介">简介</h2>
+
+<pre><code class="language-mermaid">graph TD
+A[logFile] --&gt;|filebeat| B(kafka)
+B --&gt; C{logstash}
+C --&gt;|index1| D
+C --&gt;|index2| D
+C --&gt;|index3| D[Elasticsearch]
+</code></pre>
+
+<p><strong>Elasticsearch</strong>是一个基于<a href="https://en.wikipedia.org/wiki/Lucene">Lucene</a>的<a href="https://en.wikipedia.org/wiki/Search_engine_(computing)">搜索引擎</a>。它提供了一个分布式，<a href="https://en.wikipedia.org/wiki/Multitenancy">多租户</a> -能够<a href="https://en.wikipedia.org/wiki/Full-text_search">全文搜索</a>与发动机<a href="https://en.wikipedia.org/wiki/HTTP">HTTP</a> Web界面和无架构<a href="https://en.wikipedia.org/wiki/JSON">JSON</a>文件。</p>
+
+<p>Elasticsearch与名为Logstash的数据收集和日志解析引擎以及名为Kibana的分析和可视化平台<a href="https://en.wikipedia.org/wiki/Kibana">一起开发</a>。这三种产品设计用作集成解决方案，称为<strong>“弹性堆栈”</strong>（以前称为“ELK堆栈”）。</p>
+
+<p>Elasticsearch可用于搜索各种文档。它提供可扩展的搜索，近<a href="https://en.wikipedia.org/wiki/Real-time_search">实时搜索</a>，并支持<a href="https://en.wikipedia.org/wiki/Multitenancy">多租户</a>。[<a href="https://en.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-2">2]</a> “Elasticsearch是分布式的，这意味着索引可以分为多个分<a href="https://en.wikipedia.org/wiki/Shard_(database_architecture)">片</a>，每个分<a href="https://en.wikipedia.org/wiki/Shard_(database_architecture)">片</a>可以有零个或多个副本。每个节点托管一个或多个分片，并充当协调器，将操作委托给正确的分片。重新平衡和路由是自动完成的“。[<a href="https://en.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-2">2]</a>相关数据通常存储在同一索引中，该索引由一个或多个主分片和零个或多个副本分片组成。创建索引后，无法更改主分片的数量</p>
+
+<h2 id="elasticsearch">Elasticsearch</h2>
+
+<pre><code class="language-sh">cluster status:
+http://172.18.4.42:9200/_cluster/health
+</code></pre>
+
+<p><img src="https://ww1.sinaimg.cn/large/b77abccagy1fxgt8zuoecj212i07h0tl.jpg" alt="" /></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/43437056">配置详解</a></p>
+
+<h3 id="data-node">data node</h3>
+
+<p>如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器
+node.master: false
+node.data: true</p>
+
+<h3 id="master-node">master node</h3>
+
+<p>如果想让节点成为主节点,且不存储任何数据,并保有空闲资源,可作为协调器
+node.master: true
+node.data: false</p>
+
+<h3 id="client-node">client node</h3>
+
+<p>如果想让节点既不称为主节点,又不成为数据节点,那么可将他作为搜索器,从节点中获取数据,生成搜索结果等
+node.master: false
+node.data: false</p>
+
+<h2 id="filebeat">filebeat</h2>
+
+<p>从文件读取日志，通过tag进行标记，用于区分不同的日志，最后输出到kafka。</p>
+
+<pre><code class="language-yaml">#输入
+- type: log
+  paths:
+    - /var/log/amp/*.log
+  tags: [&quot;amp-log&quot;]
+  fields_under_root: true
+  document_type: amp-log
+  ignore_older: 24h
+#输出
+output.kafka:
+  hosts: [&quot;kafka-broker-1:9092&quot;,&quot;kafka-broker-2:9092&quot;,&quot;kafka-broker-3:9092&quot;]
+  topic: logstash
+  required_acks: 1
+</code></pre>
+
+<h2 id="kafka">kafka</h2>
+
+<p>用于临时存储filebeat收集来的日志。</p>
+
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ADVERTISE_PUB_IP</td>
+<td>true</td>
+</tr>
+
+<tr>
+<td>JVMFLAGS</td>
+<td>-Xmx2048m -Xms2048m</td>
+</tr>
+
+<tr>
+<td>KAFKA_REPLICATION_FACTOR（副本数量）</td>
+<td>3</td>
+</tr>
+
+<tr>
+<td>KAFKA_LOG_RETENTION_HOURS（日志过期时间）</td>
+<td>24</td>
+</tr>
+
+<tr>
+<td>KAFKA_NUM_PARTITIONS（topic分区数量）</td>
+<td>10</td>
+</tr>
+
+<tr>
+<td>ZK_SERVICE</td>
+<td>ZK_SERVICE</td>
+</tr>
+</tbody>
+</table>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1fz8gfil2p0j20kt09xwer.jpg" alt="" /></p>
+
+<h2 id="logstash">logstash</h2>
+
+<p>从kafka读取日志，使用正则过去日志信息，之后结构化日志，存入elasticsearch。</p>
+
+<pre><code class="language-mermaid">graph LR
+A[INPUT] --&gt;|kafka| B(filter)
+B --&gt;|tags| C{output}
+C --&gt;|index1| D
+C --&gt;|index2| D[Elasticsearch]
+</code></pre>
+
+<pre><code class="language-yaml"># 从kafka读取日志
+input {
+  # beats {
+  #    port =&gt; &quot;5044&quot;
+  # }
+  kafka {
+    bootstrap_servers =&gt; &quot;kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092&quot;
+    topics =&gt; &quot;logstash&quot;
+    group_id =&gt; &quot;logstash-group-01&quot;
+    consumer_threads =&gt; 5
+    decorate_events =&gt; false
+    auto_offset_reset =&gt; &quot;latest&quot; # 从最新的偏移量开始消费
+    codec =&gt; &quot;json&quot;
+  }
+# 结构化日志并清洗日志
+filter {
+  if &quot;amp-log&quot; in [tags] {
+     grok {
+       match =&gt; { &quot;message&quot; =&gt; &quot;%{TIMESTAMP_ISO8601:timestamp} \[%{DATA:threadname}\] %{WORD:level}\s+%{DATA:topic}:%{GREEDYDATA:jsondata}&quot; }
+    }
+     json {
+       source =&gt; &quot;jsondata&quot;
+       #target =&gt; &quot;parsedJson&quot;
+       remove_field=&gt;[&quot;jsondata&quot;]
+    }
+     date {
+       match =&gt; [&quot;timestamp&quot;,&quot;YYYY-MM-dd HH:mm:ss.SSS&quot;]
+       target =&gt; [ &quot;@timestamp&quot; ]
+    }
+     ruby {
+       code=&gt;&quot;event.set('index_day', event.get('@timestamp').time.localtime.strftime('%Y.%m.%d'))&quot;
+    }
+     mutate {
+       remove_field =&gt; [&quot;timestamp&quot;]
+       remove_field =&gt; [&quot;message&quot;]
+       remove_field =&gt; [&quot;threadname&quot;]
+   }
+     if &quot;success&quot; in [topic] {
+      mutate { add_tag =&gt; [ &quot;monitor-success&quot; ] }
+   }
+     else if &quot;repeat&quot; in [topic] {
+      mutate { add_tag =&gt; [ &quot;monitor-repeat&quot; ] }
+   }
+}
+}
+# 输出到elasticsearch
+output {
+   if &quot;monitor-success&quot; in [tags] {
+        elasticsearch {
+          hosts =&gt; &quot;elasticsearch:9200&quot;
+          index =&gt; &quot;amp-success-%{index_day}&quot;
+        }
+    }
+}
+</code></pre>
+
+<h2 id="kibana">kibana</h2>
+
+<p>用于查询elasticsearch的数据，监控elasticsearch的监控状态</p>
+
+<p><img src="https://ww1.sinaimg.cn/large/b77abccagy1fxgtam3rd8j21bt0pqn0e.jpg" alt="" /></p>
+
+<p><img src="https://ww1.sinaimg.cn/large/b77abccagy1fxgtawz6g7j20sy0fcjti.jpg" alt="" /></p>
+
+<h2 id="other">other</h2>
+
+<p>配置</p>
+
+<pre><code class="language-go">// 索引写入缓存
+indices.memory.index_buffer_size=20% 
+indices.memory.min_index_buffer_size=96m
+// 存活超时时间
+discovery.zen.fd.ping_timeout=120s
+// 存活超时重试次数
+discovery.zen.fd.ping_retries=6
+// 节点间存活检测间隔
+discovery.zen.fd.ping_interval=30s
+</code></pre>
+
+<p>索引模板配置</p>
+
+<pre><code class="language-json">// 刷新间隔，merge线程数
+PUT /_template/adv_logs 
+{
+  &quot;index_patterns&quot;: [&quot;aap-*&quot;, &quot;amp-*&quot;], 
+  &quot;order&quot;:    1, 
+  &quot;settings&quot;: {
+    &quot;refresh_interval&quot;: &quot;60s&quot;,
+    &quot;merge&quot;: {
+        &quot;scheduler&quot;: {
+            &quot;max_thread_count&quot;: &quot;1&quot;
+        }
+    }	
+  }
+}
+</code></pre>
+
+<p>kafka</p>
+
+<pre><code class="language-shell"># alter partition
+bin/kafka-topics.sh --zookeeper zk:2181 --alter --topic logstash --partitions 5
+
+# list topics
+bin/kafka-topics.sh --zookeeper zk:2181 --list
+
+# describe topic 
+bin/kafka-topics.sh --zookeeper zk:2181 --topic logstash --describe
+
+# describe consumer 
+bin/kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group logstash-group-01 --describe
+</code></pre>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    
+    
+    
+    
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ3Mi8yMDAxMg==">
+    	<script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+           if (typeof LivereTower === 'function') { return; }
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    	</script>
+    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+    
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:rootzouhl@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/zou2699" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://blog.zouhl.com/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              <a href="https://zouhl.com">zouhl</a>
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://blog.zouhl.com/">易来易碎</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+<script>
+  (function() {
+    var cx = '008867044216506799499:pboytpfdouc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

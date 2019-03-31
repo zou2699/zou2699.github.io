@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <meta name="description" content="zouhl&#39;s blog" />
+  <meta property="og:title" content="易来易碎" />
+  <meta name="twitter:title" content="易来易碎" />
+  <meta name="description" content="title: k8s-object date: 2019-02-25 15:10:25 updated: 2019-03-30 09:50:36 tags: - k8s
+permalink: /articles/2019/02/25/1551078625910  原文链接: https://jimmysong.io/kubernetes-handbook/concepts/objects.html
+Objects  以下列举的内容都是 kubernetes 中的 Object，这些对象都可以在 yaml 文件中作为一种 API 类型来配置。
+ Pod Node Namespace Service Volume PersistentVolume Deployment Secret StatefulSet DaemonSet ServiceAccount ReplicationController ReplicaSet Job CronJob SecurityContext ResourceQuota LimitRange HorizontalPodAutoscaling Ingress ConfigMap Label CustomResourceDefinition Role ClusterRole  我将它们简单的分类为以下几种资源对象：
+   类别 名称     资源对象 Pod、ReplicaSet、ReplicationController、Deployment、StatefulSet、DaemonSet、Job、CronJob、HorizontalPodAutoscaling、Node、Namespace、Service、Ingress、Label、CustomResourceDefinition   存储对象 Volume、PersistentVolume、Secret、ConfigMap   策略对象 SecurityContext、ResourceQuota、LimitRange   身份对象 ServiceAccount、Role、ClusterRole    理解 kubernetes 中的对象 在 Kubernetes 系统中，Kubernetes 对象 是持久化的条目。Kubernetes 使用这些条目去表示整个集群的状态。特别地，它们描述了如下信息：">
+  <meta property="og:description" content="title: k8s-object date: 2019-02-25 15:10:25 updated: 2019-03-30 09:50:36 tags: - k8s
+permalink: /articles/2019/02/25/1551078625910  原文链接: https://jimmysong.io/kubernetes-handbook/concepts/objects.html
+Objects  以下列举的内容都是 kubernetes 中的 Object，这些对象都可以在 yaml 文件中作为一种 API 类型来配置。
+ Pod Node Namespace Service Volume PersistentVolume Deployment Secret StatefulSet DaemonSet ServiceAccount ReplicationController ReplicaSet Job CronJob SecurityContext ResourceQuota LimitRange HorizontalPodAutoscaling Ingress ConfigMap Label CustomResourceDefinition Role ClusterRole  我将它们简单的分类为以下几种资源对象：
+   类别 名称     资源对象 Pod、ReplicaSet、ReplicationController、Deployment、StatefulSet、DaemonSet、Job、CronJob、HorizontalPodAutoscaling、Node、Namespace、Service、Ingress、Label、CustomResourceDefinition   存储对象 Volume、PersistentVolume、Secret、ConfigMap   策略对象 SecurityContext、ResourceQuota、LimitRange   身份对象 ServiceAccount、Role、ClusterRole    理解 kubernetes 中的对象 在 Kubernetes 系统中，Kubernetes 对象 是持久化的条目。Kubernetes 使用这些条目去表示整个集群的状态。特别地，它们描述了如下信息：">
+  <meta name="twitter:description" content="title: k8s-object date: 2019-02-25 15:10:25 updated: 2019-03-30 09:50:36 tags: - k8s
+permalink: /articles/2019/02/25/1551078625910  原文链接: https://jimmysong.io/kubernetes-handbook/concepts/objects.html …">
+  <meta name="author" content="zouhl"/>
+  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://blog.zouhl.com/post/k8s-object/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="易来易碎" />
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="canonical" href="https://blog.zouhl.com/post/k8s-object/" />
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
+  
+  
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="POSTS" href="/post">POSTS</a>
+              
+              
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="易来易碎" href="https://blog.zouhl.com/">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索 易来易碎</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  <div class="intro-header"></div>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">300 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<p>title: k8s-object
+date: 2019-02-25 15:10:25
+updated: 2019-03-30 09:50:36
+tags:
+- k8s</p>
+
+<h2 id="permalink-articles-2019-02-25-1551078625910">permalink: /articles/2019/02/25/1551078625910</h2>
+
+<blockquote>
+<p>原文链接: <a href="https://jimmysong.io/kubernetes-handbook/concepts/objects.html">https://jimmysong.io/kubernetes-handbook/concepts/objects.html</a></p>
+
+<h1 id="objects">Objects</h1>
+</blockquote>
+
+<p>以下列举的内容都是 kubernetes 中的 Object，这些对象都可以在 yaml 文件中作为一种 API 类型来配置。</p>
+
+<ul>
+<li>Pod</li>
+<li>Node</li>
+<li>Namespace</li>
+<li>Service</li>
+<li>Volume</li>
+<li>PersistentVolume</li>
+<li>Deployment</li>
+<li>Secret</li>
+<li>StatefulSet</li>
+<li>DaemonSet</li>
+<li>ServiceAccount</li>
+<li>ReplicationController</li>
+<li>ReplicaSet</li>
+<li>Job</li>
+<li>CronJob</li>
+<li>SecurityContext</li>
+<li>ResourceQuota</li>
+<li>LimitRange</li>
+<li>HorizontalPodAutoscaling</li>
+<li>Ingress</li>
+<li>ConfigMap</li>
+<li>Label</li>
+<li>CustomResourceDefinition</li>
+<li>Role</li>
+<li>ClusterRole</li>
+</ul>
+
+<p>我将它们简单的分类为以下几种资源对象：</p>
+
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>名称</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>资源对象</td>
+<td>Pod、ReplicaSet、ReplicationController、Deployment、StatefulSet、DaemonSet、Job、CronJob、HorizontalPodAutoscaling、Node、Namespace、Service、Ingress、Label、CustomResourceDefinition</td>
+</tr>
+
+<tr>
+<td>存储对象</td>
+<td>Volume、PersistentVolume、Secret、ConfigMap</td>
+</tr>
+
+<tr>
+<td>策略对象</td>
+<td>SecurityContext、ResourceQuota、LimitRange</td>
+</tr>
+
+<tr>
+<td>身份对象</td>
+<td>ServiceAccount、Role、ClusterRole</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="理解-kubernetes-中的对象">理解 kubernetes 中的对象</h2>
+
+<p>在 Kubernetes 系统中，<em>Kubernetes 对象</em> 是持久化的条目。Kubernetes 使用这些条目去表示整个集群的状态。特别地，它们描述了如下信息：</p>
+
+<ul>
+<li>什么容器化应用在运行（以及在哪个 Node 上）</li>
+<li>可以被应用使用的资源</li>
+<li>关于应用如何表现的策略，比如重启策略、升级策略，以及容错策略</li>
+</ul>
+
+<p>Kubernetes 对象是 “目标性记录” —— 一旦创建对象，Kubernetes 系统将持续工作以确保对象存在。通过创建对象，可以有效地告知 Kubernetes 系统，所需要的集群工作负载看起来是什么样子的，这就是 Kubernetes 集群的 <strong>期望状态</strong>。</p>
+
+<p>与 Kubernetes 对象工作 —— 是否创建、修改，或者删除 —— 需要使用 <a href="https://git.k8s.io/community/contributors/devel/api-conventions.md">Kubernetes API</a>。当使用 <code>kubectl</code> 命令行接口时，比如，CLI 会使用必要的 Kubernetes API 调用，也可以在程序中直接使用 Kubernetes API。为了实现该目标，Kubernetes 当前提供了一个 <code>golang</code> <a href="https://github.com/kubernetes/client-go">客户端库</a> ，其它语言库（例如<a href="https://github.com/kubernetes-incubator/client-python">Python</a>）也正在开发中。</p>
+
+<h3 id="对象-spec-与状态">对象 Spec 与状态</h3>
+
+<p>每个 Kubernetes 对象包含两个嵌套的对象字段，它们负责管理对象的配置：对象 <em>spec</em> 和 对象 *status*。<em>spec</em> 必须提供，它描述了对象的 *期望状态*—— 希望对象所具有的特征。<em>status</em> 描述了对象的 *实际状态*，它是由 Kubernetes 系统提供和更新。在任何时刻，Kubernetes 控制平面一直处于活跃状态，管理着对象的实际状态以与我们所期望的状态相匹配。</p>
+
+<p>例如，Kubernetes Deployment 对象能够表示运行在集群中的应用。当创建 Deployment 时，可能需要设置 Deployment 的 spec，以指定该应用需要有 3 个副本在运行。Kubernetes 系统读取 Deployment spec，启动我们所期望的该应用的 3 个实例 —— 更新状态以与 spec 相匹配。如果那些实例中有失败的（一种状态变更），Kubernetes 系统通过修正来响应 spec 和状态之间的不一致 —— 这种情况，启动一个新的实例来替换。</p>
+
+<p>关于对象 spec、status 和 metadata 更多信息，查看 <a href="https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md">Kubernetes API Conventions</a>。</p>
+
+<h3 id="描述-kubernetes-对象">描述 Kubernetes 对象</h3>
+
+<p>当创建 Kubernetes 对象时，必须提供对象的 spec，用来描述该对象的期望状态，以及关于对象的一些基本信息（例如，名称）。当使用 Kubernetes API 创建对象时（或者直接创建，或者基于<code>kubectl</code>），API 请求必须在请求体中包含 JSON 格式的信息。更常用的是，需要在 .yaml 文件中为 kubectl 提供这些信息。 <code>kubectl</code> 在执行 API 请求时，将这些信息转换成 JSON 格式。</p>
+
+<p>这里有一个 <code>.yaml</code> 示例文件，展示了 Kubernetes Deployment 的必需字段和对象 spec：</p>
+
+<pre><code class="language-yaml">apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+</code></pre>
+
+<p>一种创建 Deployment 的方式，类似上面使用 <code>.yaml</code> 文件，是使用 <code>kubectl</code> 命令行接口（CLI）中的 <code>kubectl create</code> 命令，传递 <code>.yaml</code> 作为参数。下面是一个示例：</p>
+
+<pre><code class="language-bash">$ kubectl create -f docs/user-guide/nginx-deployment.yaml --record
+</code></pre>
+
+<p>输出类似如下这样：</p>
+
+<pre><code class="language-bash">deployment &quot;nginx-deployment&quot; created
+</code></pre>
+
+<h3 id="必需字段">必需字段</h3>
+
+<p>在想要创建的 Kubernetes 对象对应的 <code>.yaml</code> 文件中，需要配置如下的字段：</p>
+
+<ul>
+<li><code>apiVersion</code> - 创建该对象所使用的 Kubernetes API 的版本</li>
+<li><code>kind</code> - 想要创建的对象的类型</li>
+<li><code>metadata</code> - 帮助识别对象唯一性的数据，包括一个 <code>name</code> 字符串、UID 和可选的 <code>namespace</code></li>
+</ul>
+
+<p>也需要提供对象的 <code>spec</code> 字段。对象 <code>spec</code> 的精确格式对每个 Kubernetes 对象来说是不同的，包含了特定于该对象的嵌套字段。<a href="https://kubernetes.io/docs/api/">Kubernetes API 参考</a>能够帮助我们找到任何我们想创建的对象的 spec 格式。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://blog.zouhl.com/post/k8s_-_configmap/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://blog.zouhl.com/post/https_%E8%AF%81%E4%B9%A6%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">300 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    
+    
+    
+    
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ3Mi8yMDAxMg==">
+    	<script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+           if (typeof LivereTower === 'function') { return; }
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    	</script>
+    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+    
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:rootzouhl@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/zou2699" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://blog.zouhl.com/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              <a href="https://zouhl.com">zouhl</a>
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://blog.zouhl.com/">易来易碎</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+<script>
+  (function() {
+    var cx = '008867044216506799499:pboytpfdouc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

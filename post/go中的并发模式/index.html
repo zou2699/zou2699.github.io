@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <meta name="description" content="zouhl&#39;s blog" />
+  <meta property="og:title" content="易来易碎" />
+  <meta name="twitter:title" content="易来易碎" />
+  <meta name="description" content="title: go中的并发模式 date: 2019-02-06 19:54:53 updated: 2019-03-19 04:49:52 tags: - golang - goroutine
+permalink: /articles/2019/02/06/1549454093604 goroutine 并发（concurrency）不是并行（parallelism）。并行是让不同的代码片段同时在不同的物理处 理器上执行。并行的关键是同时做很多事情，而并发是指同时管理很多事情，这些事情可能只做 了一半就被暂停去做别的事情了。在很多情况下，并发的效果比并行好，因为操作系统和硬件的 总资源一般很少，但能支持系统同时做很多事情。这种“使用较少的资源做更多的事情”的哲学， 也是指导 Go 语言设计的哲学。
+如果希望让 goroutine 并行，必须使用多于一个逻辑处理器。当有多个逻辑处理器时，调度器 会将 goroutine 平等分配到每个逻辑处理器上。这会让 goroutine 在不同的线程上运行。不过要想真 的实现并行的效果，用户需要让自己的程序运行在有多个物理处理器的机器上。否则，哪怕 Go 语言运行时使用多个线程，goroutine 依然会在同一个物理处理器上并发运行，达不到并行的效果。
+如下图所示，展示了在一个逻辑处理器上并发运行goroutine和在两个逻辑处理器上并行运行两个并 发的 goroutine 之间的区别。调度器包含一些聪明的算法，这些算法会随着 Go 语言的发布被更新 和改进，所以不推荐盲目修改语言运行时对逻辑处理器的默认设置。
+​ 基于调度器的内部算法，一个正运行的 goroutine 在工作结束前，可以被停止并重新调度。 调度器这样做的目的是防止某个 goroutine 长时间占用逻辑处理器。当 goroutine 占用时间过长时， 调度器会停止当前正运行的 goroutine，并给其他可运行的 goroutine 运行的机会。
+​ 如下图所示，从逻辑处理器的角度展示了这一场景。在第 1 步，调度器开始运行 goroutine A，而 goroutine B 在运行队列里等待调度。之后，在第 2 步，调度器交换了 goroutine A 和 goroutine B。 由于 goroutine A 并没有完成工作，因此被放回到运行队列。之后，在第 3 步，goroutine B 完成 了它的工作并被系统销毁。这也让 goroutine A 继续之前的工作。">
+  <meta property="og:description" content="title: go中的并发模式 date: 2019-02-06 19:54:53 updated: 2019-03-19 04:49:52 tags: - golang - goroutine
+permalink: /articles/2019/02/06/1549454093604 goroutine 并发（concurrency）不是并行（parallelism）。并行是让不同的代码片段同时在不同的物理处 理器上执行。并行的关键是同时做很多事情，而并发是指同时管理很多事情，这些事情可能只做 了一半就被暂停去做别的事情了。在很多情况下，并发的效果比并行好，因为操作系统和硬件的 总资源一般很少，但能支持系统同时做很多事情。这种“使用较少的资源做更多的事情”的哲学， 也是指导 Go 语言设计的哲学。
+如果希望让 goroutine 并行，必须使用多于一个逻辑处理器。当有多个逻辑处理器时，调度器 会将 goroutine 平等分配到每个逻辑处理器上。这会让 goroutine 在不同的线程上运行。不过要想真 的实现并行的效果，用户需要让自己的程序运行在有多个物理处理器的机器上。否则，哪怕 Go 语言运行时使用多个线程，goroutine 依然会在同一个物理处理器上并发运行，达不到并行的效果。
+如下图所示，展示了在一个逻辑处理器上并发运行goroutine和在两个逻辑处理器上并行运行两个并 发的 goroutine 之间的区别。调度器包含一些聪明的算法，这些算法会随着 Go 语言的发布被更新 和改进，所以不推荐盲目修改语言运行时对逻辑处理器的默认设置。
+​ 基于调度器的内部算法，一个正运行的 goroutine 在工作结束前，可以被停止并重新调度。 调度器这样做的目的是防止某个 goroutine 长时间占用逻辑处理器。当 goroutine 占用时间过长时， 调度器会停止当前正运行的 goroutine，并给其他可运行的 goroutine 运行的机会。
+​ 如下图所示，从逻辑处理器的角度展示了这一场景。在第 1 步，调度器开始运行 goroutine A，而 goroutine B 在运行队列里等待调度。之后，在第 2 步，调度器交换了 goroutine A 和 goroutine B。 由于 goroutine A 并没有完成工作，因此被放回到运行队列。之后，在第 3 步，goroutine B 完成 了它的工作并被系统销毁。这也让 goroutine A 继续之前的工作。">
+  <meta name="twitter:description" content="title: go中的并发模式 date: 2019-02-06 19:54:53 updated: 2019-03-19 04:49:52 tags: - golang - goroutine
+permalink: /articles/2019/02/06/1549454093604 goroutine 并发（concurrency）不是并行（parallelism）。并行是让不同的代码片段同时 …">
+  <meta name="author" content="zouhl"/>
+  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="易来易碎" />
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="canonical" href="https://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/" />
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
+  
+  
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="POSTS" href="/post">POSTS</a>
+              
+              
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="易来易碎" href="https://blog.zouhl.com/">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索 易来易碎</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  <div class="intro-header"></div>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">1500 Words|Read in about 8 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#permalink-articles-2019-02-06-1549454093604">permalink: /articles/2019/02/06/1549454093604</a></li>
+</ul></li>
+<li><a href="#goroutine">goroutine</a>
+<ul>
+<li><a href="#原子函数">原子函数</a></li>
+<li><a href="#互斥锁">互斥锁</a></li>
+<li><a href="#channel">channel</a>
+<ul>
+<li><a href="#无缓存channel">无缓存channel</a></li>
+<li><a href="#有缓存channel">有缓存channel</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+  
+
+
+                
+
+<p>title: go中的并发模式
+date: 2019-02-06 19:54:53
+updated: 2019-03-19 04:49:52
+tags:
+- golang
+- goroutine</p>
+
+<h2 id="permalink-articles-2019-02-06-1549454093604">permalink: /articles/2019/02/06/1549454093604</h2>
+
+<h1 id="goroutine">goroutine</h1>
+
+<p>并发（concurrency）不是并行（parallelism）。并行是让不同的代码片段同时在不同的物理处 理器上执行。并行的关键是同时做很多事情，而并发是指同时管理很多事情，这些事情可能只做 了一半就被暂停去做别的事情了。在很多情况下，并发的效果比并行好，因为操作系统和硬件的 总资源一般很少，但能支持系统同时做很多事情。这种“使用较少的资源做更多的事情”的哲学， 也是指导 Go 语言设计的哲学。</p>
+
+<p>如果希望让 goroutine 并行，必须使用多于一个逻辑处理器。当有多个逻辑处理器时，调度器 会将 goroutine 平等分配到每个逻辑处理器上。这会让 goroutine 在不同的线程上运行。不过要想真 的实现并行的效果，用户需要让自己的程序运行在有多个物理处理器的机器上。否则，哪怕 Go 语言运行时使用多个线程，goroutine 依然会在同一个物理处理器上并发运行，达不到并行的效果。</p>
+
+<p>如下图所示，展示了在一个逻辑处理器上并发运行goroutine和在两个逻辑处理器上并行运行两个并 发的 goroutine 之间的区别。调度器包含一些聪明的算法，这些算法会随着 Go 语言的发布被更新 和改进，所以不推荐盲目修改语言运行时对逻辑处理器的默认设置。</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzwzv0109fj30xy0igtat.jpg" alt="并发和并行的区别" /></p>
+
+<p>​       基于调度器的内部算法，一个正运行的 goroutine 在工作结束前，可以被停止并重新调度。 调度器这样做的目的是防止某个 goroutine 长时间占用逻辑处理器。当 goroutine 占用时间过长时， 调度器会停止当前正运行的 goroutine，并给其他可运行的 goroutine 运行的机会。</p>
+
+<p>​      如下图所示，从逻辑处理器的角度展示了这一场景。在第 1 步，调度器开始运行 goroutine A，而 goroutine B 在运行队列里等待调度。之后，在第 2 步，调度器交换了 goroutine A 和 goroutine B。 由于 goroutine A 并没有完成工作，因此被放回到运行队列。之后，在第 3 步，goroutine B 完成 了它的工作并被系统销毁。这也让 goroutine A 继续之前的工作。</p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzwzws77r0j30z00i676j.jpg" alt="goroutine" /></p>
+
+<p>goroutine中资源竞争（共享）的三种方式，原子函数、互斥锁以及channel</p>
+
+<h2 id="原子函数">原子函数</h2>
+
+<p>原子函数能够以底层的加锁机制来同步访问整型变量和指针。
+atomic中StoreInt64，LoadInt64，AddInt64可以安全的读写整型变量。</p>
+
+<p>通过atomic.AddInt64来同步整型值得加法，如下所示：</p>
+
+<pre><code class="language-go">// This sample program demonstrates how to use the atomic
+// package to provide safe access to numeric types.
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;runtime&quot;
+	&quot;sync&quot;
+	&quot;sync/atomic&quot;
+)
+
+var (
+	// counter is a variable incremented by all goroutines.
+	counter int64
+
+	// wg is used to wait for the program to finish.
+	wg sync.WaitGroup
+)
+
+// main is the entry point for all Go programs.
+func main() {
+	// Add a count of two, one for each goroutine.
+	wg.Add(2)
+
+	// Create two goroutines.
+	go incCounter(1)
+	go incCounter(2)
+
+	// Wait for the goroutines to finish.
+	wg.Wait()
+
+	// Display the final value.
+	fmt.Println(&quot;Final Counter:&quot;, counter)
+}
+
+// incCounter increments the package level counter variable.
+func incCounter(id int) {
+	// Schedule the call to Done to tell main we are done.
+	defer wg.Done()
+
+	for count := 0; count &lt; 2; count++ {
+		// Safely Add One To Counter.
+		atomic.AddInt64(&amp;counter, 1)
+
+		// Yield the thread and be placed back in queue.
+		runtime.Gosched()
+	}
+}
+
+</code></pre>
+
+<p>通过atomic.LoadInt64，atomic.StoreInt64安全的读写整型变量</p>
+
+<pre><code class="language-go">// This sample program demonstrates how to use the atomic
+// package functions Store and Load to provide safe access
+// to numeric types.
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;sync&quot;
+	&quot;sync/atomic&quot;
+	&quot;time&quot;
+)
+
+var (
+	// shutdown is a flag to alert running goroutines to shutdown.
+	shutdown int64
+
+	// wg is used to wait for the program to finish.
+	wg sync.WaitGroup
+)
+
+// main is the entry point for all Go programs.
+func main() {
+	// Add a count of two, one for each goroutine.
+	wg.Add(2)
+
+	// Create two goroutines.
+	go doWork(&quot;A&quot;)
+	go doWork(&quot;B&quot;)
+
+	// Give the goroutines time to run.
+	time.Sleep(1 * time.Second)
+
+	// Safely flag it is time to shutdown.
+	fmt.Println(&quot;Shutdown Now&quot;)
+	atomic.StoreInt64(&amp;shutdown, 1)
+
+	// Wait for the goroutines to finish.
+	wg.Wait()
+}
+
+// doWork simulates a goroutine performing work and
+// checking the Shutdown flag to terminate early.
+func doWork(name string) {
+	// Schedule the call to Done to tell main we are done.
+	defer wg.Done()
+
+	for {
+		fmt.Printf(&quot;Doing %s Work\n&quot;, name)
+		time.Sleep(250 * time.Millisecond)
+
+		// Do we need to shutdown.
+		if atomic.LoadInt64(&amp;shutdown) == 1 {
+			fmt.Printf(&quot;Shutting %s Down\n&quot;, name)
+			break
+		}
+	}
+}
+
+</code></pre>
+
+<h2 id="互斥锁">互斥锁</h2>
+
+<p>互斥锁（mutex），用于在代码上创建一个临界区，保证同一时间只有一个goroutine可以执行临界区代码。</p>
+
+<pre><code class="language-go">// This sample program demonstrates how to use a mutex
+// to define critical sections of code that need synchronous
+// access.
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;runtime&quot;
+	&quot;sync&quot;
+)
+
+var (
+	// counter is a variable incremented by all goroutines.
+	counter int
+
+	// wg is used to wait for the program to finish.
+	wg sync.WaitGroup
+
+	// mutex is used to define a critical section of code.
+	mutex sync.Mutex
+)
+
+// main is the entry point for all Go programs.
+func main() {
+	// Add a count of two, one for each goroutine.
+	wg.Add(2)
+
+	// Create two goroutines.
+	go incCounter(1)
+	go incCounter(2)
+
+	// Wait for the goroutines to finish.
+	wg.Wait()
+	fmt.Printf(&quot;Final Counter: %d\n&quot;, counter)
+}
+
+// incCounter increments the package level Counter variable
+// using the Mutex to synchronize and provide safe access.
+func incCounter(id int) {
+	// Schedule the call to Done to tell main we are done.
+	defer wg.Done()
+
+	for count := 0; count &lt; 2; count++ {
+		// Only allow one goroutine through this
+		// critical section at a time.
+		mutex.Lock()
+		{
+			// Capture the value of counter.
+			value := counter
+
+			// Yield the thread and be placed back in queue.
+			runtime.Gosched()
+
+			// Increment our local value of counter.
+			value++
+
+			// Store the value back into counter.
+			counter = value
+		}
+		mutex.Unlock()
+		// Release the lock and allow any
+		// waiting goroutine through.
+	}
+}
+
+</code></pre>
+
+<p>在Lock()和Unlock()之间的临界区被保护起来，保证同一时刻只有一个goroutine可以进入临界区。</p>
+
+<h2 id="channel">channel</h2>
+
+<p>当一个资源需要在goroutine之间共享时，channel在goroutine之间搭起了一个管道，并提供了确保同步交换数据的机制。什么通道时，需要制定将要被共享的数据的类型，可以通过通道共享内置类型、命名类型、结构类型和引用类型的值或者指针。</p>
+
+<pre><code class="language-go">// 无缓冲整型通道
+unbuffered := make(chan int)
+
+// 有缓存字符串整型
+buffered := make(chan string, 10)
+
+// 通过通道发送一个字符串
+bufferer &lt;- &quot;Gopher&quot;
+
+// 从通道接受一个字符串
+value := &lt;- buffered
+</code></pre>
+
+<h3 id="无缓存channel">无缓存channel</h3>
+
+<p>无缓冲的通道（unbuffered channel）是指在接收前没有能力保存任何值的通道。这种类型的通 道要求发送 goroutine 和接收 goroutine 同时准备好，才能完成发送和接收操作。如果两个 goroutine 没有同时准备好，通道会导致先执行发送或接收操作的 goroutine 阻塞等待。这种对通道进行发送 和接收的交互行为本身就是同步的。其中任意一个操作都无法离开另一个操作单独存在。</p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzwzf3oo4pj30v60r241l.jpg" alt="无缓冲通道" /></p>
+
+<p>模拟网球比赛</p>
+
+<pre><code class="language-go">// This sample program demonstrates how to use an unbuffered
+// channel to simulate a game of tennis between two goroutines.
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math/rand&quot;
+	&quot;sync&quot;
+	&quot;time&quot;
+)
+
+// wg is used to wait for the program to finish.
+var wg sync.WaitGroup
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+// main is the entry point for all Go programs.
+func main() {
+	// Create an unbuffered channel.
+	court := make(chan int)
+
+	// Add a count of two, one for each goroutine.
+	wg.Add(2)
+
+	// Launch two players.
+	go player(&quot;Nadal&quot;, court)
+	go player(&quot;Djokovic&quot;, court)
+
+	// Start the set.
+	court &lt;- 1
+
+	// Wait for the game to finish.
+	wg.Wait()
+}
+
+// player simulates a person playing the game of tennis.
+func player(name string, court chan int) {
+	// Schedule the call to Done to tell main we are done.
+	defer wg.Done()
+
+	for {
+		// Wait for the ball to be hit back to us.
+		ball, ok := &lt;-court
+		if !ok {
+			// If the channel was closed we won.
+			fmt.Printf(&quot;Player %s Won\n&quot;, name)
+			return
+		}
+
+		// Pick a random number and see if we miss the ball.
+		n := rand.Intn(100)
+		if n%13 == 0 {
+			fmt.Printf(&quot;Player %s Missed\n&quot;, name)
+
+			// Close the channel to signal we lost.
+			close(court)
+			return
+		}
+
+		// Display and then increment the hit count by one.
+		fmt.Printf(&quot;Player %s Hit %d\n&quot;, name, ball)
+		ball++
+
+		// Hit the ball back to the opposing player.
+		court &lt;- ball
+	}
+}
+
+</code></pre>
+
+<p>模拟接力赛</p>
+
+<pre><code class="language-go">// This sample program demonstrates how to use an unbuffered
+// channel to simulate a relay race between four goroutines.
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;sync&quot;
+	&quot;time&quot;
+)
+
+// wg is used to wait for the program to finish.
+var wg sync.WaitGroup
+
+// main is the entry point for all Go programs.
+func main() {
+	// Create an unbuffered channel.
+	baton := make(chan int)
+
+	// Add a count of one for the last runner.
+	wg.Add(1)
+
+	// First runner to his mark.
+	go Runner(baton)
+
+	// Start the race.
+	baton &lt;- 1
+
+	// Wait for the race to finish.
+	wg.Wait()
+}
+
+// Runner simulates a person running in the relay race.
+func Runner(baton chan int) {
+	var newRunner int
+
+	// Wait to receive the baton.
+	runner := &lt;-baton
+
+	// Start running around the track.
+	fmt.Printf(&quot;Runner %d Running With Baton\n&quot;, runner)
+
+	// New runner to the line.
+	if runner != 4 {
+		newRunner = runner + 1
+		fmt.Printf(&quot;Runner %d To The Line\n&quot;, newRunner)
+		go Runner(baton)
+	}
+
+	// Running around the track.
+	time.Sleep(1000 * time.Millisecond)
+
+	// Is the race over.
+	if runner == 4 {
+		fmt.Printf(&quot;Runner %d Finished, Race Over\n&quot;, runner)
+		wg.Done()
+		return
+	}
+
+	// Exchange the baton for the next runner.
+	fmt.Printf(&quot;Runner %d Exchange With Runner %d\n&quot;,
+		runner,
+		newRunner)
+
+	baton &lt;- newRunner
+}
+
+</code></pre>
+
+<h3 id="有缓存channel">有缓存channel</h3>
+
+<p>有缓冲的通道（buffered channel）是一种在被接收前能存储一个或者多个值的通道。这种类 型的通道并不强制要求 goroutine 之间必须同时完成发送和接收。通道会阻塞发送和接收动作的 条件也会不同。只有在通道中没有要接收的值时，接收动作才会阻塞。只有在通道没有可用缓冲 区容纳被发送的值时，发送动作才会阻塞。这导致有缓冲的通道和无缓冲的通道之间的一个很大 的不同：无缓冲的通道保证进行发送和接收的 goroutine 会在同一时间进行数据交换；有缓冲的 通道没有这种保证。</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fzwzfqdqetj30tg0h640s.jpg" alt="有缓存channel" /></p>
+
+<pre><code class="language-go">// This sample program demonstrates how to use a buffered
+// channel to work on multiple tasks with a predefined number
+// of goroutines.
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math/rand&quot;
+	&quot;sync&quot;
+	&quot;time&quot;
+)
+
+const (
+	numberGoroutines = 4  // Number of goroutines to use.
+	taskLoad         = 10 // Amount of work to process.
+)
+
+// wg is used to wait for the program to finish.
+var wg sync.WaitGroup
+
+// init is called to initialize the package by the
+// Go runtime prior to any other code being executed.
+func init() {
+	// Seed the random number generator.
+    // 初始化随机数种子
+	rand.Seed(time.Now().Unix())
+}
+
+// main is the entry point for all Go programs.
+func main() {
+	// Create a buffered channel to manage the task load.
+	tasks := make(chan string, taskLoad)
+
+	// Launch goroutines to handle the work.
+	wg.Add(numberGoroutines)
+	for gr := 1; gr &lt;= numberGoroutines; gr++ {
+		go worker(tasks, gr)
+	}
+
+	// Add a bunch of work to get done.
+	for post := 1; post &lt;= taskLoad; post++ {
+		tasks &lt;- fmt.Sprintf(&quot;Task : %d&quot;, post)
+	}
+
+	// Close the channel so the goroutines will quit
+	// when all the work is done.
+	close(tasks)
+
+	// Wait for all the work to get done.
+	wg.Wait()
+}
+
+// worker is launched as a goroutine to process work from
+// the buffered channel.
+func worker(tasks chan string, worker int) {
+	// Report that we just returned.
+	defer wg.Done()
+
+	for {
+		// Wait for work to be assigned.
+		task, ok := &lt;-tasks
+		if !ok {
+			// This means the channel is empty and closed.
+			fmt.Printf(&quot;Worker: %d : Shutting Down\n&quot;, worker)
+			return
+		}
+
+		// Display we are starting the work.
+		fmt.Printf(&quot;Worker: %d : Started %s\n&quot;, worker, task)
+
+		// Randomly wait to simulate work time.
+		sleep := rand.Int63n(100)
+		time.Sleep(time.Duration(sleep) * time.Millisecond)
+
+		// Display we finished the work.
+		fmt.Printf(&quot;Worker: %d : Completed %s\n&quot;, worker, task)
+	}
+}
+
+</code></pre>
+
+<p>当通道关闭后，goroutine 依旧可以从通道接收数据， 但是不能再向通道里发送数据。能够从已经关闭的通道接收数据这一点非常重要，因为这允许通道关闭后依旧能取出其中缓冲的全部值，而不会有数据丢失。从一个已经关闭且没有数据的通道里获取数据，总会立刻返回，并返回一个通道类型的零值。如果在获取通道时还加入了可选的标志，就能得到通道的状态信息。</p>
+
+<blockquote>
+<ul>
+<li>并发是指 goroutine 运行的时候是相互独立的。<br /></li>
+<li>使用关键字 go创建 goroutine 来运行函数。<br /></li>
+<li>goroutine 在逻辑处理器上执行，而逻辑处理器具有独立的系统线程和运行队列。<br /></li>
+<li>竞争状态是指两个或者多个 goroutine 试图访问同一个资源。<br /></li>
+<li>原子函数和互斥锁提供了一种防止出现竞争状态的办法。<br /></li>
+<li>通道提供了一种在两个 goroutine 之间共享数据的简单方法。<br /></li>
+<li>无缓冲的通道保证同时交换数据，而有缓冲的通道不做这种保证。</li>
+</ul>
+</blockquote>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://blog.zouhl.com/post/https_%E8%AF%81%E4%B9%A6%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://blog.zouhl.com/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">1500 Words|Read in about 8 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    
+    
+    
+    
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ3Mi8yMDAxMg==">
+    	<script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+           if (typeof LivereTower === 'function') { return; }
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    	</script>
+    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+    
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:rootzouhl@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/zou2699" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://blog.zouhl.com/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              <a href="https://zouhl.com">zouhl</a>
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://blog.zouhl.com/">易来易碎</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+<script>
+  (function() {
+    var cx = '008867044216506799499:pboytpfdouc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

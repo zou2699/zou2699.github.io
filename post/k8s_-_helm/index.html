@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <meta name="description" content="zouhl&#39;s blog" />
+  <meta property="og:title" content="易来易碎" />
+  <meta name="twitter:title" content="易来易碎" />
+  <meta name="description" content="title: k8s - helm date: 2019-02-26 21:43:28 updated: 2019-03-28 11:22:37 tags: - k8s - helm
+permalink: /articles/2019/02/26/1551188608751 使用helm管理kubernetes应用 Helm是一个kubernetes应用的包管理工具，用来管理 charts&ndash; 预先配置好的安装包资源，有点类似于Ubuntu的APT和CentOS中的yum。
+Helm chart是用来封装kubernetes原生应用程序的yaml文件，可以在你部署应用的时候自定义应用程序的一些metadata，便与应用程序的分发。
+Helm和charts的主要作用：
+ 应用程序封装 版本管理 依赖检查 便于应用程序分发  安装helm 前提要求
+ Kubernetes1.5以上版本 集群可访问到的镜像仓库 执行helm命令的主机可以访问到kubernetes集群  安装步骤
+首先需要安装helm客户端
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get &gt; get_helm.sh chmod 700 get_helm.sh ./get_helm.sh  创建tiller的serviceaccount和clusterrolebinding
+kubectl create serviceaccount --namespace kube-system tiller kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller  然后安装helm服务端tiller
+helm init  （目前最新版v2.8.2，可以使用阿里云镜像，如： helm init --upgrade -i registry.">
+  <meta property="og:description" content="title: k8s - helm date: 2019-02-26 21:43:28 updated: 2019-03-28 11:22:37 tags: - k8s - helm
+permalink: /articles/2019/02/26/1551188608751 使用helm管理kubernetes应用 Helm是一个kubernetes应用的包管理工具，用来管理 charts&ndash; 预先配置好的安装包资源，有点类似于Ubuntu的APT和CentOS中的yum。
+Helm chart是用来封装kubernetes原生应用程序的yaml文件，可以在你部署应用的时候自定义应用程序的一些metadata，便与应用程序的分发。
+Helm和charts的主要作用：
+ 应用程序封装 版本管理 依赖检查 便于应用程序分发  安装helm 前提要求
+ Kubernetes1.5以上版本 集群可访问到的镜像仓库 执行helm命令的主机可以访问到kubernetes集群  安装步骤
+首先需要安装helm客户端
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get &gt; get_helm.sh chmod 700 get_helm.sh ./get_helm.sh  创建tiller的serviceaccount和clusterrolebinding
+kubectl create serviceaccount --namespace kube-system tiller kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller  然后安装helm服务端tiller
+helm init  （目前最新版v2.8.2，可以使用阿里云镜像，如： helm init --upgrade -i registry.">
+  <meta name="twitter:description" content="title: k8s - helm date: 2019-02-26 21:43:28 updated: 2019-03-28 11:22:37 tags: - k8s - helm
+permalink: /articles/2019/02/26/1551188608751 使用helm管理kubernetes应用 Helm是一个kubernetes应用的包管理工具， …">
+  <meta name="author" content="zouhl"/>
+  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://blog.zouhl.com/post/k8s_-_helm/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="易来易碎" />
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="canonical" href="https://blog.zouhl.com/post/k8s_-_helm/" />
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
+  
+  
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="POSTS" href="/post">POSTS</a>
+              
+              
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="易来易碎" href="https://blog.zouhl.com/">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索 易来易碎</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  <div class="intro-header"></div>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">1100 Words|Read in about 5 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#permalink-articles-2019-02-26-1551188608751">permalink: /articles/2019/02/26/1551188608751</a></li>
+</ul></li>
+<li><a href="#使用helm管理kubernetes应用">使用helm管理kubernetes应用</a>
+<ul>
+<li><a href="#安装helm">安装helm</a></li>
+<li><a href="#安装自己的chart">安装自己的chart</a>
+<ul>
+<li><a href="#模板">模板</a></li>
+<li><a href="#检查配置和模板是否有效">检查配置和模板是否有效</a></li>
+<li><a href="#部署到kubernetes">部署到kubernetes</a></li>
+<li><a href="#打包分享">打包分享</a></li>
+<li><a href="#依赖">依赖</a></li>
+<li><a href="#安装源">安装源</a></li>
+</ul></li>
+<li><a href="#注意事项">注意事项</a>
+<ul>
+<li><a href="#服务依赖管理">服务依赖管理</a></li>
+<li><a href="#解决本地chart依赖">解决本地chart依赖</a></li>
+<li><a href="#设置helm命令自动补全">设置helm命令自动补全</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+  
+
+
+                
+
+<p>title: k8s - helm
+date: 2019-02-26 21:43:28
+updated: 2019-03-28 11:22:37
+tags:
+- k8s
+- helm</p>
+
+<h2 id="permalink-articles-2019-02-26-1551188608751">permalink: /articles/2019/02/26/1551188608751</h2>
+
+<h1 id="使用helm管理kubernetes应用">使用helm管理kubernetes应用</h1>
+
+<p><a href="https://helm.sh/"><strong>Helm</strong></a>是一个kubernetes应用的包管理工具，用来管理 <a href="https://github.com/helm/charts"><strong>charts</strong></a>&ndash; 预先配置好的安装包资源，有点类似于Ubuntu的APT和CentOS中的yum。</p>
+
+<p>Helm chart是用来封装kubernetes原生应用程序的yaml文件，可以在你部署应用的时候自定义应用程序的一些metadata，便与应用程序的分发。</p>
+
+<p>Helm和charts的主要作用：</p>
+
+<ul>
+<li>应用程序封装</li>
+<li>版本管理</li>
+<li>依赖检查</li>
+<li>便于应用程序分发</li>
+</ul>
+
+<h2 id="安装helm">安装helm</h2>
+
+<p><strong>前提要求</strong></p>
+
+<ul>
+<li>Kubernetes1.5以上版本</li>
+<li>集群可访问到的镜像仓库</li>
+<li>执行helm命令的主机可以访问到kubernetes集群</li>
+</ul>
+
+<p><strong>安装步骤</strong></p>
+
+<p>首先需要安装helm客户端</p>
+
+<pre><code class="language-bash">curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get &gt; get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+</code></pre>
+
+<p>创建tiller的<code>serviceaccount</code>和<code>clusterrolebinding</code></p>
+
+<pre><code class="language-bash">kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+</code></pre>
+
+<p>然后安装helm服务端tiller</p>
+
+<pre><code class="language-bash">helm init 
+</code></pre>
+
+<p>（目前最新版v2.8.2，可以使用阿里云镜像，如： <code>helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.8.2 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</code>）</p>
+
+<p>我们使用<code>-i</code>指定自己的镜像，因为官方的镜像因为某些原因无法拉取，官方镜像地址是：<code>gcr.io/kubernetes-helm/tiller:v2.8.1</code>，我在DockerHub上放了一个备份<code>jimmysong/kubernetes-helm-tiller:v2.8.1</code>，该镜像的版本与helm客户端的版本相同，使用<code>helm version</code>可查看helm客户端版本。</p>
+
+<p>为应用程序设置<code>serviceAccount</code>：</p>
+
+<pre><code class="language-bash">kubectl patch deploy --namespace kube-system tiller-deploy -p '{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}'
+</code></pre>
+
+<p>检查是否安装成功：</p>
+
+<pre><code class="language-bash">$ kubectl -n kube-system get pods|grep tiller
+tiller-deploy-dbb85cb99-xwgpd          1/1     Running   0          16s
+
+$ helm version
+Client: &amp;version.Version{SemVer:&quot;v2.12.3&quot;, GitCommit:&quot;eecf22f77df5f65c823aacd2dbd30ae6c65f186e&quot;, GitTreeState:&quot;clean&quot;}
+Server: &amp;version.Version{SemVer:&quot;v2.12.3&quot;, GitCommit:&quot;eecf22f77df5f65c823aacd2dbd30ae6c65f186e&quot;, GitTreeState:&quot;clean&quot;}
+</code></pre>
+
+<h2 id="安装自己的chart">安装自己的chart</h2>
+
+<p>我们创建一个名为<code>mychart</code>的chart，看一看chart的文件结构。</p>
+
+<pre><code class="language-bash">$ helm create mychart
+
+$ tree mychart
+mychart
+|-- charts # 依赖的chart
+|-- Chart.yaml # Chart本身的版本和配置信息
+|-- templates # 配置模板目录
+|   |-- deployment.yaml #kubernetes Deployment object
+|   |-- _helpers.tpl #用于修改kubernetes objcet配置的模板
+|   |-- ingress.yaml #kubernetes ingress
+|   |-- NOTES.txt #helm提示信息
+|   |-- service.yaml #kubernetes Serivce
+|   `-- tests
+|       `-- test-connection.yaml
+`-- values.yaml #kubernetes object configuration
+
+3 directories, 8 files
+</code></pre>
+
+<h3 id="模板">模板</h3>
+
+<p><code>Templates</code>目录下是yaml文件的模板，遵循<a href="https://golang.org/pkg/text/template/">Go template</a>语法。使用过<a href="https://gohugo.io/">Hugo</a>的静态网站生成工具的人应该对此很熟悉。</p>
+
+<p>我们查看下<code>deployment.yaml</code>文件的内容。</p>
+
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include &quot;mychart.fullname&quot; . }}
+  labels:
+    app.kubernetes.io/name: {{ include &quot;mychart.name&quot; . }}
+    helm.sh/chart: {{ include &quot;mychart.chart&quot; . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include &quot;mychart.name&quot; . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include &quot;mychart.name&quot; . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: &quot;{{ .Values.image.repository }}:{{ .Values.image.tag }}&quot;
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+</code></pre>
+
+<p>这是该应用的Deployment的yaml配置文件，其中的双大括号包扩起来的部分是Go template，其中的Values是在<code>values.yaml</code>文件中定义的：</p>
+
+<pre><code class="language-yaml"># Default values for mychart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: 1.11
+  pullPolicy: IfNotPresent
+
+nameOverride: &quot;&quot;
+fullnameOverride: &quot;&quot;
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: &quot;true&quot;
+  paths: []
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+</code></pre>
+
+<p>比如在<code>Deployment.yaml</code>中定义的容器镜像<code>image: &quot;{{ .Values.image.repository }}:{{ .Values.image.tag }}&quot;</code>其中的：</p>
+
+<ul>
+<li><code>.Values.image.repository</code>就是nginx</li>
+<li><code>.Values.image.tag</code>就是stable</li>
+</ul>
+
+<p>以上两个变量值是在create chart的时候自动生成的默认值。</p>
+
+<p>我们将默认的镜像地址和tag改成我们自己的镜像<code>nginx:1.11</code>。</p>
+
+<h3 id="检查配置和模板是否有效">检查配置和模板是否有效</h3>
+
+<p>当使用kubernetes部署应用的时候实际上讲templates渲染成最终的kubernetes能够识别的yaml格式。</p>
+
+<p>使用<code>helm install --dry-run --debug &lt;chart_dir&gt;</code>命令来验证chart配置。该输出中包含了模板的变量配置与最终渲染的yaml文件。</p>
+
+<pre><code class="language-yaml">$ helm install --dry-run --debug ./mychart
+[debug] Created tunnel using local port: '35273'
+
+[debug] SERVER: &quot;127.0.0.1:35273&quot;
+
+[debug] Original chart version: &quot;&quot;
+[debug] CHART PATH: /root/k8s/helm/mychart
+
+NAME:   handy-antelope
+REVISION: 1
+RELEASED: Tue Feb 26 20:46:10 2019
+CHART: mychart-0.1.0
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+affinity: {}
+fullnameOverride: &quot;&quot;
+image:
+  pullPolicy: IfNotPresent
+  repository: nginx
+  tag: 1.11
+ingress:
+  annotations: {}
+  enabled: false
+  hosts:
+  - chart-example.local
+  paths: []
+  tls: []
+nameOverride: &quot;&quot;
+nodeSelector: {}
+replicaCount: 1
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+service:
+  port: 80
+  type: ClusterIP
+tolerations: []
+
+HOOKS:
+---
+# handy-antelope-mychart-test-connection
+apiVersion: v1
+kind: Pod
+metadata:
+  name: &quot;handy-antelope-mychart-test-connection&quot;
+  labels:
+    app.kubernetes.io/name: mychart
+    helm.sh/chart: mychart-0.1.0
+    app.kubernetes.io/instance: handy-antelope
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    &quot;helm.sh/hook&quot;: test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['handy-antelope-mychart:80']
+  restartPolicy: Never
+MANIFEST:
+
+---
+# Source: mychart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: handy-antelope-mychart
+  labels:
+    app.kubernetes.io/name: mychart
+    helm.sh/chart: mychart-0.1.0
+    app.kubernetes.io/instance: handy-antelope
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: mychart
+    app.kubernetes.io/instance: handy-antelope
+---
+# Source: mychart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: handy-antelope-mychart
+  labels:
+    app.kubernetes.io/name: mychart
+    helm.sh/chart: mychart-0.1.0
+    app.kubernetes.io/instance: handy-antelope
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mychart
+      app.kubernetes.io/instance: handy-antelope
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mychart
+        app.kubernetes.io/instance: handy-antelope
+    spec:
+      containers:
+        - name: mychart
+          image: &quot;nginx:1.11&quot;
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+</code></pre>
+
+<p>我们可以看到Deployment和Service的名字前半截由两个随机的单词组成，最后才是我们在<code>values.yaml</code>中配置的值。</p>
+
+<h3 id="部署到kubernetes">部署到kubernetes</h3>
+
+<p>在 mychart 目录下执行下面的命令将 nginx 部署到 kubernetes 集群上。</p>
+
+<pre><code class="language-bash">$ helm install .
+NAME:   pining-woodpecker
+LAST DEPLOYED: Tue Feb 26 20:51:30 2019
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==&gt; v1/Deployment
+NAME                       DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+pining-woodpecker-mychart  1        0        0           0          0s
+
+==&gt; v1/Pod(related)
+NAME                                        READY  STATUS             RESTARTS  AGE
+pining-woodpecker-mychart-5779b8bd49-cvtbr  0/1    ContainerCreating  0         0s
+
+==&gt; v1/Service
+NAME                       TYPE       CLUSTER-IP    EXTERNAL-IP  PORT(S)  AGE
+pining-woodpecker-mychart  ClusterIP  10.1.165.110  &lt;none&gt;       80/TCP   0s
+
+
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace default -l &quot;app.kubernetes.io/name=mychart,app.kubernetes.io/instance=pining-woodpecker&quot; -o jsonpath=&quot;{.items[0].metadata.name}&quot;)
+  echo &quot;Visit http://127.0.0.1:8080 to use your application&quot;
+  kubectl port-forward $POD_NAME 8080:80
+</code></pre>
+
+<p>现在nginx已经部署到kubernetes集群上，本地执行提示中的命令在本地主机上访问到nginx实例。</p>
+
+<pre><code class="language-bash">export POD_NAME=$(kubectl get pods --namespace default -l &quot;app.kubernetes.io/name=mychart,app.kubernetes.io/instance=pining-woodpecker&quot; -o jsonpath=&quot;{.items[0].metadata.name}&quot;)
+  echo &quot;Visit http://127.0.0.1:8080 to use your application&quot;
+  kubectl port-forward $POD_NAME 8080:80	
+</code></pre>
+
+<p>在本地访问<code>http://127.0.0.1:8080</code>即可访问到nginx。</p>
+
+<p><strong>查看部署的relaese</strong></p>
+
+<pre><code class="language-bash">$ helm list
+NAME             	REVISION	UPDATED                 	STATUS  	CHART        	APP VERSION	NAMESPACE
+pining-woodpecker	1       	Tue Feb 26 20:51:30 2019	DEPLOYED	mychart-0.1.0	1.0        	default
+
+</code></pre>
+
+<p><strong>删除部署的release</strong></p>
+
+<pre><code class="language-bash">helm delete pining-woodpecker
+</code></pre>
+
+<h3 id="打包分享">打包分享</h3>
+
+<p>我们可以修改<code>Chart.yaml</code>中的helm chart配置信息，然后使用下列命令将chart打包成一个压缩文件。</p>
+
+<pre><code>$ helm package .
+Successfully packaged chart and saved it to: /root/k8s/helm/mychart/mychart-0.1.0.tgz
+</code></pre>
+
+<h3 id="依赖">依赖</h3>
+
+<p>我们可以在<code>~/k8s/helm/mychart/requirements.yaml</code>中定义应用所依赖的chart，例如定义对<code>mariadb</code>的依赖：</p>
+
+<pre><code class="language-bash">dependencies:
+- name: mariadb
+  version: 0.6.0
+  repository: https://kubernetes-charts.storage.googleapis.com
+</code></pre>
+
+<p>使用<code>helm lint .</code>命令可以检查依赖和模板配置是否正确。</p>
+
+<pre><code>$ helm lint .
+==&gt; Linting .
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, no failures
+
+$ helm dep list
+NAME   	VERSION	REPOSITORY                                      	STATUS
+mariadb	0.6.0  	https://kubernetes-charts.storage.googleapis.com	missing
+</code></pre>
+
+<h3 id="安装源">安装源</h3>
+
+<p>使用第三方chat库</p>
+
+<ul>
+<li>添加fabric8库</li>
+</ul>
+
+<pre><code class="language-bash">$ helm repo add fabric8 https://fabric8.io/helm
+</code></pre>
+
+<ul>
+<li>搜索fabric8提供的工具（主要就是fabric8-platform工具包，包含了CI、CD的全套工具）</li>
+</ul>
+
+<pre><code class="language-bash">$ helm search fabric8
+</code></pre>
+
+<p>我们在前面安装chart可以通过HTTP server的方式提供。</p>
+
+<pre><code class="language-bash">$ helm serve
+Regenerating index. This may take a moment.
+Now serving you on 127.0.0.1:8879
+</code></pre>
+
+<p>访问<code>http://localhost:8879</code>可以看到刚刚安装的chart。</p>
+
+<h2 id="注意事项">注意事项</h2>
+
+<p>下面列举一些常见问题，和在解决这些问题时候的注意事项。</p>
+
+<h3 id="服务依赖管理">服务依赖管理</h3>
+
+<p>所有使用helm部署的应用中如果没有特别指定chart的名字都会生成一个随机的<code>Release name</code>，例如<code>romping-frog</code>、<code>sexy-newton</code>等，跟启动docker容器时候容器名字的命名规则相同，而真正的资源对象的名字是在YAML文件中定义的名字，我们成为<code>App name</code>，两者连接起来才是资源对象的实际名字：<code>Release name</code>-<code>App name</code>。</p>
+
+<p>而使用helm chart部署的包含依赖关系的应用，都会使用同一套<code>Release name</code>，在配置YAML文件的时候一定要注意在做服务发现时需要配置的服务地址，如果使用环境变量的话，需要像下面这样配置。</p>
+
+<pre><code class="language-yaml">env:
+ - name: SERVICE_NAME
+   value: &quot;{{ .Release.Name }}-{{ .Values.image.env.SERVICE_NAME }}&quot;
+</code></pre>
+
+<p>这是使用了Go template的语法。至于<code>{{ .Values.image.env.SERVICE_NAME }}</code>的值是从<code>values.yaml</code>文件中获取的，所以需要在<code>values.yaml</code>中增加如下配置：</p>
+
+<pre><code class="language-yaml">image:
+  env:
+    SERVICE_NAME: k8s-app-monitor-test
+</code></pre>
+
+<h3 id="解决本地chart依赖">解决本地chart依赖</h3>
+
+<p>在本地当前chart配置的目录下启动helm server，我们不指定任何参数，直接使用默认端口启动。</p>
+
+<pre><code class="language-bash">helm serve
+</code></pre>
+
+<p>将该repo加入到repo list中。</p>
+
+<pre><code class="language-bash">helm repo add local http://localhost:8879
+</code></pre>
+
+<p>在浏览器中访问<a href="http://localhost:8879/">http://localhost:8879</a>可以看到所有本地的chart。</p>
+
+<p>然后下载依赖到本地。</p>
+
+<pre><code class="language-bash">helm dependency update
+</code></pre>
+
+<p>这样所有的chart都会下载到本地的<code>charts</code>目录下。</p>
+
+<h3 id="设置helm命令自动补全">设置helm命令自动补全</h3>
+
+<p>为了方便helm命令的使用，helm提供了自动补全功能，如果使用zsh请执行：</p>
+
+<pre><code class="language-bash">source &lt;(helm completion zsh)
+source &lt;(helm completion zsh | sed -E 's/\[&quot;(.+)&quot;\]/\[\1\]/g')
+</code></pre>
+
+<p>如果使用bash请执行：</p>
+
+<pre><code class="language-bash">source &lt;(helm completion bash)
+</code></pre>
+
+<blockquote>
+<p>原文链接：<a href="https://jimmysong.io/kubernetes-handbook/practice/helm.html">https://jimmysong.io/kubernetes-handbook/practice/helm.html</a></p>
+</blockquote>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://blog.zouhl.com/post/k8s_-_%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://blog.zouhl.com/post/k8s_-_dashboard/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">1100 Words|Read in about 5 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    
+    
+    
+    
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ3Mi8yMDAxMg==">
+    	<script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+           if (typeof LivereTower === 'function') { return; }
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    	</script>
+    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+    
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:rootzouhl@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/zou2699" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://blog.zouhl.com/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              <a href="https://zouhl.com">zouhl</a>
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://blog.zouhl.com/">易来易碎</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+<script>
+  (function() {
+    var cx = '008867044216506799499:pboytpfdouc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

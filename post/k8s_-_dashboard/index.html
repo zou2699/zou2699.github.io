@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <meta name="description" content="zouhl&#39;s blog" />
+  <meta property="og:title" content="易来易碎" />
+  <meta name="twitter:title" content="易来易碎" />
+  <meta name="description" content="title: k8s - dashboard date: 2019-02-26 10:46:19 updated: 2019-03-28 11:21:29 tags: - k8s - dashboard
+permalink: /articles/2019/02/26/1551149179363 更换k8s-dashboard证书 生成证书 # root @ k8s-master in ~/k8s/dashboard [9:51:34] $ openssl genrsa -des3 -passout pass:x -out dashboard.pass.key 2048 Generating RSA private key, 2048 bit long modulus .....&#43;&#43;&#43; .........................&#43;&#43;&#43; e is 65537 (0x10001) # root @ k8s-master in ~/k8s/dashboard [9:51:36] $ ls dashboard.pass.key # root @ k8s-master in ~/k8s/dashboard [9:51:38] $ openssl rsa -passin pass:x -in dashboard.">
+  <meta property="og:description" content="title: k8s - dashboard date: 2019-02-26 10:46:19 updated: 2019-03-28 11:21:29 tags: - k8s - dashboard
+permalink: /articles/2019/02/26/1551149179363 更换k8s-dashboard证书 生成证书 # root @ k8s-master in ~/k8s/dashboard [9:51:34] $ openssl genrsa -des3 -passout pass:x -out dashboard.pass.key 2048 Generating RSA private key, 2048 bit long modulus .....&#43;&#43;&#43; .........................&#43;&#43;&#43; e is 65537 (0x10001) # root @ k8s-master in ~/k8s/dashboard [9:51:36] $ ls dashboard.pass.key # root @ k8s-master in ~/k8s/dashboard [9:51:38] $ openssl rsa -passin pass:x -in dashboard.">
+  <meta name="twitter:description" content="title: k8s - dashboard date: 2019-02-26 10:46:19 updated: 2019-03-28 11:21:29 tags: - k8s - dashboard
+permalink: /articles/2019/02/26/1551149179363 更换k8s-dashboard证书 生成证书 # root @ k8s-master in …">
+  <meta name="author" content="zouhl"/>
+  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://blog.zouhl.com/post/k8s_-_dashboard/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="易来易碎" />
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="canonical" href="https://blog.zouhl.com/post/k8s_-_dashboard/" />
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
+  
+  
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="POSTS" href="/post">POSTS</a>
+              
+              
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="易来易碎" href="https://blog.zouhl.com/">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索 易来易碎</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  <div class="intro-header"></div>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+
+
+                
+
+<p>title: k8s - dashboard
+date: 2019-02-26 10:46:19
+updated: 2019-03-28 11:21:29
+tags:
+- k8s
+- dashboard</p>
+
+<h2 id="permalink-articles-2019-02-26-1551149179363">permalink: /articles/2019/02/26/1551149179363</h2>
+
+<h1 id="更换k8s-dashboard证书">更换k8s-dashboard证书</h1>
+
+<h2 id="生成证书">生成证书</h2>
+
+<pre><code class="language-bash"># root @ k8s-master in ~/k8s/dashboard [9:51:34] 
+$ openssl genrsa -des3 -passout pass:x -out dashboard.pass.key 2048
+Generating RSA private key, 2048 bit long modulus
+.....+++
+.........................+++
+e is 65537 (0x10001)
+
+# root @ k8s-master in ~/k8s/dashboard [9:51:36] 
+$ ls
+dashboard.pass.key
+
+# root @ k8s-master in ~/k8s/dashboard [9:51:38] 
+$ openssl rsa -passin pass:x -in dashboard.pass.key -out dashboard.key
+writing RSA key
+
+# root @ k8s-master in ~/k8s/dashboard [9:51:44] 
+$ ls 
+dashboard.key  dashboard.pass.key
+
+# root @ k8s-master in ~/k8s/dashboard [9:51:48] 
+$ rm dashboard.pass.key 
+
+# root @ k8s-master in ~/k8s/dashboard [9:51:50] 
+$ openssl req -new -key dashboard.key -out dashboard.csr
+
+$ openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt
+Signature ok
+subject=/C=CN/ST=SiChuan/L=ChengDu/O=k8s/OU=dashboard/CN=dashboard/emailAddress=zou2699@163.com
+Getting Private key
+
+</code></pre>
+
+<h2 id="创建secret">创建secret</h2>
+
+<pre><code class="language-bash">kubectl create secret generic kubernetes-dashboard-certs --from-file=/root/k8s/dashboard -n kube-system
+</code></pre>
+
+<h3 id="创建k8s-dashboard">创建k8s-dashboard</h3>
+
+<pre><code class="language-bash">kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
+</code></pre>
+
+<h2 id="角色绑定">角色绑定</h2>
+
+<pre><code class="language-bash">kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+
+</code></pre>
+
+<h2 id="访问方式">访问方式</h2>
+
+<ol>
+<li>使用kubectl proxy</li>
+</ol>
+
+<pre><code>   kubectl proxy --address='0.0.0.0'  --accept-hosts='^*$'
+</code></pre>
+
+<ol>
+<li>NodePort，上面的证书是针对NodePort形式访问用到的。</li>
+</ol>
+
+<pre><code class="language-bash">   kubectl -n kube-system edit service kubernetes-dashboard
+</code></pre>
+
+<p>将 <code>type: ClusterIP</code> 改为 <code>type: NodePort</code>，然后使用<code>kubectl get service</code>命令来查看自动生产的端口：</p>
+
+<ol>
+<li>API Server</li>
+</ol>
+
+<p>如果Kubernetes API服务器是公开的，并可以从外部访问，那我们可以直接使用API Server的方式来访问，也是比较推荐的方式。</p>
+
+<p>Dashboard的访问地址为：
+   <code>https://&lt;master-ip&gt;:&lt;apiserver-port&gt;/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/</code>，但是返回的结果可能如下：</p>
+
+<pre><code class="language-json">   {
+     &quot;kind&quot;: &quot;Status&quot;,
+     &quot;apiVersion&quot;: &quot;v1&quot;,
+     &quot;metadata&quot;: {
+       
+     },
+     &quot;status&quot;: &quot;Failure&quot;,
+     &quot;message&quot;: &quot;services \&quot;https:kubernetes-dashboard:\&quot; is forbidden: User \&quot;system:anonymous\&quot; cannot get services/proxy in the namespace \&quot;kube-system\&quot;&quot;,
+     &quot;reason&quot;: &quot;Forbidden&quot;,
+     &quot;details&quot;: {
+       &quot;name&quot;: &quot;https:kubernetes-dashboard:&quot;,
+       &quot;kind&quot;: &quot;services&quot;
+     },
+     &quot;code&quot;: 403
+   }
+</code></pre>
+
+<p>这是因为最新版的k8s默认启用了RBAC，并为未认证用户赋予了一个默认的身份：<code>anonymous</code>。</p>
+
+<p>对于API Server来说，它是使用证书进行认证的，我们需要先创建一个证书：</p>
+
+<p>1.首先找到<code>kubectl</code>命令的配置文件，默认情况下为<code>/etc/kubernetes/admin.conf</code>，我们当前已经复制到了<code>$HOME/.kube/config</code>中。</p>
+
+<p>2.然后我们使用<code>client-certificate-data</code>和<code>client-key-data</code>生成一个*p12*文件，可使用下列命令：</p>
+
+<pre><code class="language-bash">   # 生成client-certificate-data
+   grep 'client-certificate-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d &gt;&gt; kubecfg.crt
+   
+   # 生成client-key-data
+   grep 'client-key-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d &gt;&gt; kubecfg.key
+   
+   # 生成p12
+   openssl pkcs12 -export -clcerts -inkey kubecfg.key -in kubecfg.crt -out kubecfg.p12 -name &quot;kubernetes-client&quot;
+</code></pre>
+
+<p>3.最后导入上面生成的p12文件，重新打开浏览器即可，如下图：</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g0jmo45e2bj20qh0eqwey.jpg" alt="" /></p>
+
+<ol>
+<li>ingress</li>
+</ol>
+
+<p>Ingress将开源的反向代理负载均衡器（如 Nginx、Apache、Haproxy等）与k8s进行集成，并可以动态的更新Nginx配置等，是比较灵活，更为推荐的暴露服务的方式，但也相对比较复杂，以后再来介绍。</p>
+
+<h2 id="获取token">获取token</h2>
+
+<p>获取之前binding的用户的token</p>
+
+<pre><code>kubectl describe secrets -n kube-system $(kubectl -n kube-system get secret | awk '/dashboard/{print $1}')
+</code></pre>
+
+<p>会话过期时间修改<code>kubectl edit deployment -n kube-system kubernetes-dashboard</code></p>
+
+<pre><code>     - args:
+        - --auto-generate-certificates
+        - --token-ttl=43200
+</code></pre>
+
+<blockquote>
+<p>参考地址:</p>
+
+<p><a href="https://github.com/kubernetes/dashboard/wiki/Certificate-management">https://github.com/kubernetes/dashboard/wiki/Certificate-management</a></p>
+
+<p><a href="https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup">https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup</a></p>
+
+<p><a href="https://www.cnblogs.com/RainingNight/p/deploying-k8s-dashboard-ui.html">https://www.cnblogs.com/RainingNight/p/deploying-k8s-dashboard-ui.html</a></p>
+</blockquote>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://blog.zouhl.com/post/k8s_-_helm/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://blog.zouhl.com/post/k8s_-_configmap/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">400 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    
+    
+    
+    
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ3Mi8yMDAxMg==">
+    	<script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+           if (typeof LivereTower === 'function') { return; }
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    	</script>
+    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+    
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:rootzouhl@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/zou2699" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://blog.zouhl.com/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              <a href="https://zouhl.com">zouhl</a>
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://blog.zouhl.com/">易来易碎</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+<script>
+  (function() {
+    var cx = '008867044216506799499:pboytpfdouc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

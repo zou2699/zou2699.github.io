@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <meta name="description" content="zouhl&#39;s blog" />
+  <meta property="og:title" content="易来易碎" />
+  <meta name="twitter:title" content="易来易碎" />
+  <meta name="description" content="title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
+permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。
+jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server
+使用helm安装jenkins  创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。  kind: PersistentVolume apiVersion: v1 metadata: name: jenkins-pv spec: # selector: # jenkins: master # storageClassName: jenkins-pv capacity: storage: 10Gi accessModes: - ReadWriteOnce persistentVolumeReclaimPolicy: Retain hostPath: path: &quot;/data/jenkins&quot;   使用helm安装jenkins  helm install --name jenkins stable/jenkins  如果开启了rbac可以使用helm upgrade jenkins stable/jenkins --set rbac.">
+  <meta property="og:description" content="title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
+permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。
+jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server
+使用helm安装jenkins  创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。  kind: PersistentVolume apiVersion: v1 metadata: name: jenkins-pv spec: # selector: # jenkins: master # storageClassName: jenkins-pv capacity: storage: 10Gi accessModes: - ReadWriteOnce persistentVolumeReclaimPolicy: Retain hostPath: path: &quot;/data/jenkins&quot;   使用helm安装jenkins  helm install --name jenkins stable/jenkins  如果开启了rbac可以使用helm upgrade jenkins stable/jenkins --set rbac.">
+  <meta name="twitter:description" content="title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
+permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用， …">
+  <meta name="author" content="zouhl"/>
+  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="易来易碎" />
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="canonical" href="https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/" />
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
+  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
+  
+  
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="POSTS" href="/post">POSTS</a>
+              
+              
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="易来易碎" href="https://blog.zouhl.com/">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索 易来易碎</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  <div class="intro-header"></div>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">1200 Words|Read in about 6 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+  
+  <aside class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#permalink-articles-2019-03-03-1551603125319">permalink: /articles/2019/03/03/1551603125319</a></li>
+<li><a href="#使用helm安装jenkins">使用helm安装jenkins</a></li>
+<li><a href="#配置jenkins">配置jenkins</a></li>
+<li><a href="#进行构建">进行构建</a></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#流程说明">流程说明</a></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+  
+
+
+                
+
+<p>title: Set Up a Jenkins CI/CD Pipeline with Kubernetes
+date: 2019-03-03 16:52:05
+updated: 2019-03-30 07:00:57
+tags:
+- jenkins
+- devops
+- k8s</p>
+
+<h2 id="permalink-articles-2019-03-03-1551603125319">permalink: /articles/2019/03/03/1551603125319</h2>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g0ppydxbdsj218n0uftlp.jpg" alt="imagepng" /></p>
+
+<p>以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。</p>
+
+<p>jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server</p>
+
+<h2 id="使用helm安装jenkins">使用helm安装jenkins</h2>
+
+<ol>
+<li>创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。</li>
+</ol>
+
+<pre><code class="language-yaml">   kind: PersistentVolume
+   apiVersion: v1
+   metadata:
+     name: jenkins-pv
+   spec:
+   #  selector:
+   #      jenkins: master
+   #  storageClassName: jenkins-pv
+     capacity:
+       storage: 10Gi
+     accessModes:
+       - ReadWriteOnce
+     persistentVolumeReclaimPolicy: Retain
+     hostPath:
+       path: &quot;/data/jenkins&quot;
+   
+</code></pre>
+
+<ol>
+<li>使用helm安装jenkins</li>
+</ol>
+
+<pre><code class="language-bash">   helm install --name jenkins stable/jenkins
+</code></pre>
+
+<p>如果开启了rbac可以使用<code>helm upgrade jenkins stable/jenkins --set rbac.install=true</code>进行更新，无需重新安装。</p>
+
+<ol>
+<li>配置ingress（可选）</li>
+</ol>
+
+<pre><code class="language-yaml">   apiVersion: extensions/v1beta1
+   kind: Ingress
+   metadata:
+     name: jenkins
+     labels:
+       app: jenkins
+     annotations:
+       kubernetes.io/ingress.class: nginx
+     namespace: default
+   spec:
+     rules:
+       - host: jenkins.192.168.2.20.xip.io
+         http:
+           paths:
+             - backend:
+                 serviceName: jenkins
+                 servicePort: 80
+               path: /
+   
+</code></pre>
+
+<p>使用<code>kubectl create -f jenkins-ingress.yaml</code>创建。</p>
+
+<ol>
+<li>到此，jenkins基本安装完成，如果出现问题，可以使用kubectl  describe 和kubectl logs进行排查。</li>
+</ol>
+
+<h2 id="配置jenkins">配置jenkins</h2>
+
+<ol>
+<li>安装完成过后，默认jenkins的系统配置下会自动添加好kubernetes cloud，如下图</li>
+</ol>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g0pop4arrxj21m6144jvh.jpg" alt="" /></p>
+
+<p>以及配置好的kubernetes pod template<img src="https://ws1.sinaimg.cn/large/b77abccagy1g0porq2ikuj21jt1520x0.jpg" alt="" /></p>
+
+<ol>
+<li><p>因为待会儿会将程序部署到k8s中，所以还需要安装<code>kubernetes-cd</code>  👉<a href="https://plugins.jenkins.io/kubernetes-cd">官方介绍</a>，直接在插件管理搜索下载即可。</p></li>
+
+<li><p>代码及配置地址，👉<a href="https://github.com/zou2699/demoweb.git">github</a></p></li>
+
+<li><p>配置好待会儿会用到的docker hub的账号密码及k8s的kubeconfig</p></li>
+</ol>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g0powtcor9j21ni0dnmz6.jpg" alt="" /></p>
+
+<p>## 开始一个新项目</p>
+
+<p>创建一个pipeline任务，👉<a href="https://github.com/jenkinsci/pipeline-plugin/blob/master/TUTORIAL.md#understanding-flow-scripts">官方介绍</a></p>
+
+<p>这里使用一个golang写的demo web，在docker容器中进行构建。</p>
+
+<p>jenkins会自动在k8s集群中创建自己的slave及docker容器，然后把挂载工作目录，完成后自动销毁刚刚创建的容器。</p>
+
+<p>在pipeline处填写下面的代码，</p>
+
+<pre><code class="language-groovy">   def label = &quot;mypod-${UUID.randomUUID().toString()}&quot;
+   
+   podTemplate(label: label, 
+   containers: [
+       containerTemplate(name: 'docker', image: 'docker:18.06.2', command: 'cat', ttyEnabled: true)],
+   volumes: [
+       hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]
+   )  {
+   
+       node(label) {
+           def ImageName = 'zouhl/demo-app'
+   
+           stage('Get a Golang project'){
+               git url: 'https://github.com/zou2699/demoweb.git'
+               container('docker') {
+                   stage('Build a Go project and docker image')
+                   sh &quot;&quot;&quot;
+                   docker build -t ${ImageName}:${BUILD_NUMBER} .
+                   &quot;&quot;&quot;
+   
+                   stage('push image') {
+                   withDockerRegistry(credentialsId: 'dockerHub') {
+                       sh &quot;&quot;&quot;
+                       docker push ${ImageName}:${BUILD_NUMBER}
+                       &quot;&quot;&quot;
+                       }
+                   }
+   
+                   stage('Remove the local docker image') {
+                       sh &quot;docker rmi ${ImageName}:${BUILD_NUMBER}&quot;
+                   }
+               }
+           }
+           stage('deploy to k8s') {
+              kubernetesDeploy(
+                  kubeconfigId: 'kubeconfig',
+                  configs: 'deploy.yaml',
+                  enableConfigSubstitution: true,
+                  )
+           }
+           stage('create or update ingress') {
+               input 'Ready to go?'
+               kubernetesDeploy(
+                  kubeconfigId: 'kubeconfig',
+                  configs: 'app-ingress.yaml',
+                  enableConfigSubstitution: true,
+                  )
+           }
+   }
+   }
+</code></pre>
+
+<p>其中deploy.yaml的镜像名字填写为自己的hub地址。</p>
+
+<h2 id="进行构建">进行构建</h2>
+
+<p>下面是构建和部署的过程，仅作参考。</p>
+
+<pre><code class="language-log">Started by user admin
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] podTemplate
+[Pipeline] {
+[Pipeline] node
+Still waiting to schedule task
+‘jenkins-slave-5qg6x-q2mst’ is offline
+Agent jenkins-slave-5qg6x-q2mst is provisioned from template Kubernetes Pod Template
+Agent specification [Kubernetes Pod Template] (mypod-c92aa982-03f8-42f1-857e-66cca7e96e21): 
+* [docker] docker:18.06.2
+
+Running on jenkins-slave-5qg6x-q2mst in /home/jenkins/workspace/demo-app
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Get a Golang project)
+[Pipeline] git
+Cloning the remote Git repository
+Cloning repository https://github.com/zou2699/demoweb.git
+ &gt; git init /home/jenkins/workspace/demo-app # timeout=10
+Fetching upstream changes from https://github.com/zou2699/demoweb.git
+ &gt; git --version # timeout=10
+ &gt; git fetch --tags --progress https://github.com/zou2699/demoweb.git +refs/heads/*:refs/remotes/origin/*
+ &gt; git config remote.origin.url https://github.com/zou2699/demoweb.git # timeout=10
+ &gt; git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ &gt; git config remote.origin.url https://github.com/zou2699/demoweb.git # timeout=10
+Fetching upstream changes from https://github.com/zou2699/demoweb.git
+ &gt; git fetch --tags --progress https://github.com/zou2699/demoweb.git +refs/heads/*:refs/remotes/origin/*
+Checking out Revision fbe3e5c71305b8ec166e84f47b3e824235119570 (refs/remotes/origin/master)
+Commit message: &quot;add ingress file&quot;
+[Pipeline] container
+[Pipeline] {
+[Pipeline] stage (Build a Go project and docker image)
+Using the ‘stage’ step without a block argument is deprecated
+Entering stage Build a Go project and docker image
+Proceeding
+[Pipeline] sh
+ &gt; git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ &gt; git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+ &gt; git config core.sparsecheckout # timeout=10
+ &gt; git checkout -f fbe3e5c71305b8ec166e84f47b3e824235119570
+ &gt; git branch -a -v --no-abbrev # timeout=10
+ &gt; git checkout -b master fbe3e5c71305b8ec166e84f47b3e824235119570
+ &gt; git rev-list --no-walk 561c05039df2a1a5effd018139b244d2f23fa427 # timeout=10
++ docker build -t zouhl/demo-app:20 .
+Sending build context to Docker daemon  11.29MB
+
+Step 1/9 : FROM golang:1.11
+1.11: Pulling from library/golang
+741437d97401: Already exists
+34d8874714d7: Already exists
+0a108aa26679: Already exists
+7f0334c36886: Already exists
+d35724ed4672: Already exists
+e75ac00960df: Already exists
+08686fc4280e: Already exists
+Digest: sha256:baee78b46407117bfa6777b1e0361018b503936f9f878a4e18068207a0a1ff0c
+Status: Downloaded newer image for golang:1.11
+ ---&gt; 901414995ecd
+Step 2/9 : WORKDIR /go/src/app
+ ---&gt; Running in bd8a5da92ec0
+Removing intermediate container bd8a5da92ec0
+ ---&gt; 664736b487fb
+Step 3/9 : COPY . .
+ ---&gt; b1e7198a6d62
+Step 4/9 : RUN go get -d -v ./...
+ ---&gt; Running in 1258cae3f35b
+Removing intermediate container 1258cae3f35b
+ ---&gt; e6c54702bfe2
+Step 5/9 : RUN go install -v ./...
+ ---&gt; Running in 0e5dfd0fa037
+[91mapp/vendor/github.com/gin-gonic/gin/json
+[0m[91mapp/vendor/github.com/golang/protobuf/proto
+[0m[91mapp/vendor/github.com/gin-contrib/sse
+[0m[91mapp/vendor/github.com/ugorji/go/codec
+[0m[91mapp/vendor/gopkg.in/go-playground/validator.v8
+[0m[91mapp/vendor/gopkg.in/yaml.v2
+[0m[91mapp/vendor/github.com/mattn/go-isatty
+[0m[91mapp/vendor/github.com/gin-gonic/gin/render
+[0m[91mapp/vendor/github.com/gin-gonic/gin/binding
+[0m[91mapp/vendor/github.com/gin-gonic/gin
+[0m[91mapp
+[0mRemoving intermediate container 0e5dfd0fa037
+ ---&gt; fc1ea9025ea4
+Step 6/9 : RUN rm -rf /go/src/*
+ ---&gt; Running in db72fd36ca53
+Removing intermediate container db72fd36ca53
+ ---&gt; 717e4dca6895
+Step 7/9 : WORKDIR /go/bin/
+ ---&gt; Running in 037344a8cdb6
+Removing intermediate container 037344a8cdb6
+ ---&gt; 9acf3bd33867
+Step 8/9 : EXPOSE 8080
+ ---&gt; Running in cdf47489216b
+Removing intermediate container cdf47489216b
+ ---&gt; 14a9757f4895
+Step 9/9 : CMD [&quot;./app&quot;]
+ ---&gt; Running in 072100ec5df1
+Removing intermediate container 072100ec5df1
+ ---&gt; a9587242060c
+Successfully built a9587242060c
+Successfully tagged zouhl/demo-app:20
+[Pipeline] stage
+[Pipeline] { (push image)
+[Pipeline] withDockerRegistry
+Executing shell script inside container [docker] of pod [jenkins-slave-5qg6x-q2mst]
+Executing command: &quot;docker&quot; &quot;login&quot; &quot;-u&quot; &quot;zouhl&quot; &quot;-p&quot; ******** &quot;https://index.docker.io/v1/&quot; 
+exit
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+Login Succeeded
+WARNING! Your password will be stored unencrypted in /home/jenkins/workspace/demo-app@tmp/924b09bb-ba00-4377-8a9b-42e0fe5173e1/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+[Pipeline] {
+[Pipeline] sh
++ docker push zouhl/demo-app:20
+The push refers to repository [docker.io/zouhl/demo-app]
+fb0291753bf7: Preparing
+c1ff945be567: Preparing
+a5e3559c27d7: Preparing
+06a8ef03aeff: Preparing
+c5472925cd03: Preparing
+77afbe0f4fed: Preparing
+c3b2e3d53ad1: Preparing
+77b4b6493272: Preparing
+6257fa9f9597: Preparing
+578414b395b9: Preparing
+abc3250a6c7f: Preparing
+13d5529fd232: Preparing
+77b4b6493272: Waiting
+6257fa9f9597: Waiting
+578414b395b9: Waiting
+abc3250a6c7f: Waiting
+13d5529fd232: Waiting
+77afbe0f4fed: Waiting
+c3b2e3d53ad1: Waiting
+c5472925cd03: Pushed
+fb0291753bf7: Pushed
+a5e3559c27d7: Pushed
+c3b2e3d53ad1: Layer already exists
+77afbe0f4fed: Layer already exists
+06a8ef03aeff: Pushed
+77b4b6493272: Layer already exists
+578414b395b9: Layer already exists
+6257fa9f9597: Layer already exists
+abc3250a6c7f: Layer already exists
+13d5529fd232: Layer already exists
+c1ff945be567: Pushed
+20: digest: sha256:40a10e22a19508962ef00e469db4091e29633460e56e9e8e4b958e9abf1beff4 size: 2838
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Remove the local docker image)
+[Pipeline] sh
++ docker rmi zouhl/demo-app:20
+Untagged: zouhl/demo-app:20
+Untagged: zouhl/demo-app@sha256:40a10e22a19508962ef00e469db4091e29633460e56e9e8e4b958e9abf1beff4
+Deleted: sha256:a9587242060c6de1a06293900c04b94e1937b3748f238d377f80a147635ea42c
+Deleted: sha256:14a9757f4895ad23bded56d5df14c9b7c5d1a4f2b882ae9da0c4e9d27986a5ea
+Deleted: sha256:9acf3bd338676f2772f72a55bebd8a30c27156a88ab0c4115292d24a527b33aa
+Deleted: sha256:717e4dca6895a79899982af59313840ddfe321d7217ca00400864aa2bfd2ef19
+Deleted: sha256:aeaba5e7b1eeda47794f51e53b5c8435d87aec22dfa04e221fb029ac8840263c
+Deleted: sha256:fc1ea9025ea4cab736ae85d3c23de6294dcff7cb9509f19b57265b9c4d5121bc
+Deleted: sha256:94209db674e4f9dc6bd2f561cfc9c2c5dac2796a1d82e3e662abc24e11177efb
+Deleted: sha256:e6c54702bfe235a25c3b94383dc93e2ff61e67d2aeb9eb870710ae9767d0f990
+Deleted: sha256:70c2e14e69370aae7df8921073263454e4945174223b6b2bb427d4474b0a8e4b
+Deleted: sha256:b1e7198a6d629bacd799a4fc0c6df060da05f8d953c6ecb6ab44b73df78db959
+Deleted: sha256:ded0ab7056905293366361f3ccef519fdf97e9660c80a8fcbe74cbab5fa5779c
+Deleted: sha256:664736b487fbbe1d83938e23061060ee8fe863c4a64bc49273e4609cb91cca11
+Deleted: sha256:52a27f01339de7babc1c83e843cb76b7ee68e5f438f562e1ee6c61cd0822d1ae
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // container
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (deploy to k8s)
+[Pipeline] kubernetesDeploy
+Starting Kubernetes deployment
+Loading configuration: /home/jenkins/workspace/demo-app/deploy.yaml
+Finished Kubernetes deployment
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (create or update ingress)
+[Pipeline] input
+Ready to go?
+Proceed or Abort
+Applied Deployment: Deployment(apiVersion=extensions/v1beta1, kind=Deployment, metadata=ObjectMeta(annotations=null, clusterName=null, creationTimestamp=2019-03-03T07:40:41Z, deletionGracePeriodSeconds=null, deletionTimestamp=null, finalizers=[], generateName=null, generation=4, initializers=null, labels={run=demo-web}, name=demo-web, namespace=default, ownerReferences=[], resourceVersion=399848, selfLink=/apis/extensions/v1beta1/namespaces/default/deployments/demo-web, uid=a54a482c-3d87-11e9-b446-000c29c5c464, additionalProperties={}), spec=DeploymentSpec(minReadySeconds=null, paused=null, progressDeadlineSeconds=2147483647, replicas=2, revisionHistoryLimit=2147483647, rollbackTo=null, selector=LabelSelector(matchExpressions=[], matchLabels={run=demo-web}, additionalProperties={}), strategy=DeploymentStrategy(rollingUpdate=RollingUpdateDeployment(maxSurge=IntOrString(IntVal=1, Kind=null, StrVal=null, additionalProperties={}), maxUnavailable=IntOrString(IntVal=1, Kind=null, StrVal=null, additionalProperties={}), additionalProperties={}), type=RollingUpdate, additionalProperties={}), template=PodTemplateSpec(metadata=ObjectMeta(annotations=null, clusterName=null, creationTimestamp=null, deletionGracePeriodSeconds=null, deletionTimestamp=null, finalizers=[], generateName=null, generation=null, initializers=null, labels={run=demo-web}, name=null, namespace=null, ownerReferences=[], resourceVersion=null, selfLink=null, uid=null, additionalProperties={}), spec=PodSpec(activeDeadlineSeconds=null, affinity=null, automountServiceAccountToken=null, containers=[Container(args=[], command=[], env=[], envFrom=[], image=zouhl/demo-app:20, imagePullPolicy=Always, lifecycle=null, livenessProbe=null, name=demo-web, ports=[ContainerPort(containerPort=80, hostIP=null, hostPort=null, name=null, protocol=TCP, additionalProperties={})], readinessProbe=null, resources=ResourceRequirements(limits=null, requests=null, additionalProperties={}), securityContext=null, stdin=null, stdinOnce=null, terminationMessagePath=/dev/termination-log, terminationMessagePolicy=File, tty=null, volumeMounts=[], workingDir=null, additionalProperties={})], dnsPolicy=ClusterFirst, hostAliases=[], hostIPC=null, hostNetwork=null, hostPID=null, hostname=null, imagePullSecrets=[], initContainers=[], nodeName=null, nodeSelector=null, restartPolicy=Always, schedulerName=default-scheduler, securityContext=PodSecurityContext(fsGroup=null, runAsNonRoot=null, runAsUser=null, seLinuxOptions=null, supplementalGroups=[], additionalProperties={}), serviceAccount=null, serviceAccountName=null, subdomain=null, terminationGracePeriodSeconds=30, tolerations=[], volumes=[], additionalProperties={}), additionalProperties={}), additionalProperties={}), status=DeploymentStatus(availableReplicas=2, collisionCount=null, conditions=[DeploymentCondition(lastTransitionTime=2019-03-03T07:53:53Z, lastUpdateTime=2019-03-03T07:53:53Z, message=Deployment has minimum availability., reason=MinimumReplicasAvailable, status=True, type=Available, additionalProperties={})], observedGeneration=3, readyReplicas=2, replicas=2, unavailableReplicas=null, updatedReplicas=2, additionalProperties={}), additionalProperties={})
+Applied Service: Service(apiVersion=v1, kind=Service, metadata=ObjectMeta(annotations=null, clusterName=null, creationTimestamp=2019-03-03T07:40:41Z, deletionGracePeriodSeconds=null, deletionTimestamp=null, finalizers=[], generateName=null, generation=null, initializers=null, labels=null, name=demo-web, namespace=default, ownerReferences=[], resourceVersion=396922, selfLink=/api/v1/namespaces/default/services/demo-web, uid=a5673bb9-3d87-11e9-b446-000c29c5c464, additionalProperties={}), spec=ServiceSpec(clusterIP=10.1.115.186, externalIPs=[], externalName=null, externalTrafficPolicy=Cluster, healthCheckNodePort=null, loadBalancerIP=null, loadBalancerSourceRanges=[], ports=[ServicePort(name=null, nodePort=31907, port=80, protocol=TCP, targetPort=IntOrString(IntVal=80, Kind=null, StrVal=null, additionalProperties={}), additionalProperties={})], selector={run=demo-web}, sessionAffinity=None, type=NodePort, additionalProperties={}), status=ServiceStatus(loadBalancer=LoadBalancerStatus(ingress=[], additionalProperties={}), additionalProperties={}), additionalProperties={})
+Approved by admin
+[Pipeline] kubernetesDeploy
+Starting Kubernetes deployment
+Finished Kubernetes deployment
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] }
+[Pipeline] // podTemplate
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+Page
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<h2 id="流程说明">流程说明</h2>
+
+<p>应用构建和发布流程说明。</p>
+
+<ol>
+<li>用户向Gitlab提交代码，代码中必须包含<code>Dockerfile</code></li>
+<li>将代码提交到远程仓库</li>
+<li>用户在发布应用时需要填写git仓库地址和分支、服务类型、服务名称、资源数量、实例个数，确定后触发Jenkins自动构建</li>
+<li>Jenkins的CI流水线自动编译代码并打包成docker镜像推送到Harbor镜像仓库</li>
+<li>Jenkins的CI流水线中包括了自定义脚本，根据我们已准备好的kubernetes的YAML模板，将其中的变量替换成用户输入的选项</li>
+<li>生成应用的kubernetes YAML配置文件</li>
+<li>更新Ingress的配置，根据新部署的应用的名称，在ingress的配置文件中增加一条路由信息</li>
+<li>Jenkins调用kubernetes的API，部署应用</li>
+</ol>
+
+<p>这里只是一个简单的例子，可以对ingress进行优化，实现灰度发布。</p>
+
+<p>代码的发布和构建只要按照步骤来，即可。</p>
+
+<p>既然jenkins在k8s中，就要遵循其设计的理念，使用容器进行构建，而不是传统的ssh。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://blog.zouhl.com/post/hackintosh/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">1200 Words|Read in about 6 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    
+    
+    
+    
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ3Mi8yMDAxMg==">
+    	<script type="text/javascript">
+       (function(d, s) {
+           var j, e = d.getElementsByTagName(s)[0];
+           if (typeof LivereTower === 'function') { return; }
+           j = d.createElement(s);
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+           e.parentNode.insertBefore(j, e);
+       })(document, 'script');
+    	</script>
+    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+    
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:rootzouhl@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/zou2699" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://blog.zouhl.com/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017-2018
+          
+            
+              <a href="https://zouhl.com">zouhl</a>
+            
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://blog.zouhl.com/">易来易碎</a>
+          
+        </p>
+
+        
+        <p class="credits theme-by text-muted">
+          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+<script>
+  (function() {
+    var cx = '008867044216506799499:pboytpfdouc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+  </body>
+</html>
+
