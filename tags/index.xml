@@ -1,122 +1,472 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on 易来易碎</title>
-    <link>https://blog.zouhl.com/tags/</link>
-    <description>Recent content in Tags on 易来易碎</description>
+    <title>Tags on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/</link>
+    <description>Recent content in Tags on Tux - zouhl&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
-    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
-    <lastBuildDate>Tue, 07 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <language>en</language>
+    <lastBuildDate>Tue, 02 Apr 2019 16:32:07 +0800</lastBuildDate>
     
-	<atom:link href="https://blog.zouhl.com/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://blog.zouhl.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Bigimg</title>
-      <link>https://blog.zouhl.com/tags/bigimg/</link>
-      <pubDate>Tue, 07 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/bigimg/</guid>
+      <title>CICD</title>
+      <link>http://blog.zouhl.com/tags/cicd/</link>
+      <pubDate>Tue, 02 Apr 2019 16:32:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/cicd/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Code</title>
-      <link>https://blog.zouhl.com/tags/code/</link>
-      <pubDate>Tue, 08 Mar 2016 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/code/</guid>
+      <title>IOPS</title>
+      <link>http://blog.zouhl.com/tags/iops/</link>
+      <pubDate>Tue, 22 Jan 2019 19:16:12 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/iops/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Example</title>
-      <link>https://blog.zouhl.com/tags/example/</link>
-      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/example/</guid>
+      <title>acme</title>
+      <link>http://blog.zouhl.com/tags/acme/</link>
+      <pubDate>Sat, 23 Feb 2019 12:08:55 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/acme/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Golang</title>
-      <link>https://blog.zouhl.com/tags/golang/</link>
-      <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/golang/</guid>
+      <title>bench</title>
+      <link>http://blog.zouhl.com/tags/bench/</link>
+      <pubDate>Sun, 10 Feb 2019 15:31:54 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/bench/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Hexo</title>
-      <link>https://blog.zouhl.com/tags/hexo/</link>
+      <title>ci</title>
+      <link>http://blog.zouhl.com/tags/ci/</link>
+      <pubDate>Sun, 03 Mar 2019 16:52:05 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/ci/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>curl</title>
+      <link>http://blog.zouhl.com/tags/curl/</link>
+      <pubDate>Sat, 26 Jan 2019 10:25:22 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/curl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dashboard</title>
+      <link>http://blog.zouhl.com/tags/dashboard/</link>
+      <pubDate>Tue, 26 Feb 2019 10:46:19 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/dashboard/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>devops</title>
+      <link>http://blog.zouhl.com/tags/devops/</link>
+      <pubDate>Tue, 09 Apr 2019 14:36:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dns</title>
+      <link>http://blog.zouhl.com/tags/dns/</link>
+      <pubDate>Thu, 16 May 2019 11:19:57 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/dns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>http://blog.zouhl.com/tags/docker/</link>
+      <pubDate>Sun, 10 Feb 2019 16:30:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>drone</title>
+      <link>http://blog.zouhl.com/tags/drone/</link>
+      <pubDate>Tue, 02 Apr 2019 16:32:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/drone/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>elasticsearch</title>
+      <link>http://blog.zouhl.com/tags/elasticsearch/</link>
+      <pubDate>Wed, 16 Jan 2019 15:19:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/elasticsearch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>elk</title>
+      <link>http://blog.zouhl.com/tags/elk/</link>
+      <pubDate>Wed, 16 Jan 2019 15:19:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/elk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>golang</title>
+      <link>http://blog.zouhl.com/tags/golang/</link>
+      <pubDate>Mon, 18 Feb 2019 20:08:01 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>goroutine</title>
+      <link>http://blog.zouhl.com/tags/goroutine/</link>
+      <pubDate>Wed, 06 Feb 2019 19:54:53 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/goroutine/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hackintosh</title>
+      <link>http://blog.zouhl.com/tags/hackintosh/</link>
+      <pubDate>Fri, 22 Feb 2019 12:26:21 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/hackintosh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>helm</title>
+      <link>http://blog.zouhl.com/tags/helm/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/helm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hexo</title>
+      <link>http://blog.zouhl.com/tags/hexo/</link>
       <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/hexo/</guid>
+      
+      <guid>http://blog.zouhl.com/tags/hexo/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Hugo</title>
-      <link>https://blog.zouhl.com/tags/hugo/</link>
+      <title>https</title>
+      <link>http://blog.zouhl.com/tags/https/</link>
+      <pubDate>Sat, 23 Feb 2019 12:08:55 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/https/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>http://blog.zouhl.com/tags/hugo/</link>
       <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/hugo/</guid>
+      
+      <guid>http://blog.zouhl.com/tags/hugo/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Markdown</title>
-      <link>https://blog.zouhl.com/tags/markdown/</link>
+      <title>ingress</title>
+      <link>http://blog.zouhl.com/tags/ingress/</link>
+      <pubDate>Wed, 27 Feb 2019 13:15:32 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/ingress/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>istio</title>
+      <link>http://blog.zouhl.com/tags/istio/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/istio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>jenkins</title>
+      <link>http://blog.zouhl.com/tags/jenkins/</link>
+      <pubDate>Sun, 03 Mar 2019 16:52:05 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/jenkins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>json</title>
+      <link>http://blog.zouhl.com/tags/json/</link>
+      <pubDate>Sun, 10 Feb 2019 15:54:32 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/json/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>jsonpath</title>
+      <link>http://blog.zouhl.com/tags/jsonpath/</link>
+      <pubDate>Wed, 22 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/jsonpath/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubectl</title>
+      <link>http://blog.zouhl.com/tags/kubectl/</link>
+      <pubDate>Wed, 22 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/kubectl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>http://blog.zouhl.com/tags/kubernetes/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>http://blog.zouhl.com/tags/linux/</link>
+      <pubDate>Tue, 14 May 2019 11:20:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>log</title>
+      <link>http://blog.zouhl.com/tags/log/</link>
+      <pubDate>Sun, 10 Feb 2019 15:54:32 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/log/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>logstash</title>
+      <link>http://blog.zouhl.com/tags/logstash/</link>
+      <pubDate>Wed, 16 Jan 2019 15:19:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/logstash/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mac</title>
+      <link>http://blog.zouhl.com/tags/mac/</link>
+      <pubDate>Tue, 22 Jan 2019 20:07:46 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/mac/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>markdown</title>
+      <link>http://blog.zouhl.com/tags/markdown/</link>
+      <pubDate>Tue, 15 Jan 2019 19:56:50 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/markdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mesh</title>
+      <link>http://blog.zouhl.com/tags/mesh/</link>
+      <pubDate>Tue, 21 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/mesh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>music</title>
+      <link>http://blog.zouhl.com/tags/music/</link>
+      <pubDate>Mon, 18 Feb 2019 20:08:01 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/music/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>object</title>
+      <link>http://blog.zouhl.com/tags/object/</link>
+      <pubDate>Mon, 25 Feb 2019 15:10:25 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/object/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rancher</title>
+      <link>http://blog.zouhl.com/tags/rancher/</link>
+      <pubDate>Sun, 10 Feb 2019 16:30:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/rancher/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>spring-boot</title>
+      <link>http://blog.zouhl.com/tags/spring-boot/</link>
+      <pubDate>Sun, 10 Feb 2019 16:30:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/spring-boot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>test</title>
+      <link>http://blog.zouhl.com/tags/test/</link>
+      <pubDate>Sun, 10 Feb 2019 15:31:54 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/test/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>test-tag</title>
+      <link>http://blog.zouhl.com/tags/test-tag/</link>
       <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/markdown/</guid>
+      
+      <guid>http://blog.zouhl.com/tags/test-tag/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Math</title>
-      <link>https://blog.zouhl.com/tags/math/</link>
-      <pubDate>Sun, 05 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/math/</guid>
+      <title>tmux</title>
+      <link>http://blog.zouhl.com/tags/tmux/</link>
+      <pubDate>Tue, 14 May 2019 11:20:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/tmux/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Photoswipe</title>
-      <link>https://blog.zouhl.com/tags/photoswipe/</link>
-      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/photoswipe/</guid>
+      <title>tools</title>
+      <link>http://blog.zouhl.com/tags/tools/</link>
+      <pubDate>Mon, 28 Jan 2019 21:40:03 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/tools/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Test Tag</title>
-      <link>https://blog.zouhl.com/tags/test-tag/</link>
-      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/test-tag/</guid>
+      <title>win</title>
+      <link>http://blog.zouhl.com/tags/win/</link>
+      <pubDate>Fri, 25 Jan 2019 14:21:11 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/win/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>xcode</title>
+      <link>http://blog.zouhl.com/tags/xcode/</link>
+      <pubDate>Tue, 22 Jan 2019 20:07:46 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/xcode/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>xip</title>
+      <link>http://blog.zouhl.com/tags/xip/</link>
+      <pubDate>Thu, 16 May 2019 11:19:57 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/xip/</guid>
       <description></description>
     </item>
     
     <item>
       <title>图床</title>
-      <link>https://blog.zouhl.com/tags/%E5%9B%BE%E5%BA%8A/</link>
+      <link>http://blog.zouhl.com/tags/%E5%9B%BE%E5%BA%8A/</link>
       <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/%E5%9B%BE%E5%BA%8A/</guid>
+      
+      <guid>http://blog.zouhl.com/tags/%E5%9B%BE%E5%BA%8A/</guid>
       <description></description>
     </item>
     
     <item>
       <title>常用链接</title>
-      <link>https://blog.zouhl.com/tags/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</link>
+      <link>http://blog.zouhl.com/tags/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</link>
       <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/tags/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</guid>
+      
+      <guid>http://blog.zouhl.com/tags/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>灰度发布</title>
+      <link>http://blog.zouhl.com/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>磁盘</title>
+      <link>http://blog.zouhl.com/tags/%E7%A3%81%E7%9B%98/</link>
+      <pubDate>Tue, 22 Jan 2019 19:16:12 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/%E7%A3%81%E7%9B%98/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>编译</title>
+      <link>http://blog.zouhl.com/tags/%E7%BC%96%E8%AF%91/</link>
+      <pubDate>Mon, 21 Jan 2019 17:32:18 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/%E7%BC%96%E8%AF%91/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>证书</title>
+      <link>http://blog.zouhl.com/tags/%E8%AF%81%E4%B9%A6/</link>
+      <pubDate>Sat, 23 Feb 2019 12:08:55 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/%E8%AF%81%E4%B9%A6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>黑苹果</title>
+      <link>http://blog.zouhl.com/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/</link>
+      <pubDate>Fri, 22 Feb 2019 12:26:21 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/</guid>
       <description></description>
     </item>
     

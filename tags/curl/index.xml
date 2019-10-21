@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>curl on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/curl/</link>
+    <description>Recent content in curl on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 26 Jan 2019 10:25:22 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/curl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>curl获取天气和公网ip</title>
+      <link>http://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/</link>
+      <pubDate>Sat, 26 Jan 2019 10:25:22 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/</guid>
+      <description>&lt;p&gt;常用的curl命令。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

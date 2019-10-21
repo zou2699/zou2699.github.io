@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>drone on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/drone/</link>
+    <description>Recent content in drone on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 02 Apr 2019 16:32:07 +0800</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/drone/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Drone 安装配置指南</title>
+      <link>http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Tue, 02 Apr 2019 16:32:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</guid>
+      <description>&lt;p&gt;本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

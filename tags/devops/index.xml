@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>devops on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/devops/</link>
+    <description>Recent content in devops on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Apr 2019 14:36:07 +0800</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>采用istio实现灰度发布 金丝雀发布</title>
+      <link>http://blog.zouhl.com/post/2019-04-09-%E4%BD%BF%E7%94%A8istio%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Tue, 09 Apr 2019 14:36:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/2019-04-09-%E4%BD%BF%E7%94%A8istio%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Drone 安装配置指南</title>
+      <link>http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Tue, 02 Apr 2019 16:32:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</guid>
+      <description>&lt;p&gt;本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Set Up a Jenkins CI/CD Pipeline with Kubernetes</title>
+      <link>http://blog.zouhl.com/post/setupajenkinscicdpipelinewithkubernetes/</link>
+      <pubDate>Sun, 03 Mar 2019 16:52:05 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/setupajenkinscicdpipelinewithkubernetes/</guid>
+      <description>&lt;p&gt;本文将介绍 jenkins 在kubernetes下的CI/CD发布流程。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tools on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/tools/</link>
+    <description>Recent content in tools on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 28 Jan 2019 21:40:03 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>一些笔记</title>
+      <link>http://blog.zouhl.com/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 28 Jan 2019 21:40:03 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;p&gt;记录一些时常用到，但又记不住的东西。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

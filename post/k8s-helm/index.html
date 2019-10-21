@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>k8s - helm - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。
+" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/k8s-helm/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="k8s - helm" />
+<meta property="og:description" content="本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/k8s-helm/" />
+<meta property="article:published_time" content="2019-02-26T21:43:28&#43;00:00"/>
+<meta property="article:modified_time" content="2019-02-26T21:43:28&#43;00:00"/>
+
+<meta itemprop="name" content="k8s - helm">
+<meta itemprop="description" content="本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。">
+
+
+<meta itemprop="datePublished" content="2019-02-26T21:43:28&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-26T21:43:28&#43;00:00" />
+<meta itemprop="wordCount" content="3239">
+
+
+
+<meta itemprop="keywords" content="kubernetes,helm," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="k8s - helm"/>
+<meta name="twitter:description" content="本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">k8s - helm</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-26 Tue </span>
+        <div class="post-category">
+            <a href="/categories/kubernetes/"> kubernetes </a>
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 3239 words </span>
+          <span class="more-meta"> 7 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#使用helm管理kubernetes应用">使用helm管理kubernetes应用</a>
+<ul>
+<li><a href="#安装helm">安装helm</a></li>
+<li><a href="#安装自己的chart">安装自己的chart</a>
+<ul>
+<li><a href="#模板">模板</a></li>
+<li><a href="#检查配置和模板是否有效">检查配置和模板是否有效</a></li>
+<li><a href="#部署到kubernetes">部署到kubernetes</a></li>
+<li><a href="#打包分享">打包分享</a></li>
+<li><a href="#依赖">依赖</a></li>
+<li><a href="#安装源">安装源</a></li>
+</ul></li>
+<li><a href="#注意事项">注意事项</a>
+<ul>
+<li><a href="#服务依赖管理">服务依赖管理</a></li>
+<li><a href="#解决本地chart依赖">解决本地chart依赖</a></li>
+<li><a href="#设置helm命令自动补全">设置helm命令自动补全</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。</p>
+
+<h1 id="使用helm管理kubernetes应用">使用helm管理kubernetes应用</h1>
+
+<p><a href="https://helm.sh/"><strong>Helm</strong></a>是一个kubernetes应用的包管理工具，用来管理 <a href="https://github.com/helm/charts"><strong>charts</strong></a>&ndash; 预先配置好的安装包资源，有点类似于Ubuntu的APT和CentOS中的yum。</p>
+
+<p>Helm chart是用来封装kubernetes原生应用程序的yaml文件，可以在你部署应用的时候自定义应用程序的一些metadata，便与应用程序的分发。</p>
+
+<p>Helm和charts的主要作用：</p>
+
+<ul>
+<li>应用程序封装</li>
+<li>版本管理</li>
+<li>依赖检查</li>
+<li>便于应用程序分发</li>
+</ul>
+
+<h2 id="安装helm">安装helm</h2>
+
+<p><strong>前提要求</strong></p>
+
+<ul>
+<li>Kubernetes1.5以上版本</li>
+<li>集群可访问到的镜像仓库</li>
+<li>执行helm命令的主机可以访问到kubernetes集群</li>
+</ul>
+
+<p><strong>安装步骤</strong></p>
+
+<p>首先需要安装helm客户端</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get &gt; get_helm.sh
+chmod <span class="m">700</span> get_helm.sh
+./get_helm.sh</code></pre></td></tr></table>
+</div>
+</div>
+<p>创建tiller的<code>serviceaccount</code>和<code>clusterrolebinding</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole<span class="o">=</span>cluster-admin --serviceaccount<span class="o">=</span>kube-system:tiller</code></pre></td></tr></table>
+</div>
+</div>
+<p>然后安装helm服务端tiller</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">helm init </code></pre></td></tr></table>
+</div>
+</div>
+<p>（目前最新版v2.8.2，可以使用阿里云镜像，如： <code>helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.8.2 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</code>）</p>
+
+<p>我们使用<code>-i</code>指定自己的镜像，因为官方的镜像因为某些原因无法拉取，官方镜像地址是：<code>gcr.io/kubernetes-helm/tiller:v2.8.1</code>，我在DockerHub上放了一个备份<code>jimmysong/kubernetes-helm-tiller:v2.8.1</code>，该镜像的版本与helm客户端的版本相同，使用<code>helm version</code>可查看helm客户端版本。</p>
+
+<p>为应用程序设置<code>serviceAccount</code>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl patch deploy --namespace kube-system tiller-deploy -p <span class="s1">&#39;{&#34;spec&#34;:{&#34;template&#34;:{&#34;spec&#34;:{&#34;serviceAccount&#34;:&#34;tiller&#34;}}}}&#39;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>检查是否安装成功：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ kubectl -n kube-system get pods<span class="p">|</span>grep tiller
+tiller-deploy-dbb85cb99-xwgpd          <span class="m">1</span>/1     Running   <span class="m">0</span>          16s
+
+$ helm version
+Client: <span class="p">&amp;</span>version.Version<span class="o">{</span>SemVer:<span class="s2">&#34;v2.12.3&#34;</span>, GitCommit:<span class="s2">&#34;eecf22f77df5f65c823aacd2dbd30ae6c65f186e&#34;</span>, GitTreeState:<span class="s2">&#34;clean&#34;</span><span class="o">}</span>
+Server: <span class="p">&amp;</span>version.Version<span class="o">{</span>SemVer:<span class="s2">&#34;v2.12.3&#34;</span>, GitCommit:<span class="s2">&#34;eecf22f77df5f65c823aacd2dbd30ae6c65f186e&#34;</span>, GitTreeState:<span class="s2">&#34;clean&#34;</span><span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="安装自己的chart">安装自己的chart</h2>
+
+<p>我们创建一个名为<code>mychart</code>的chart，看一看chart的文件结构。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ helm create mychart
+
+$ tree mychart
+mychart
+<span class="p">|</span>-- charts <span class="c1"># 依赖的chart</span>
+<span class="p">|</span>-- Chart.yaml <span class="c1"># Chart本身的版本和配置信息</span>
+<span class="p">|</span>-- templates <span class="c1"># 配置模板目录</span>
+<span class="p">|</span>   <span class="p">|</span>-- deployment.yaml <span class="c1">#kubernetes Deployment object</span>
+<span class="p">|</span>   <span class="p">|</span>-- _helpers.tpl <span class="c1">#用于修改kubernetes objcet配置的模板</span>
+<span class="p">|</span>   <span class="p">|</span>-- ingress.yaml <span class="c1">#kubernetes ingress</span>
+<span class="p">|</span>   <span class="p">|</span>-- NOTES.txt <span class="c1">#helm提示信息</span>
+<span class="p">|</span>   <span class="p">|</span>-- service.yaml <span class="c1">#kubernetes Serivce</span>
+<span class="p">|</span>   <span class="sb">`</span>-- tests
+<span class="p">|</span>       <span class="sb">`</span>-- test-connection.yaml
+<span class="sb">`</span>-- values.yaml <span class="c1">#kubernetes object configuration</span>
+
+<span class="m">3</span> directories, <span class="m">8</span> files</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="模板">模板</h3>
+
+<p><code>Templates</code>目录下是yaml文件的模板，遵循<a href="https://golang.org/pkg/text/template/">Go template</a>语法。使用过<a href="https://gohugo.io/">Hugo</a>的静态网站生成工具的人应该对此很熟悉。</p>
+
+<p>我们查看下<code>deployment.yaml</code>文件的内容。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>apps/v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Deployment<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>include<span class="w"> </span><span class="s2">&#34;mychart.fullname&#34;</span><span class="w"> </span>.<span class="w"> </span>}}<span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>include<span class="w"> </span><span class="s2">&#34;mychart.name&#34;</span><span class="w"> </span>.<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>helm.sh/chart<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>include<span class="w"> </span><span class="s2">&#34;mychart.chart&#34;</span><span class="w"> </span>.<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Release.Name<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>app.kubernetes.io/managed-by<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Release.Service<span class="w"> </span>}}<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>replicas<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Values.replicaCount<span class="w"> </span>}}<span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>matchLabels<span class="p">:</span><span class="w">
+</span><span class="w">      </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>include<span class="w"> </span><span class="s2">&#34;mychart.name&#34;</span><span class="w"> </span>.<span class="w"> </span>}}<span class="w">
+</span><span class="w">      </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Release.Name<span class="w"> </span>}}<span class="w">
+</span><span class="w">  </span>template<span class="p">:</span><span class="w">
+</span><span class="w">    </span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">      </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">        </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>include<span class="w"> </span><span class="s2">&#34;mychart.name&#34;</span><span class="w"> </span>.<span class="w"> </span>}}<span class="w">
+</span><span class="w">        </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Release.Name<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>spec<span class="p">:</span><span class="w">
+</span><span class="w">      </span>containers<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Chart.Name<span class="w"> </span>}}<span class="w">
+</span><span class="w">          </span>image<span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ .Values.image.repository }}:{{ .Values.image.tag }}&#34;</span><span class="w">
+</span><span class="w">          </span>imagePullPolicy<span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Values.image.pullPolicy<span class="w"> </span>}}<span class="w">
+</span><span class="w">          </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">              </span>containerPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">              </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">          </span>livenessProbe<span class="p">:</span><span class="w">
+</span><span class="w">            </span>httpGet<span class="p">:</span><span class="w">
+</span><span class="w">              </span>path<span class="p">:</span><span class="w"> </span>/<span class="w">
+</span><span class="w">              </span>port<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">          </span>readinessProbe<span class="p">:</span><span class="w">
+</span><span class="w">            </span>httpGet<span class="p">:</span><span class="w">
+</span><span class="w">              </span>path<span class="p">:</span><span class="w"> </span>/<span class="w">
+</span><span class="w">              </span>port<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">          </span>resources<span class="p">:</span><span class="w">
+</span><span class="w">            </span>{{-<span class="w"> </span>toYaml<span class="w"> </span>.Values.resources<span class="w"> </span>|<span class="w"> </span>nindent<span class="w"> </span><span class="m">12</span><span class="w"> </span>}}<span class="w">
+</span><span class="w">      </span>{{-<span class="w"> </span>with<span class="w"> </span>.Values.nodeSelector<span class="w"> </span>}}<span class="w">
+</span><span class="w">      </span>nodeSelector<span class="p">:</span><span class="w">
+</span><span class="w">        </span>{{-<span class="w"> </span>toYaml<span class="w"> </span>.<span class="w"> </span>|<span class="w"> </span>nindent<span class="w"> </span><span class="m">8</span><span class="w"> </span>}}<span class="w">
+</span><span class="w">      </span>{{-<span class="w"> </span>end<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>{{-<span class="w"> </span>with<span class="w"> </span>.Values.affinity<span class="w"> </span>}}<span class="w">
+</span><span class="w">      </span>affinity<span class="p">:</span><span class="w">
+</span><span class="w">        </span>{{-<span class="w"> </span>toYaml<span class="w"> </span>.<span class="w"> </span>|<span class="w"> </span>nindent<span class="w"> </span><span class="m">8</span><span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>{{-<span class="w"> </span>end<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>{{-<span class="w"> </span>with<span class="w"> </span>.Values.tolerations<span class="w"> </span>}}<span class="w">
+</span><span class="w">      </span>tolerations<span class="p">:</span><span class="w">
+</span><span class="w">        </span>{{-<span class="w"> </span>toYaml<span class="w"> </span>.<span class="w"> </span>|<span class="w"> </span>nindent<span class="w"> </span><span class="m">8</span><span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>{{-<span class="w"> </span>end<span class="w"> </span>}}</code></pre></td></tr></table>
+</div>
+</div>
+<p>这是该应用的Deployment的yaml配置文件，其中的双大括号包扩起来的部分是Go template，其中的Values是在<code>values.yaml</code>文件中定义的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="c"># Default values for mychart.</span><span class="w">
+</span><span class="w"></span><span class="c"># This is a YAML-formatted file.</span><span class="w">
+</span><span class="w"></span><span class="c"># Declare variables to be passed into your templates.</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>replicaCount<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>image<span class="p">:</span><span class="w">
+</span><span class="w">  </span>repository<span class="p">:</span><span class="w"> </span>nginx<span class="w">
+</span><span class="w">  </span>tag<span class="p">:</span><span class="w"> </span><span class="m">1.11</span><span class="w">
+</span><span class="w">  </span>pullPolicy<span class="p">:</span><span class="w"> </span>IfNotPresent<span class="w">
+</span><span class="w">
+</span><span class="w"></span>nameOverride<span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="w"></span>fullnameOverride<span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>service<span class="p">:</span><span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span>ClusterIP<span class="w">
+</span><span class="w">  </span>port<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>ingress<span class="p">:</span><span class="w">
+</span><span class="w">  </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">    </span><span class="c"># kubernetes.io/ingress.class: nginx</span><span class="w">
+</span><span class="w">    </span><span class="c"># kubernetes.io/tls-acme: &#34;true&#34;</span><span class="w">
+</span><span class="w">  </span>paths<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w">  </span>hosts<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>chart-example.local<span class="w">
+</span><span class="w">  </span>tls<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w">  </span><span class="c">#  - secretName: chart-example-tls</span><span class="w">
+</span><span class="w">  </span><span class="c">#    hosts:</span><span class="w">
+</span><span class="w">  </span><span class="c">#      - chart-example.local</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>resources<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c"># We usually recommend not to specify default resources and to leave this as a conscious</span><span class="w">
+</span><span class="w">  </span><span class="c"># choice for the user. This also increases chances charts run on environments with little</span><span class="w">
+</span><span class="w">  </span><span class="c"># resources, such as Minikube. If you do want to specify resources, uncomment the following</span><span class="w">
+</span><span class="w">  </span><span class="c"># lines, adjust them as necessary, and remove the curly braces after &#39;resources:&#39;.</span><span class="w">
+</span><span class="w">  </span>limits<span class="p">:</span><span class="w">
+</span><span class="w">    </span>cpu<span class="p">:</span><span class="w"> </span>100m<span class="w">
+</span><span class="w">    </span>memory<span class="p">:</span><span class="w"> </span>128Mi<span class="w">
+</span><span class="w">  </span>requests<span class="p">:</span><span class="w">
+</span><span class="w">    </span>cpu<span class="p">:</span><span class="w"> </span>100m<span class="w">
+</span><span class="w">    </span>memory<span class="p">:</span><span class="w"> </span>128Mi<span class="w">
+</span><span class="w">
+</span><span class="w"></span>nodeSelector<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w"></span>tolerations<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>affinity<span class="p">:</span><span class="w"> </span>{}</code></pre></td></tr></table>
+</div>
+</div>
+<p>比如在<code>Deployment.yaml</code>中定义的容器镜像<code>image: &quot;{{ .Values.image.repository }}:{{ .Values.image.tag }}&quot;</code>其中的：</p>
+
+<ul>
+<li><code>.Values.image.repository</code>就是nginx</li>
+<li><code>.Values.image.tag</code>就是stable</li>
+</ul>
+
+<p>以上两个变量值是在create chart的时候自动生成的默认值。</p>
+
+<p>我们将默认的镜像地址和tag改成我们自己的镜像<code>nginx:1.11</code>。</p>
+
+<h3 id="检查配置和模板是否有效">检查配置和模板是否有效</h3>
+
+<p>当使用kubernetes部署应用的时候实际上讲templates渲染成最终的kubernetes能够识别的yaml格式。</p>
+
+<p>使用<code>helm install --dry-run --debug &lt;chart_dir&gt;</code>命令来验证chart配置。该输出中包含了模板的变量配置与最终渲染的yaml文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">$<span class="w"> </span>helm<span class="w"> </span>install<span class="w"> </span>--dry-run<span class="w"> </span>--debug<span class="w"> </span>./mychart<span class="w">
+</span><span class="w"></span><span class="p">[</span>debug<span class="p">]</span><span class="w"> </span>Created<span class="w"> </span>tunnel<span class="w"> </span>using<span class="w"> </span>local<span class="w"> </span>port<span class="p">:</span><span class="w"> </span><span class="s1">&#39;35273&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="p">[</span>debug<span class="p">]</span><span class="w"> </span>SERVER<span class="p">:</span><span class="w"> </span><span class="s2">&#34;127.0.0.1:35273&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="p">[</span>debug<span class="p">]</span><span class="w"> </span>Original<span class="w"> </span>chart<span class="w"> </span>version<span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="w"></span><span class="p">[</span>debug<span class="p">]</span><span class="w"> </span>CHART<span class="w"> </span>PATH<span class="p">:</span><span class="w"> </span>/root/k8s/helm/mychart<span class="w">
+</span><span class="w">
+</span><span class="w"></span>NAME<span class="p">:</span><span class="w">   </span>handy-antelope<span class="w">
+</span><span class="w"></span>REVISION<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w"></span>RELEASED<span class="p">:</span><span class="w"> </span>Tue<span class="w"> </span>Feb<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">20</span><span class="p">:</span><span class="m">46</span><span class="p">:</span><span class="m">10</span><span class="w"> </span><span class="m">2019</span><span class="w">
+</span><span class="w"></span>CHART<span class="p">:</span><span class="w"> </span>mychart-<span class="m">0.1</span>.<span class="m">0</span><span class="w">
+</span><span class="w"></span>USER-SUPPLIED<span class="w"> </span>VALUES<span class="p">:</span><span class="w">
+</span><span class="w"></span>{}<span class="w">
+</span><span class="w">
+</span><span class="w"></span>COMPUTED<span class="w"> </span>VALUES<span class="p">:</span><span class="w">
+</span><span class="w"></span>affinity<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w"></span>fullnameOverride<span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="w"></span>image<span class="p">:</span><span class="w">
+</span><span class="w">  </span>pullPolicy<span class="p">:</span><span class="w"> </span>IfNotPresent<span class="w">
+</span><span class="w">  </span>repository<span class="p">:</span><span class="w"> </span>nginx<span class="w">
+</span><span class="w">  </span>tag<span class="p">:</span><span class="w"> </span><span class="m">1.11</span><span class="w">
+</span><span class="w"></span>ingress<span class="p">:</span><span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">  </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">  </span>hosts<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>chart-example.local<span class="w">
+</span><span class="w">  </span>paths<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w">  </span>tls<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w"></span>nameOverride<span class="p">:</span><span class="w"> </span><span class="s2">&#34;&#34;</span><span class="w">
+</span><span class="w"></span>nodeSelector<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w"></span>replicaCount<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w"></span>resources<span class="p">:</span><span class="w">
+</span><span class="w">  </span>limits<span class="p">:</span><span class="w">
+</span><span class="w">    </span>cpu<span class="p">:</span><span class="w"> </span>100m<span class="w">
+</span><span class="w">    </span>memory<span class="p">:</span><span class="w"> </span>128Mi<span class="w">
+</span><span class="w">  </span>requests<span class="p">:</span><span class="w">
+</span><span class="w">    </span>cpu<span class="p">:</span><span class="w"> </span>100m<span class="w">
+</span><span class="w">    </span>memory<span class="p">:</span><span class="w"> </span>128Mi<span class="w">
+</span><span class="w"></span>service<span class="p">:</span><span class="w">
+</span><span class="w">  </span>port<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span>ClusterIP<span class="w">
+</span><span class="w"></span>tolerations<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>HOOKS<span class="p">:</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="c"># handy-antelope-mychart-test-connection</span><span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Pod<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span><span class="s2">&#34;handy-antelope-mychart-test-connection&#34;</span><span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">    </span>helm.sh/chart<span class="p">:</span><span class="w"> </span>mychart-<span class="m">0.1</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>handy-antelope<span class="w">
+</span><span class="w">    </span>app.kubernetes.io/managed-by<span class="p">:</span><span class="w"> </span>Tiller<span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="s2">&#34;helm.sh/hook&#34;</span><span class="p">:</span><span class="w"> </span>test-success<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>containers<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>wget<span class="w">
+</span><span class="w">      </span>image<span class="p">:</span><span class="w"> </span>busybox<span class="w">
+</span><span class="w">      </span>command<span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;wget&#39;</span><span class="p">]</span><span class="w">
+</span><span class="w">      </span>args<span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s1">&#39;handy-antelope-mychart:80&#39;</span><span class="p">]</span><span class="w">
+</span><span class="w">  </span>restartPolicy<span class="p">:</span><span class="w"> </span>Never<span class="w">
+</span><span class="w"></span>MANIFEST<span class="p">:</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="c"># Source: mychart/templates/service.yaml</span><span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Service<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>handy-antelope-mychart<span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">    </span>helm.sh/chart<span class="p">:</span><span class="w"> </span>mychart-<span class="m">0.1</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>handy-antelope<span class="w">
+</span><span class="w">    </span>app.kubernetes.io/managed-by<span class="p">:</span><span class="w"> </span>Tiller<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span>ClusterIP<span class="w">
+</span><span class="w">  </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>port<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">      </span>targetPort<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">      </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">      </span>name<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">    </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>handy-antelope<span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span><span class="c"># Source: mychart/templates/deployment.yaml</span><span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>apps/v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Deployment<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>handy-antelope-mychart<span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">    </span>helm.sh/chart<span class="p">:</span><span class="w"> </span>mychart-<span class="m">0.1</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>handy-antelope<span class="w">
+</span><span class="w">    </span>app.kubernetes.io/managed-by<span class="p">:</span><span class="w"> </span>Tiller<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>replicas<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>matchLabels<span class="p">:</span><span class="w">
+</span><span class="w">      </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">      </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>handy-antelope<span class="w">
+</span><span class="w">  </span>template<span class="p">:</span><span class="w">
+</span><span class="w">    </span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">      </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">        </span>app.kubernetes.io/name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">        </span>app.kubernetes.io/instance<span class="p">:</span><span class="w"> </span>handy-antelope<span class="w">
+</span><span class="w">    </span>spec<span class="p">:</span><span class="w">
+</span><span class="w">      </span>containers<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>mychart<span class="w">
+</span><span class="w">          </span>image<span class="p">:</span><span class="w"> </span><span class="s2">&#34;nginx:1.11&#34;</span><span class="w">
+</span><span class="w">          </span>imagePullPolicy<span class="p">:</span><span class="w"> </span>IfNotPresent<span class="w">
+</span><span class="w">          </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">              </span>containerPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">              </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">          </span>livenessProbe<span class="p">:</span><span class="w">
+</span><span class="w">            </span>httpGet<span class="p">:</span><span class="w">
+</span><span class="w">              </span>path<span class="p">:</span><span class="w"> </span>/<span class="w">
+</span><span class="w">              </span>port<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">          </span>readinessProbe<span class="p">:</span><span class="w">
+</span><span class="w">            </span>httpGet<span class="p">:</span><span class="w">
+</span><span class="w">              </span>path<span class="p">:</span><span class="w"> </span>/<span class="w">
+</span><span class="w">              </span>port<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">          </span>resources<span class="p">:</span><span class="w">
+</span><span class="w">            </span>limits<span class="p">:</span><span class="w">
+</span><span class="w">              </span>cpu<span class="p">:</span><span class="w"> </span>100m<span class="w">
+</span><span class="w">              </span>memory<span class="p">:</span><span class="w"> </span>128Mi<span class="w">
+</span><span class="w">            </span>requests<span class="p">:</span><span class="w">
+</span><span class="w">              </span>cpu<span class="p">:</span><span class="w"> </span>100m<span class="w">
+</span><span class="w">              </span>memory<span class="p">:</span><span class="w"> </span>128Mi</code></pre></td></tr></table>
+</div>
+</div>
+<p>我们可以看到Deployment和Service的名字前半截由两个随机的单词组成，最后才是我们在<code>values.yaml</code>中配置的值。</p>
+
+<h3 id="部署到kubernetes">部署到kubernetes</h3>
+
+<p>在 mychart 目录下执行下面的命令将 nginx 部署到 kubernetes 集群上。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ helm install .
+NAME:   pining-woodpecker
+LAST DEPLOYED: Tue Feb <span class="m">26</span> <span class="m">20</span>:51:30 <span class="m">2019</span>
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+<span class="o">==</span>&gt; v1/Deployment
+NAME                       DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+pining-woodpecker-mychart  <span class="m">1</span>        <span class="m">0</span>        <span class="m">0</span>           <span class="m">0</span>          <span class="nv">0s</span>
+
+<span class="o">==</span>&gt; v1/Pod<span class="o">(</span>related<span class="o">)</span>
+NAME                                        READY  STATUS             RESTARTS  AGE
+pining-woodpecker-mychart-5779b8bd49-cvtbr  <span class="m">0</span>/1    ContainerCreating  <span class="m">0</span>         <span class="nv">0s</span>
+
+<span class="o">==</span>&gt; v1/Service
+NAME                       TYPE       CLUSTER-IP    EXTERNAL-IP  PORT<span class="o">(</span>S<span class="o">)</span>  AGE
+pining-woodpecker-mychart  ClusterIP  <span class="m">10</span>.1.165.110  &lt;none&gt;       <span class="m">80</span>/TCP   0s
+
+
+NOTES:
+<span class="m">1</span>. Get the application URL by running these commands:
+  <span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace default -l <span class="s2">&#34;app.kubernetes.io/name=mychart,app.kubernetes.io/instance=pining-woodpecker&#34;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&#34;{.items[0].metadata.name}&#34;</span><span class="k">)</span>
+  <span class="nb">echo</span> <span class="s2">&#34;Visit http://127.0.0.1:8080 to use your application&#34;</span>
+  kubectl port-forward <span class="nv">$POD_NAME</span> <span class="m">8080</span>:80</code></pre></td></tr></table>
+</div>
+</div>
+<p>现在nginx已经部署到kubernetes集群上，本地执行提示中的命令在本地主机上访问到nginx实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace default -l <span class="s2">&#34;app.kubernetes.io/name=mychart,app.kubernetes.io/instance=pining-woodpecker&#34;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&#34;{.items[0].metadata.name}&#34;</span><span class="k">)</span>
+  <span class="nb">echo</span> <span class="s2">&#34;Visit http://127.0.0.1:8080 to use your application&#34;</span>
+  kubectl port-forward <span class="nv">$POD_NAME</span> <span class="m">8080</span>:80	</code></pre></td></tr></table>
+</div>
+</div>
+<p>在本地访问<code>http://127.0.0.1:8080</code>即可访问到nginx。</p>
+
+<p><strong>查看部署的relaese</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ helm list
+NAME             	REVISION	UPDATED                 	STATUS  	CHART        	APP VERSION	NAMESPACE
+pining-woodpecker	<span class="m">1</span>       	Tue Feb <span class="m">26</span> <span class="m">20</span>:51:30 <span class="m">2019</span>	DEPLOYED	mychart-0.1.0	<span class="m">1</span>.0        	default</code></pre></td></tr></table>
+</div>
+</div>
+<p><strong>删除部署的release</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">helm delete pining-woodpecker</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="打包分享">打包分享</h3>
+
+<p>我们可以修改<code>Chart.yaml</code>中的helm chart配置信息，然后使用下列命令将chart打包成一个压缩文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"><span class="err">$</span> <span class="nx">helm</span> <span class="kn">package</span> <span class="p">.</span>
+<span class="nx">Successfully</span> <span class="nx">packaged</span> <span class="nx">chart</span> <span class="nx">and</span> <span class="nx">saved</span> <span class="nx">it</span> <span class="nx">to</span><span class="p">:</span> <span class="o">/</span><span class="nx">root</span><span class="o">/</span><span class="nx">k8s</span><span class="o">/</span><span class="nx">helm</span><span class="o">/</span><span class="nx">mychart</span><span class="o">/</span><span class="nx">mychart</span><span class="o">-</span><span class="mf">0.1.0</span><span class="p">.</span><span class="nx">tgz</span></pre></td></tr></table>
+</div>
+</div>
+<h3 id="依赖">依赖</h3>
+
+<p>我们可以在<code>~/k8s/helm/mychart/requirements.yaml</code>中定义应用所依赖的chart，例如定义对<code>mariadb</code>的依赖：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">dependencies:
+- name: mariadb
+  version: <span class="m">0</span>.6.0
+  repository: https://kubernetes-charts.storage.googleapis.com</code></pre></td></tr></table>
+</div>
+</div>
+<p>使用<code>helm lint .</code>命令可以检查依赖和模板配置是否正确。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$ helm lint .
+==&gt; Linting .
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, no failures
+
+$ helm dep list
+NAME   	VERSION	REPOSITORY                                      	STATUS
+mariadb	0.6.0  	https://kubernetes-charts.storage.googleapis.com	missing</pre></td></tr></table>
+</div>
+</div>
+<h3 id="安装源">安装源</h3>
+
+<p>使用第三方chat库</p>
+
+<ul>
+<li>添加fabric8库</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ helm repo add fabric8 https://fabric8.io/helm</code></pre></td></tr></table>
+</div>
+</div>
+<ul>
+<li>搜索fabric8提供的工具（主要就是fabric8-platform工具包，包含了CI、CD的全套工具）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ helm search fabric8</code></pre></td></tr></table>
+</div>
+</div>
+<p>我们在前面安装chart可以通过HTTP server的方式提供。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ helm serve
+Regenerating index. This may take a moment.
+Now serving you on <span class="m">127</span>.0.0.1:8879</code></pre></td></tr></table>
+</div>
+</div>
+<p>访问<code>http://localhost:8879</code>可以看到刚刚安装的chart。</p>
+
+<h2 id="注意事项">注意事项</h2>
+
+<p>下面列举一些常见问题，和在解决这些问题时候的注意事项。</p>
+
+<h3 id="服务依赖管理">服务依赖管理</h3>
+
+<p>所有使用helm部署的应用中如果没有特别指定chart的名字都会生成一个随机的<code>Release name</code>，例如<code>romping-frog</code>、<code>sexy-newton</code>等，跟启动docker容器时候容器名字的命名规则相同，而真正的资源对象的名字是在YAML文件中定义的名字，我们成为<code>App name</code>，两者连接起来才是资源对象的实际名字：<code>Release name</code>-<code>App name</code>。</p>
+
+<p>而使用helm chart部署的包含依赖关系的应用，都会使用同一套<code>Release name</code>，在配置YAML文件的时候一定要注意在做服务发现时需要配置的服务地址，如果使用环境变量的话，需要像下面这样配置。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">env<span class="p">:</span><span class="w">
+</span><span class="w"> </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>SERVICE_NAME<span class="w">
+</span><span class="w">   </span>value<span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ .Release.Name }}-{{ .Values.image.env.SERVICE_NAME }}&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>这是使用了Go template的语法。至于<code>{{ .Values.image.env.SERVICE_NAME }}</code>的值是从<code>values.yaml</code>文件中获取的，所以需要在<code>values.yaml</code>中增加如下配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">image<span class="p">:</span><span class="w">
+</span><span class="w">  </span>env<span class="p">:</span><span class="w">
+</span><span class="w">    </span>SERVICE_NAME<span class="p">:</span><span class="w"> </span>k8s-app-monitor-test</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="解决本地chart依赖">解决本地chart依赖</h3>
+
+<p>在本地当前chart配置的目录下启动helm server，我们不指定任何参数，直接使用默认端口启动。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">helm serve</code></pre></td></tr></table>
+</div>
+</div>
+<p>将该repo加入到repo list中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">helm repo add <span class="nb">local</span> http://localhost:8879</code></pre></td></tr></table>
+</div>
+</div>
+<p>在浏览器中访问<a href="http://localhost:8879/">http://localhost:8879</a>可以看到所有本地的chart。</p>
+
+<p>然后下载依赖到本地。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">helm dependency update</code></pre></td></tr></table>
+</div>
+</div>
+<p>这样所有的chart都会下载到本地的<code>charts</code>目录下。</p>
+
+<h3 id="设置helm命令自动补全">设置helm命令自动补全</h3>
+
+<p>为了方便helm命令的使用，helm提供了自动补全功能，如果使用zsh请执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">source</span> &lt;<span class="o">(</span>helm completion zsh<span class="o">)</span>
+<span class="nb">source</span> &lt;<span class="o">(</span>helm completion zsh <span class="p">|</span> sed -E <span class="s1">&#39;s/\[&#34;(.+)&#34;\]/\[\1\]/g&#39;</span><span class="o">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>如果使用bash请执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">source</span> &lt;<span class="o">(</span>helm completion bash<span class="o">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<blockquote>
+<p>原文链接：<a href="https://jimmysong.io/kubernetes-handbook/practice/helm.html">https://jimmysong.io/kubernetes-handbook/practice/helm.html</a></p>
+</blockquote>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-02-26 Tue
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kubernetes/">kubernetes</a>
+          <a href="/tags/helm/">helm</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">k8s - 基于nginx-ingress的灰度发布</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/k8s-dashboard/">
+            <span class="next-text nav-default">k8s - dashboard</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-02-26 21:43:28 \x2b0000 UTC',
+        title: 'k8s - helm',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

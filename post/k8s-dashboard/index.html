@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>k8s - dashboard - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="本文将介绍如何较正确的在kubernetes下使用dashboard。
+" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/k8s-dashboard/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="k8s - dashboard" />
+<meta property="og:description" content="本文将介绍如何较正确的在kubernetes下使用dashboard。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/k8s-dashboard/" />
+<meta property="article:published_time" content="2019-02-26T10:46:19&#43;00:00"/>
+<meta property="article:modified_time" content="2019-02-26T10:46:19&#43;00:00"/>
+
+<meta itemprop="name" content="k8s - dashboard">
+<meta itemprop="description" content="本文将介绍如何较正确的在kubernetes下使用dashboard。">
+
+
+<meta itemprop="datePublished" content="2019-02-26T10:46:19&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-26T10:46:19&#43;00:00" />
+<meta itemprop="wordCount" content="1180">
+
+
+
+<meta itemprop="keywords" content="kubernetes,dashboard," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="k8s - dashboard"/>
+<meta name="twitter:description" content="本文将介绍如何较正确的在kubernetes下使用dashboard。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">k8s - dashboard</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-26 Tue </span>
+        <div class="post-category">
+            <a href="/categories/kubernetes/"> kubernetes </a>
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 1180 words </span>
+          <span class="more-meta"> 3 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#更换k8s-dashboard证书">更换k8s-dashboard证书</a>
+<ul>
+<li><a href="#生成证书">生成证书</a></li>
+<li><a href="#创建secret">创建secret</a>
+<ul>
+<li><a href="#创建k8s-dashboard">创建k8s-dashboard</a></li>
+</ul></li>
+<li><a href="#角色绑定">角色绑定</a></li>
+<li><a href="#访问方式">访问方式</a></li>
+<li><a href="#获取token">获取token</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文将介绍如何较正确的在kubernetes下使用dashboard。</p>
+
+<h1 id="更换k8s-dashboard证书">更换k8s-dashboard证书</h1>
+
+<h2 id="生成证书">生成证书</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># root @ k8s-master in ~/k8s/dashboard [9:51:34]</span> 
+$ openssl genrsa -des3 -passout pass:x -out dashboard.pass.key <span class="m">2048</span>
+Generating RSA private key, <span class="m">2048</span> bit long modulus
+.....+++
+.........................+++
+e is <span class="m">65537</span> <span class="o">(</span>0x10001<span class="o">)</span>
+
+<span class="c1"># root @ k8s-master in ~/k8s/dashboard [9:51:36]</span> 
+$ ls
+dashboard.pass.key
+
+<span class="c1"># root @ k8s-master in ~/k8s/dashboard [9:51:38]</span> 
+$ openssl rsa -passin pass:x -in dashboard.pass.key -out dashboard.key
+writing RSA key
+
+<span class="c1"># root @ k8s-master in ~/k8s/dashboard [9:51:44]</span> 
+$ ls 
+dashboard.key  dashboard.pass.key
+
+<span class="c1"># root @ k8s-master in ~/k8s/dashboard [9:51:48]</span> 
+$ rm dashboard.pass.key 
+
+<span class="c1"># root @ k8s-master in ~/k8s/dashboard [9:51:50]</span> 
+$ openssl req -new -key dashboard.key -out dashboard.csr
+
+$ openssl x509 -req -sha256 -days <span class="m">365</span> -in dashboard.csr -signkey dashboard.key -out dashboard.crt
+Signature ok
+<span class="nv">subject</span><span class="o">=</span>/C<span class="o">=</span>CN/ST<span class="o">=</span>SiChuan/L<span class="o">=</span>ChengDu/O<span class="o">=</span>k8s/OU<span class="o">=</span>dashboard/CN<span class="o">=</span>dashboard/emailAddress<span class="o">=</span>zou2699@163.com
+Getting Private key</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="创建secret">创建secret</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl create secret generic kubernetes-dashboard-certs --from-file<span class="o">=</span>/root/k8s/dashboard -n kube-system</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="创建k8s-dashboard">创建k8s-dashboard</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="角色绑定">角色绑定</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl create clusterrolebinding kubernetes-dashboard --clusterrole<span class="o">=</span>cluster-admin --serviceaccount<span class="o">=</span>kube-system:kubernetes-dashboard</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="访问方式">访问方式</h2>
+
+<ol>
+<li>使用kubectl proxy</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">   kubectl proxy --address=&#39;0.0.0.0&#39;  --accept-hosts=&#39;^*$&#39;</pre></td></tr></table>
+</div>
+</div>
+<ol>
+<li>NodePort，上面的证书是针对NodePort形式访问用到的。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">   kubectl -n kube-system edit service kubernetes-dashboard</code></pre></td></tr></table>
+</div>
+</div>
+<p>将 <code>type: ClusterIP</code> 改为 <code>type: NodePort</code>，然后使用<code>kubectl get service</code>命令来查看自动生产的端口：</p>
+
+<ol>
+<li>API Server</li>
+</ol>
+
+<p>如果Kubernetes API服务器是公开的，并可以从外部访问，那我们可以直接使用API Server的方式来访问，也是比较推荐的方式。</p>
+
+<p>Dashboard的访问地址为：
+   <code>https://&lt;master-ip&gt;:&lt;apiserver-port&gt;/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/</code>，但是返回的结果可能如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json">   <span class="p">{</span>
+     <span class="nt">&#34;kind&#34;</span><span class="p">:</span> <span class="s2">&#34;Status&#34;</span><span class="p">,</span>
+     <span class="nt">&#34;apiVersion&#34;</span><span class="p">:</span> <span class="s2">&#34;v1&#34;</span><span class="p">,</span>
+     <span class="nt">&#34;metadata&#34;</span><span class="p">:</span> <span class="p">{</span>
+       
+     <span class="p">},</span>
+     <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;Failure&#34;</span><span class="p">,</span>
+     <span class="nt">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;services \&#34;https:kubernetes-dashboard:\&#34; is forbidden: User \&#34;system:anonymous\&#34; cannot get services/proxy in the namespace \&#34;kube-system\&#34;&#34;</span><span class="p">,</span>
+     <span class="nt">&#34;reason&#34;</span><span class="p">:</span> <span class="s2">&#34;Forbidden&#34;</span><span class="p">,</span>
+     <span class="nt">&#34;details&#34;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;https:kubernetes-dashboard:&#34;</span><span class="p">,</span>
+       <span class="nt">&#34;kind&#34;</span><span class="p">:</span> <span class="s2">&#34;services&#34;</span>
+     <span class="p">},</span>
+     <span class="nt">&#34;code&#34;</span><span class="p">:</span> <span class="mi">403</span>
+   <span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>这是因为最新版的k8s默认启用了RBAC，并为未认证用户赋予了一个默认的身份：<code>anonymous</code>。</p>
+
+<p>对于API Server来说，它是使用证书进行认证的，我们需要先创建一个证书：</p>
+
+<p>1.首先找到<code>kubectl</code>命令的配置文件，默认情况下为<code>/etc/kubernetes/admin.conf</code>，我们当前已经复制到了<code>$HOME/.kube/config</code>中。</p>
+
+<p>2.然后我们使用<code>client-certificate-data</code>和<code>client-key-data</code>生成一个*p12*文件，可使用下列命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">   <span class="c1"># 生成client-certificate-data</span>
+   grep <span class="s1">&#39;client-certificate-data&#39;</span> ~/.kube/config <span class="p">|</span> head -n <span class="m">1</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> base64 -d &gt;&gt; kubecfg.crt
+   
+   <span class="c1"># 生成client-key-data</span>
+   grep <span class="s1">&#39;client-key-data&#39;</span> ~/.kube/config <span class="p">|</span> head -n <span class="m">1</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> base64 -d &gt;&gt; kubecfg.key
+   
+   <span class="c1"># 生成p12</span>
+   openssl pkcs12 -export -clcerts -inkey kubecfg.key -in kubecfg.crt -out kubecfg.p12 -name <span class="s2">&#34;kubernetes-client&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>3.最后导入上面生成的p12文件，重新打开浏览器即可，如下图：</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g0jmo45e2bj20qh0eqwey.jpg" alt="" /></p>
+
+<ol>
+<li>ingress</li>
+</ol>
+
+<p>Ingress将开源的反向代理负载均衡器（如 Nginx、Apache、Haproxy等）与k8s进行集成，并可以动态的更新Nginx配置等，是比较灵活，更为推荐的暴露服务的方式，但也相对比较复杂，以后再来介绍。</p>
+
+<h2 id="获取token">获取token</h2>
+
+<p>获取之前binding的用户的token</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">kubectl describe secrets -n kube-system $(kubectl -n kube-system get secret | awk &#39;/dashboard/{print $1}&#39;)</pre></td></tr></table>
+</div>
+</div>
+<p>会话过期时间修改<code>kubectl edit deployment -n kube-system kubernetes-dashboard</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">     - args:
+        - --auto-generate-certificates
+        - --token-ttl=43200</pre></td></tr></table>
+</div>
+</div>
+<blockquote>
+<p>参考地址:</p>
+
+<p><a href="https://github.com/kubernetes/dashboard/wiki/Certificate-management">https://github.com/kubernetes/dashboard/wiki/Certificate-management</a></p>
+
+<p><a href="https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup">https://github.com/kubernetes/dashboard/wiki/Installation#recommended-setup</a></p>
+
+<p><a href="https://www.cnblogs.com/RainingNight/p/deploying-k8s-dashboard-ui.html">https://www.cnblogs.com/RainingNight/p/deploying-k8s-dashboard-ui.html</a></p>
+</blockquote>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-02-26 Tue
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kubernetes/">kubernetes</a>
+          <a href="/tags/dashboard/">dashboard</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/k8s-helm/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">k8s - helm</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/k8s-object/">
+            <span class="next-text nav-default">k8s - object</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-02-26 10:46:19 \x2b0000 UTC',
+        title: 'k8s - dashboard',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

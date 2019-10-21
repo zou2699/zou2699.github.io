@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>磁盘 on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/%E7%A3%81%E7%9B%98/</link>
+    <description>Recent content in 磁盘 on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 22 Jan 2019 19:16:12 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/%E7%A3%81%E7%9B%98/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>测试磁盘IOPS</title>
+      <link>http://blog.zouhl.com/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/</link>
+      <pubDate>Tue, 22 Jan 2019 19:16:12 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/</guid>
+      <description>&lt;p&gt;IOPS是Input/Output Operations per Second，即每秒能处理的I/O个数，用于表示块存储处理读写（输出/输入）的能力。如果要部署事务密集型应用，典型场景比如数据库类业务应用，需要关注IOPS性能。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

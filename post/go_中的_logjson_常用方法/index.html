@@ -5,29 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <title> go 中的 log，json 常用方法 - zouhl&#39;s blog</title>
   <meta name="description" content="zouhl&#39;s blog" />
-  <meta property="og:title" content="易来易碎" />
-  <meta name="twitter:title" content="易来易碎" />
-  <meta name="description" content="title: go 中的 log，json 常用方法 date: 2019-02-10 15:54:32 updated: 2019-03-19 04:50:17 tags: - golang - log - json
-permalink: /articles/2019/02/10/1549785272463 log 下面是log包一些常用的格式配置
-const ( Ldate = 1 &lt;&lt; iota // the date in the local time zone: 2009/01/23 Ltime // the time in the local time zone: 01:23:23 Lmicroseconds // microsecond resolution: 01:23:23.123123. assumes Ltime. Llongfile // full file name and line number: /a/b/c/d.go:23 Lshortfile // final file name element and line number: d.">
-  <meta property="og:description" content="title: go 中的 log，json 常用方法 date: 2019-02-10 15:54:32 updated: 2019-03-19 04:50:17 tags: - golang - log - json
-permalink: /articles/2019/02/10/1549785272463 log 下面是log包一些常用的格式配置
-const ( Ldate = 1 &lt;&lt; iota // the date in the local time zone: 2009/01/23 Ltime // the time in the local time zone: 01:23:23 Lmicroseconds // microsecond resolution: 01:23:23.123123. assumes Ltime. Llongfile // full file name and line number: /a/b/c/d.go:23 Lshortfile // final file name element and line number: d.">
-  <meta name="twitter:description" content="title: go 中的 log，json 常用方法 date: 2019-02-10 15:54:32 updated: 2019-03-19 04:50:17 tags: - golang - log - json
-permalink: /articles/2019/02/10/1549785272463 log 下面是log包一些常用的格式配置
-const ( Ldate = 1 …">
+  <meta property="og:title" content="go 中的 log，json 常用方法" />
+  <meta name="twitter:title" content="go 中的 log，json 常用方法" />
+  <meta name="description" content="自定义golang中的log格式及输出位置， 以及json解析的2种常用方式">
+  <meta property="og:description" content="自定义golang中的log格式及输出位置， 以及json解析的2种常用方式">
+  <meta name="twitter:description" content="自定义golang中的log格式及输出位置， 以及json解析的2种常用方式">
   <meta name="author" content="zouhl"/>
   <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="twitter:card" content="summary" />
   <meta property="og:url" content="https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="易来易碎" />
+  <meta property="og:site_name" content="Tux" />
 
   <meta name="generator" content="Hugo 0.54.0" />
   <link rel="canonical" href="https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" />
-  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="Tux">
   <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -128,7 +122,7 @@ if (!doNotTrack) {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+      <a class="navbar-brand" href="https://blog.zouhl.com">Tux</a>
     </div>
     <div class="collapse navbar-collapse" id="main-navbar">
       <ul class="nav navbar-nav navbar-right">
@@ -147,10 +141,13 @@ if (!doNotTrack) {
               <div class="navlinks-children">
                 
                 
-                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                  <a href="https://blog.zouhl.com/tags/kubernetes">kubernetes</a>
                 
                 
                   <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/linux">linux</a>
                 
               </div>
             </li>
@@ -158,7 +155,7 @@ if (!doNotTrack) {
         
           
             <li>
-              <a title="About" href="/page/about/">About</a>
+              <a title="Tags" href="/tags">Tags</a>
               
               
             </li>
@@ -166,7 +163,7 @@ if (!doNotTrack) {
         
           
             <li>
-              <a title="Tags" href="/tags">Tags</a>
+              <a title="About" href="/page/about/">About</a>
               
               
             </li>
@@ -189,8 +186,8 @@ if (!doNotTrack) {
     <div class="avatar-container">
       <div class="avatar-img-border">
         
-          <a title="易来易碎" href="https://blog.zouhl.com/">
-            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          <a title="Tux" href="https://blog.zouhl.com">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="Tux" />
           </a>
         
       </div>
@@ -206,7 +203,7 @@ if (!doNotTrack) {
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">搜索 易来易碎</h4>
+          <h4 class="modal-title">搜索 Tux</h4>
         </div>
         <div class="modal-body">
           <gcse:search></gcse:search>
@@ -229,7 +226,55 @@ if (!doNotTrack) {
 
 
 
-  <div class="intro-header"></div>
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://zouhl.com/wallpaper.jpg" data-img-desc-1="bing"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="page-heading">
+                
+                  
+                     <h1>go 中的 log，json 常用方法</h1>
+                     
+                    <span class="post-meta">
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="post-heading">
+                <h1 align="center">go 中的 log，json 常用方法</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
     
@@ -241,10 +286,16 @@ if (!doNotTrack) {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Sun Feb 10, 2019</h4>
     </section>
-    <h5 id="wc">500 Words|Read in about 3 Min</h5>
+    <h5 id="wc">500 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://blog.zouhl.com/tags/golang/">golang</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/log/">log</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/json/">json</a> &nbsp;
     </h5>
 </div>
 
@@ -257,7 +308,6 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#permalink-articles-2019-02-10-1549785272463">permalink: /articles/2019/02/10/1549785272463</a></li>
 <li><a href="#log">log</a></li>
 <li><a href="#json">json</a>
 <ul>
@@ -275,17 +325,7 @@ if (!doNotTrack) {
   
 
 
-                
-
-<p>title: go 中的 log，json 常用方法
-date: 2019-02-10 15:54:32
-updated: 2019-03-19 04:50:17
-tags:
-- golang
-- log
-- json</p>
-
-<h2 id="permalink-articles-2019-02-10-1549785272463">permalink: /articles/2019/02/10/1549785272463</h2>
+                <p>自定义golang中的log格式及输出位置， 以及json解析的2种常用方式</p>
 
 <h2 id="log">log</h2>
 
@@ -448,23 +488,37 @@ func main() {
    fmt.Println(string(data))
 }
 </code></pre>
-
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://blog.zouhl.com/post/golang_%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                    <a href="https://blog.zouhl.com/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/" data-toggle="tooltip" data-placement="top" title="golang中的test和bench样例">&larr; 前一篇</a>
                 </li>
                  
                 <li class="next">
-                    <a href="https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                    <a href="https://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher_1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" data-toggle="tooltip" data-placement="top" title="基于rancher 1.6的企业级微服务平台">后一篇 &rarr;</a>
                 </li>
                 
             </ul>
             
             <div>
                  
+                <h2>See Also</h2>
+                <ul>
+                    
+                    <li><a href="/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/">golang中的test和bench样例</a></li>
+                    
+                    <li><a href="/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/">go中的并发模式</a></li>
+                    
+                    <li><a href="/post/windows%E4%B8%8Bgcc%E7%BC%96%E8%AF%91%E5%99%A8%E9%97%AE%E9%A2%98/">windows下GCC编译器问题</a></li>
+                    
+                    <li><a href="/post/golang_%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/">golang 交叉编译</a></li>
+                    
+                    <li><a href="/post/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/">Golang常用链接</a></li>
+                    
+                </ul>
+                
             </div>
             
             
@@ -472,10 +526,16 @@ func main() {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Sun Feb 10, 2019</h4>
     </section>
-    <h5 id="wc">500 Words|Read in about 3 Min</h5>
+    <h5 id="wc">500 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://blog.zouhl.com/tags/golang/">golang</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/log/">log</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/json/">json</a> &nbsp;
     </h5>
 </div>
 
@@ -557,7 +617,7 @@ func main() {
           
           
             &nbsp;&bull;&nbsp;
-            <a href="https://blog.zouhl.com/">易来易碎</a>
+            <a href="https://blog.zouhl.com">Tux</a>
           
         </p>
 
@@ -594,6 +654,8 @@ func main() {
 </script>
 
 
+
+  <script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dcc84aa6f68caf"></script>
 
 
 

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>kubectl jsonpath简介 - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="JSONPath 支持 JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数： $ 运算符是可选的，因为表达式默认情况下始终从根对象开始。 我" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="kubectl jsonpath简介" />
+<meta property="og:description" content="JSONPath 支持 JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数： $ 运算符是可选的，因为表达式默认情况下始终从根对象开始。 我" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/" />
+<meta property="article:published_time" content="2019-05-22T09:39:11&#43;08:00"/>
+<meta property="article:modified_time" content="2019-05-22T09:39:11&#43;08:00"/>
+
+<meta itemprop="name" content="kubectl jsonpath简介">
+<meta itemprop="description" content="JSONPath 支持 JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数： $ 运算符是可选的，因为表达式默认情况下始终从根对象开始。 我">
+
+
+<meta itemprop="datePublished" content="2019-05-22T09:39:11&#43;08:00" />
+<meta itemprop="dateModified" content="2019-05-22T09:39:11&#43;08:00" />
+<meta itemprop="wordCount" content="546">
+
+
+
+<meta itemprop="keywords" content="kubernetes,jsonpath,kubectl," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="kubectl jsonpath简介"/>
+<meta name="twitter:description" content="JSONPath 支持 JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数： $ 运算符是可选的，因为表达式默认情况下始终从根对象开始。 我"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">kubectl jsonpath简介</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-05-22 Wed </span>
+        <div class="post-category">
+            <a href="/categories/kubernetes/"> kubernetes </a>
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 546 words </span>
+          <span class="more-meta"> 2 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#jsonpath-支持">JSONPath 支持</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="jsonpath-支持">JSONPath 支持</h2>
+
+<p>JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数：</p>
+
+<ol>
+<li><code>$</code> 运算符是可选的，因为表达式默认情况下始终从根对象开始。</li>
+<li>我们可以使用 <code>&quot;&quot;</code> 来引用 JSONPath 表达式中的文本。</li>
+<li>我们可以使用 <code>range</code> 运算符来迭代列表。</li>
+</ol>
+
+<p>结果对象使用 String() 函数打印。</p>
+
+<p>给定输入：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&#34;kind&#34;</span><span class="p">:</span> <span class="s2">&#34;List&#34;</span><span class="p">,</span>
+  <span class="nt">&#34;items&#34;</span><span class="p">:[</span>
+    <span class="p">{</span>
+      <span class="nt">&#34;kind&#34;</span><span class="p">:</span><span class="s2">&#34;None&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;metadata&#34;</span><span class="p">:{</span><span class="nt">&#34;name&#34;</span><span class="p">:</span><span class="s2">&#34;127.0.0.1&#34;</span><span class="p">},</span>
+      <span class="nt">&#34;status&#34;</span><span class="p">:{</span>
+        <span class="nt">&#34;capacity&#34;</span><span class="p">:{</span><span class="nt">&#34;cpu&#34;</span><span class="p">:</span><span class="s2">&#34;4&#34;</span><span class="p">},</span>
+        <span class="nt">&#34;addresses&#34;</span><span class="p">:[{</span><span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;LegacyHostIP&#34;</span><span class="p">,</span> <span class="nt">&#34;address&#34;</span><span class="p">:</span><span class="s2">&#34;127.0.0.1&#34;</span><span class="p">}]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&#34;kind&#34;</span><span class="p">:</span><span class="s2">&#34;None&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;metadata&#34;</span><span class="p">:{</span><span class="nt">&#34;name&#34;</span><span class="p">:</span><span class="s2">&#34;127.0.0.2&#34;</span><span class="p">},</span>
+      <span class="nt">&#34;status&#34;</span><span class="p">:{</span>
+        <span class="nt">&#34;capacity&#34;</span><span class="p">:{</span><span class="nt">&#34;cpu&#34;</span><span class="p">:</span><span class="s2">&#34;8&#34;</span><span class="p">},</span>
+        <span class="nt">&#34;addresses&#34;</span><span class="p">:[</span>
+          <span class="p">{</span><span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;LegacyHostIP&#34;</span><span class="p">,</span> <span class="nt">&#34;address&#34;</span><span class="p">:</span><span class="s2">&#34;127.0.0.2&#34;</span><span class="p">},</span>
+          <span class="p">{</span><span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;another&#34;</span><span class="p">,</span> <span class="nt">&#34;address&#34;</span><span class="p">:</span><span class="s2">&#34;127.0.0.3&#34;</span><span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&#34;users&#34;</span><span class="p">:[</span>
+    <span class="p">{</span>
+      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;myself&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;user&#34;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;e2e&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;user&#34;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;admin&#34;</span><span class="p">,</span> <span class="nt">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;secret&#34;</span><span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<table>
+<thead>
+<tr>
+<th align="left">函数</th>
+<th align="left">描述</th>
+<th align="left">示例</th>
+<th align="left">结果</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">text</td>
+<td align="left">纯文本</td>
+<td align="left">kind is {.kind}</td>
+<td align="left">kind is List</td>
+</tr>
+
+<tr>
+<td align="left">@</td>
+<td align="left">当前对象</td>
+<td align="left">{@}</td>
+<td align="left">与输入相同</td>
+</tr>
+
+<tr>
+<td align="left">. or []</td>
+<td align="left">子运算符</td>
+<td align="left">{.kind} 或者 {[‘kind’]}</td>
+<td align="left">List</td>
+</tr>
+
+<tr>
+<td align="left">..</td>
+<td align="left">递归下降</td>
+<td align="left">{..name}</td>
+<td align="left">127.0.0.1 127.0.0.2 myself e2e</td>
+</tr>
+
+<tr>
+<td align="left">*</td>
+<td align="left">通配符，获取所有对象</td>
+<td align="left">{.items[*].metadata.name}</td>
+<td align="left">[127.0.0.1 127.0.0.2]</td>
+</tr>
+
+<tr>
+<td align="left">[start:end :step]</td>
+<td align="left">下标运算符</td>
+<td align="left">{.users[0].name}</td>
+<td align="left">myself</td>
+</tr>
+
+<tr>
+<td align="left">[,]</td>
+<td align="left">并集运算符</td>
+<td align="left">{.items[*][‘metadata.name’, ‘status.capacity’]}</td>
+<td align="left">127.0.0.1 127.0.0.2 map[cpu:4] map[cpu:8]</td>
+</tr>
+
+<tr>
+<td align="left">?()</td>
+<td align="left">过滤</td>
+<td align="left">{.users[?(@.name==“e2e”)].user.password}</td>
+<td align="left">secret</td>
+</tr>
+
+<tr>
+<td align="left">range, end</td>
+<td align="left">迭代列表</td>
+<td align="left">{range .items[*]}[{.metadata.name}, {.status.capacity}] {end}</td>
+<td align="left">[127.0.0.1, map[cpu:4]] [127.0.0.2, map[cpu:8]]</td>
+</tr>
+
+<tr>
+<td align="left">””</td>
+<td align="left">引用解释执行字符串</td>
+<td align="left">{range .items[*]}{.metadata.name}{”\t”}{end}</td>
+<td align="left">127.0.0.1 127.0.0.2</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="examples">Examples</h2>
+
+<p>Examples using <code>kubectl</code> and JSONPath expressions:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">kubectl get pods -o json
+kubectl get pods -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{@}&#39;</span>
+kubectl get pods -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0]}&#39;</span>
+kubectl get pods -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span>
+kubectl get pods -o<span class="o">=</span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.name}{&#34;\t&#34;}{.status.startTime}{&#34;\n&#34;}{end}&#39;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>On Windows, you must <em>double</em> quote any JSONPath template that contains spaces (not single quote as shown above for bash). This in turn means that you must use a single quote or escaped double quote around any literals in the template. For example:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-cmd" data-lang="cmd"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cmd" data-lang="cmd">C<span class="p">:</span><span class="nl">\</span><span class="c1">&gt; kubectl get pods -o=jsonpath=&#34;{range .items[*]}{.metadata.name}{&#39;\t&#39;}{.status.startTime}{&#39;\n&#39;}{end}&#34;</span>
+C<span class="p">:</span><span class="nl">\</span><span class="c1">&gt; kubectl get pods -o=jsonpath=&#34;{range .items[*]}{.metadata.name}{\&#34;\t\&#34;}{.status.startTime}{\&#34;\n\&#34;}{end}&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<blockquote>
+<p><a href="https://kubernetes.io/docs/reference/kubectl/jsonpath/">原文地址</a></p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-05-22 Wed
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kubernetes/">kubernetes</a>
+          <a href="/tags/jsonpath/">jsonpath</a>
+          <a href="/tags/kubectl/">kubectl</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用Kubernetes，Istio和Helm实现金丝雀发布</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/istio%E7%AE%80%E4%BB%8B/">
+            <span class="next-text nav-default">Istio简介</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-05-22 09:39:11 \x2b0800 CST',
+        title: 'kubectl jsonpath简介',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

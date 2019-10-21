@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>helm on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/helm/</link>
+    <description>Recent content in helm on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 30 May 2019 15:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/helm/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用Kubernetes，Istio和Helm实现金丝雀发布</title>
+      <link>http://blog.zouhl.com/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</guid>
+      <description>作者 Maninderjit (Mani) Bindra | 译者 宋歌 |查看原文 编者按 本文阐述了如何使用Helm和Istio实现手动金丝雀发布。 我近期工作的项目目标是为微服务应用的金丝雀/分</description>
+    </item>
+    
+    <item>
+      <title>k8s - helm</title>
+      <link>http://blog.zouhl.com/post/k8s-helm/</link>
+      <pubDate>Tue, 26 Feb 2019 21:43:28 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-helm/</guid>
+      <description>&lt;p&gt;本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

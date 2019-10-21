@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>k8s - 基于nginx-ingress的灰度发布 - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。
+" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="k8s - 基于nginx-ingress的灰度发布" />
+<meta property="og:description" content="本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/" />
+<meta property="article:published_time" content="2019-02-27T13:15:32&#43;00:00"/>
+<meta property="article:modified_time" content="2019-02-27T13:15:32&#43;00:00"/>
+
+<meta itemprop="name" content="k8s - 基于nginx-ingress的灰度发布">
+<meta itemprop="description" content="本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。">
+
+
+<meta itemprop="datePublished" content="2019-02-27T13:15:32&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-27T13:15:32&#43;00:00" />
+<meta itemprop="wordCount" content="1006">
+
+
+
+<meta itemprop="keywords" content="kubernetes,ingress,灰度发布," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="k8s - 基于nginx-ingress的灰度发布"/>
+<meta name="twitter:description" content="本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">k8s - 基于nginx-ingress的灰度发布</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-27 Wed </span>
+        <div class="post-category">
+            <a href="/categories/kubernetes/"> kubernetes </a>
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 1006 words </span>
+          <span class="more-meta"> 3 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#准备老版本程序">准备老版本程序</a></li>
+<li><a href="#装备新版本程序">装备新版本程序</a></li>
+<li><a href="#发布流程">发布流程</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。</p>
+
+<p>假设当前线上环境我们已经有一套服务app-old对外提供7层服务，此时我们修复了一些问题，需要灰度发布上线一个新的版本app-new，但是我们又不希望简单直接地将所有客户端流量切换到新版本app-new中，而是希望仅仅切换20%的流量到新版本app-new中，待运行一段时间稳定，将所有的流量切换到app-new服务中后，再平滑地下线掉app-old服务。</p>
+
+<p>针对以上多种不同的应用发布需求，K8S Ingress Controller支持了多种流量切分方式：</p>
+
+<ol>
+<li><p>基于Request Header的流量切分，适用于灰度发布以及AB测试场景</p></li>
+
+<li><p>基于Cookie的流量切分，适用于灰度发布以及AB测试场景</p></li>
+
+<li><p>基于Query Param的流量切分，适用于灰度发布以及AB测试场景</p></li>
+
+<li><p>基于服务权重的流量切分，适用于蓝绿发布场景</p></li>
+</ol>
+
+<p>以下测试基于服务权重的流量切分，也可以将<code>nginx.ingress.kubernetes.io/canary-weight: &quot;30&quot;</code>改为基于header的流量切分。</p>
+
+<h2 id="准备老版本程序">准备老版本程序</h2>
+
+<p>老版本程序app-old</p>
+
+<p><code>app-old.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Deployment<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>replicas<span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>matchLabels<span class="p">:</span><span class="w">
+</span><span class="w">      </span>run<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w">  </span>template<span class="p">:</span><span class="w">
+</span><span class="w">    </span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">      </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">        </span>run<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w">    </span>spec<span class="p">:</span><span class="w">
+</span><span class="w">      </span>containers<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>image<span class="p">:</span><span class="w"> </span>zouhl/app<span class="p">:</span>v2.<span class="m">1</span><span class="w">
+</span><span class="w">        </span>imagePullPolicy<span class="p">:</span><span class="w"> </span>Always<span class="w">
+</span><span class="w">        </span>name<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w">        </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>containerPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">          </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">      </span>restartPolicy<span class="p">:</span><span class="w"> </span>Always<span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Service<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>port<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">    </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">    </span>targetPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>run<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w">  </span>sessionAffinity<span class="p">:</span><span class="w"> </span>None<span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span>NodePor</code></pre></td></tr></table>
+</div>
+</div>
+<p>老版本的ingress</p>
+
+<p><code>app-v1.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Ingress<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>my-app<span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app<span class="p">:</span><span class="w"> </span>my-app<span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w">
+</span><span class="w">    </span>kubernetes.io/ingress.class<span class="p">:</span><span class="w"> </span>nginx<span class="w">
+</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>rules<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>host<span class="p">:</span><span class="w"> </span>test.<span class="m">192.168</span>.<span class="m">2.20</span>.xip.io<span class="w">
+</span><span class="w">      </span>http<span class="p">:</span><span class="w">
+</span><span class="w">        </span>paths<span class="p">:</span><span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>backend<span class="p">:</span><span class="w">
+</span><span class="w">              </span>serviceName<span class="p">:</span><span class="w"> </span>app-old<span class="w">
+</span><span class="w">              </span>servicePort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">            </span>path<span class="p">:</span><span class="w"> </span>/</code></pre></td></tr></table>
+</div>
+</div>
+<p>在k8s中创建</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl create -f app-old.yaml
+kubectl create -f app-v1.yaml</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="装备新版本程序">装备新版本程序</h2>
+
+<p>新版本<code>app-new.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Deployment<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>replicas<span class="p">:</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>matchLabels<span class="p">:</span><span class="w">
+</span><span class="w">      </span>run<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w">  </span>template<span class="p">:</span><span class="w">
+</span><span class="w">    </span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">      </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">        </span>run<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w">    </span>spec<span class="p">:</span><span class="w">
+</span><span class="w">      </span>containers<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>image<span class="p">:</span><span class="w"> </span>zouhl/app<span class="p">:</span>v2.<span class="m">2</span><span class="w">
+</span><span class="w">        </span>imagePullPolicy<span class="p">:</span><span class="w"> </span>Always<span class="w">
+</span><span class="w">        </span>name<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w">        </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>containerPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">          </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">      </span>restartPolicy<span class="p">:</span><span class="w"> </span>Always<span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Service<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>port<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">    </span>protocol<span class="p">:</span><span class="w"> </span>TCP<span class="w">
+</span><span class="w">    </span>targetPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">  </span>selector<span class="p">:</span><span class="w">
+</span><span class="w">    </span>run<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w">  </span>sessionAffinity<span class="p">:</span><span class="w"> </span>None<span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span>NodePort</code></pre></td></tr></table>
+</div>
+</div>
+<p>新版本canary-ingress</p>
+
+<p><code>app-v2-canary.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Ingress<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>my-app-canary<span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app<span class="p">:</span><span class="w"> </span>my-app<span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w">
+</span><span class="w">    </span>kubernetes.io/ingress.class<span class="p">:</span><span class="w"> </span>nginx<span class="w">
+</span><span class="w">    </span>nginx.ingress.kubernetes.io/canary<span class="p">:</span><span class="w"> </span><span class="s2">&#34;true&#34;</span><span class="w">
+</span><span class="w">    </span>nginx.ingress.kubernetes.io/canary-weight<span class="p">:</span><span class="w"> </span><span class="s2">&#34;30&#34;</span><span class="w">
+</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>rules<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>host<span class="p">:</span><span class="w"> </span>test.<span class="m">192.168</span>.<span class="m">2.20</span>.xip.io<span class="w">
+</span><span class="w">      </span>http<span class="p">:</span><span class="w">
+</span><span class="w">        </span>paths<span class="p">:</span><span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>backend<span class="p">:</span><span class="w">
+</span><span class="w">              </span>serviceName<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w">              </span>servicePort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">            </span>path<span class="p">:</span><span class="w"> </span>/</code></pre></td></tr></table>
+</div>
+</div>
+<p>新版本ingress yaml</p>
+
+<p><code>app-v2.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>extensions/v1beta1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>Ingress<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>my-app<span class="w">
+</span><span class="w">  </span>labels<span class="p">:</span><span class="w">
+</span><span class="w">    </span>app<span class="p">:</span><span class="w"> </span>my-app<span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w">
+</span><span class="w">    </span>kubernetes.io/ingress.class<span class="p">:</span><span class="w"> </span>nginx<span class="w">
+</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w"></span>spec<span class="p">:</span><span class="w">
+</span><span class="w">  </span>rules<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>host<span class="p">:</span><span class="w"> </span>test.<span class="m">192.168</span>.<span class="m">2.20</span>.xip.io<span class="w">
+</span><span class="w">      </span>http<span class="p">:</span><span class="w">
+</span><span class="w">        </span>paths<span class="p">:</span><span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>backend<span class="p">:</span><span class="w">
+</span><span class="w">              </span>serviceName<span class="p">:</span><span class="w"> </span>app-new<span class="w">
+</span><span class="w">              </span>servicePort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">            </span>path<span class="p">:</span><span class="w"> </span>/</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="发布流程">发布流程</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ tree                                              
+.
+├── app-new.yaml
+├── app-old.yaml
+├── app-v1.yaml
+├── app-v2-canary.yaml
+└── app-v2.yaml</code></pre></td></tr></table>
+</div>
+</div>
+<p>app-v1已经发布了，现在灰度发布第二版，权重为30%，<code>nginx.ingress.kubernetes.io/canary-weight: &quot;30&quot;</code>，更多参数参考<a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md#canary">github</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">kubectl create -f app-new.yaml
+kubectl create -f app-v2-canary.yaml</code></pre></td></tr></table>
+</div>
+</div>
+<p>检查</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$ kubectl get ingresses.extensions   
+NAME            HOSTS                       ADDRESS   PORTS   AGE
+app-ingress     www.example.com                       80      109m
+my-app          test.192.168.2.20.xip.io              80      25m
+my-app-canary   test.192.168.2.20.xip.io              80      1s
+nginx-test      nginx.192.168.2.20.xip.io             80      3h12m</pre></td></tr></table>
+</div>
+</div>
+<p>在后台观察，70% to v1，30% to v2</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ <span class="k">while</span> sleep <span class="m">0</span>.5<span class="p">;</span> <span class="k">do</span> curl <span class="s2">&#34;test.192.168.2.20.xip.io&#34;</span><span class="p">;</span>echo<span class="p">;</span> <span class="k">done</span>
+<span class="o">{</span><span class="s2">&#34;v2.2 hostname&#34;</span>:<span class="s2">&#34;app-new-658dfc9c6b-lbmvr&#34;</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">&#34;v2.2 hostname&#34;</span>:<span class="s2">&#34;app-new-658dfc9c6b-qhwtg&#34;</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">&#34;v1 hostname&#34;</span>:<span class="s2">&#34;app-old-64fd44b699-4hvlb&#34;</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">&#34;v1 hostname&#34;</span>:<span class="s2">&#34;app-old-64fd44b699-zb58f&#34;</span><span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>如果一切正常则可以正式发布</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># delete the canary ingress
+kubectl delete -f app-v2-canary.yaml
+# set 100% traffic to v2
+kubectl apply -f app-v2.yaml </pre></td></tr></table>
+</div>
+</div>
+<p>检查ingress</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ kubectl get ingresses.extensions    
+NAME          HOSTS                       ADDRESS   PORTS   AGE
+app-ingress   www.example.com                       <span class="m">80</span>      109m
+my-app        test.192.168.2.20.xip.io              <span class="m">80</span>      25m
+nginx-test    nginx.192.168.2.20.xip.io             <span class="m">80</span>      3h13m
+
+$ <span class="k">while</span> sleep <span class="m">0</span>.5<span class="p">;</span> <span class="k">do</span> curl <span class="s2">&#34;test.192.168.2.20.xip.io&#34;</span><span class="p">;</span>echo<span class="p">;</span> <span class="k">done</span>
+<span class="o">{</span><span class="s2">&#34;v2.2 hostname&#34;</span>:<span class="s2">&#34;app-new-658dfc9c6b-lbmvr&#34;</span><span class="o">}</span>
+<span class="o">{</span><span class="s2">&#34;v2.2 hostname&#34;</span>:<span class="s2">&#34;app-new-658dfc9c6b-qhwtg&#34;</span><span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-02-27 Wed
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kubernetes/">kubernetes</a>
+          <a href="/tags/ingress/">ingress</a>
+          <a href="/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/">灰度发布</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/setupajenkinscicdpipelinewithkubernetes/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Set Up a Jenkins CI/CD Pipeline with Kubernetes</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/k8s-helm/">
+            <span class="next-text nav-default">k8s - helm</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-02-27 13:15:32 \x2b0000 UTC',
+        title: 'k8s - 基于nginx-ingress的灰度发布',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

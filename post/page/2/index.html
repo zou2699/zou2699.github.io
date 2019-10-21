@@ -1,704 +1,367 @@
 <!DOCTYPE html>
-<html lang="zh">
-  <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Archive - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-  <title> Posts - zouhl&#39;s blog</title>
-  <meta name="description" content="zouhl&#39;s blog" />
-  <meta property="og:title" content="Posts" />
-  <meta name="twitter:title" content="Posts" />
-  <meta name="author" content="zouhl"/>
-  <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://blog.zouhl.com/post/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="易来易碎" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-  <meta name="generator" content="Hugo 0.54.0" />
-  <link rel="canonical" href="https://blog.zouhl.com/post/" />
-  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
-  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  
-  
-  <link rel="stylesheet" href="https://blog.zouhl.com/css/main.css" />
-  <link rel="stylesheet" href="https://blog.zouhl.com/css/search.css" />
-  
-  
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<script>
-    var _hmt = _hmt || [];
-    (function() {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-    })();
-</script>
+<meta name="author" content="zouhl" /><meta name="description" content="Although life is meaningless, do something meaningful." /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
 
 
 
-<link rel="stylesheet" href="https://blog.zouhl.com/css/prism.css" />
 
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
 
 
+<link rel="canonical" href="http://blog.zouhl.com/post/" />
+  <link href="http://blog.zouhl.com/post/index.xml" rel="alternate" type="application/rss+xml" title="Tux - zouhl&#39;s Blog" />
+  <link href="http://blog.zouhl.com/post/index.xml" rel="feed" type="application/rss+xml" title="Tux - zouhl&#39;s Blog" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
-<div class="pswp__bg"></div>
 
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
+<meta property="og:title" content="Posts" />
+<meta property="og:description" content="Although life is meaningless, do something meaningful." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://blog.zouhl.com/post/" />
+
+<meta property="og:updated_time" content="2019-02-18T20:08:01&#43;00:00"/>
+
+<meta itemprop="name" content="Posts">
+<meta itemprop="description" content="Although life is meaningless, do something meaningful.">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Posts"/>
+<meta name="twitter:description" content="Although life is meaningless, do something meaningful."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 </div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          
+<section id="archive" class="archive">
+      <div class="collection-title">
+        <h2 class="archive-year">2019</h2>
+      </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        02-18 Mon
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/" class="archive-post-link">
+          一个命令行下载音乐的小工具
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        02-10 Sun
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E5%9F%BA%E4%BA%8Erancher1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" class="archive-post-link">
+          基于rancher 1.6的企业级微服务平台
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        02-10 Sun
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/go%E4%B8%AD%E7%9A%84logjson%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" class="archive-post-link">
+          go 中的 log，json 常用方法
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        02-10 Sun
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/" class="archive-post-link">
+          golang中的test和bench样例
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        02-06 Wed
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/" class="archive-post-link">
+          go中的并发模式
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-28 Mon
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/" class="archive-post-link">
+          一些笔记
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-26 Sat
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/" class="archive-post-link">
+          curl获取天气和公网ip
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-25 Fri
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/windows%E4%B8%8Bgcc%E7%BC%96%E8%AF%91%E5%99%A8%E9%97%AE%E9%A2%98/" class="archive-post-link">
+          windows下GCC编译器问题
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-22 Tue
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E6%9B%B4%E6%96%B0macos%E5%90%8E%E4%B8%A2%E5%A4%B1xcode/" class="archive-post-link">
+          mac Command Line Tools问题
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-22 Tue
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/" class="archive-post-link">
+          测试磁盘IOPS
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-21 Mon
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/" class="archive-post-link">
+          golang 交叉编译
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-16 Wed
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" class="archive-post-link">
+          elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        01-15 Tue
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/markdown%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/" class="archive-post-link">
+          markdown 使用小结
+        </a>
+      </span>
+    </div>
+      <div class="collection-title">
+        <h2 class="archive-year">2018</h2>
+      </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        10-14 Sun
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/" class="archive-post-link">
+          Golang常用链接
+        </a>
+      </span>
+    </div>
+
+    <div class="archive-post">
+      <span class="archive-post-time">
+        10-13 Sat
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/%E8%BF%81%E7%A7%BB%E5%88%B0hugo/" class="archive-post-link">
+          迁移到hugo
+        </a>
+      </span>
+    </div></section>
+
+<nav class="pagination">
+  <a class="prev" href="/post/">
+      <i class="iconfont icon-left"></i>
+      <span class="prev-text">Prev</span>
+    </a>
+  <a class="next" href="/post/page/3/">
+      <span class="next-text">Next</span>
+      <i class="iconfont icon-right"></i>
+    </a>
+</nav>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
 
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 	ga('create', 'UA-127266354-1', 'auto');
-	
+	ga('set', 'anonymizeIp', true);
 	ga('send', 'pageview');
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
-
-</head>
-
-  <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">切换导航</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
-    </div>
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="POSTS" href="/post">POSTS</a>
-              
-              
-            </li>
-          
-        
-          
-            <li class="navlinks-container">
-              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
-              <div class="navlinks-children">
-                
-                
-                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
-                
-                
-                  <a href="https://blog.zouhl.com/tags/golang">golang</a>
-                
-              </div>
-            </li>
-          
-        
-          
-            <li>
-              <a title="About" href="/page/about/">About</a>
-              
-              
-            </li>
-          
-        
-          
-            <li>
-              <a title="Tags" href="/tags">Tags</a>
-              
-              
-            </li>
-          
-        
-
-        
-
-        
-          <li>
-            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
-              <span class="hidden-sm hidden-md hidden-lg">搜索</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
-            </a>
-          </li>
-        
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-          <a title="易来易碎" href="https://blog.zouhl.com/">
-            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
-          </a>
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-  <div id="modalSearch" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">搜索 易来易碎</h4>
-        </div>
-        <div class="modal-body">
-          <gcse:search></gcse:search>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-
-    
-  <header class="header-section ">
-    <div class="intro-header no-img">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-md-offset-0">
-            <div class="page-heading">
-              <h1>Posts</h1>
-              <hr class="small">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-    
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/2015-01-27-dear-diary/">
-                <h2 class="post-title">Dear diary</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 27, 2015
-              </p>
-              <div class="post-entry">
-                
-                  What is it with that Mary girl? Dragging me to school every day. As if I had a choice. What you don&rsquo;t hear in those nursery rhymes is that she starves me if I don&rsquo;t go to school with her; it&rsquo;s the only way I can stay alive! I&rsquo;m thinking about being adopted by Little Bo Peep, sure I may get lost, but anything is better than being with Mary and those little brats at school (shudder, shudder).
-                  <a href="https://blog.zouhl.com/post/2015-01-27-dear-diary/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 19, 2015
-              </p>
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="https://blog.zouhl.com/post/2015-01-19-soccer/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 15, 2015
-              </p>
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="https://blog.zouhl.com/post/2015-01-15-pirates/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 5, 2015
-              </p>
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/hackintosh/">
-                <h2 class="post-title"></h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  
-
-<p>title: Hackintosh
-date: 2019-02-22 12:26:21
-updated: 2019-03-27 08:20:31
-tags:
-- hackintosh
-- 黑苹果</p>
-
-<h2 id="permalink-hackintosh">permalink: /hackintosh</h2>
-
-<p>Hackintosh（黑苹果）的一些索引
-* tonymacx86 购买指南及相关教程
-<a href="https://www.tonymacx86.com/buyersguide/building-a-customac-hackintosh-the-ultimate-buyers-guide">https://www.tonymacx86.com/buyersguide/building-a-customac-hackintosh-the-ultimate-buyers-guide</a>
-* 硬件指南
-<a href="http://bbs.pcbeta.com/viewthread-1799271-1-1.html">http://bbs.pcbeta.com/viewthread-1799271-1-1.html</a>
-* 相关clover汇总
-<a href="https://github.com/sqlsec/clover">https://github.com/sqlsec/clover</a>
-* 自用的 xps13 clover 地址
-<a href="https://github.com/hoanX/xps13-9360-i7-7560u">https://github.com/hoanX/xps13-9360-i7-7560u</a></p>
-
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/">
-                <h2 class="post-title"></h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
-permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。
-jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server
-使用helm安装jenkins  创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。  kind: PersistentVolume apiVersion: v1 metadata: name: jenkins-pv spec: # selector: # jenkins: master # storageClassName: jenkins-pv capacity: storage: 10Gi accessModes: - ReadWriteOnce persistentVolumeReclaimPolicy: Retain hostPath: path: &quot;/data/jenkins&quot;   使用helm安装jenkins  helm install --name jenkins stable/jenkins  如果开启了rbac可以使用helm upgrade jenkins stable/jenkins --set rbac.
-                  <a href="https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/">
-                <h2 class="post-title"></h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  
-
-<p>title: curl获取天气和公网ip
-date: 2019-01-26 10:25:22
-updated: 2019-03-19 04:50:18
-tags:
-- linux</p>
-
-<h2 id="permalink-articles-2019-01-26-1548469522081">permalink: /articles/2019/01/26/1548469522081</h2>
-
-<p>获取ip地址</p>
-
-<pre><code class="language-sh">curl ipinfo.io
-curl cip.cc
-</code></pre>
-
-<p>获取天气</p>
-
-<pre><code class="language-sh">curl wttr.in
-</code></pre>
-
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/">
-                <h2 class="post-title"></h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  title: elasticsearch + logstash + kafka + filebeat 的集群搭建及相关优化。 date: 2019-01-16 15:19:16 updated: 2019-03-16 08:32:56 tags: - elasticsearch - elk - logstash
-permalink: /articles/2019/01/16/1547623156236 elasticsearch + logstash + kafka + filebeat 简介 graph TD A[logFile] --&gt;|filebeat| B(kafka) B --&gt; C{logstash} C --&gt;|index1| D C --&gt;|index2| D C --&gt;|index3| D[Elasticsearch]  Elasticsearch是一个基于Lucene的搜索引擎。它提供了一个分布式，多租户 -能够全文搜索与发动机HTTP Web界面和无架构JSON文件。
-Elasticsearch与名为Logstash的数据收集和日志解析引擎以及名为Kibana的分析和可视化平台一起开发。这三种产品设计用作集成解决方案，称为“弹性堆栈”（以前称为“ELK堆栈”）。
-Elasticsearch可用于搜索各种文档。它提供可扩展的搜索，近实时搜索，并支持多租户。[2] “Elasticsearch是分布式的，这意味着索引可以分为多个分片，每个分片可以有零个或多个副本。每个节点托管一个或多个分片，并充当协调器，将操作委托给正确的分片。重新平衡和路由是自动完成的“。[2]相关数据通常存储在同一索引中，该索引由一个或多个主分片和零个或多个副本分片组成。创建索引后，无法更改主分片的数量
-Elasticsearch cluster status: http://172.18.4.42:9200/_cluster/health  配置详解
-data node 如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器 node.master: false node.data: true
-                  <a href="https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/">
-                <h2 class="post-title"></h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  title: go 中的 log，json 常用方法 date: 2019-02-10 15:54:32 updated: 2019-03-19 04:50:17 tags: - golang - log - json
-permalink: /articles/2019/02/10/1549785272463 log 下面是log包一些常用的格式配置
-const ( Ldate = 1 &lt;&lt; iota // the date in the local time zone: 2009/01/23 Ltime // the time in the local time zone: 01:23:23 Lmicroseconds // microsecond resolution: 01:23:23.123123. assumes Ltime. Llongfile // full file name and line number: /a/b/c/d.go:23 Lshortfile // final file name element and line number: d.
-                  <a href="https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://blog.zouhl.com/post/golang_%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/">
-                <h2 class="post-title"></h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  
-
-<p>title: golang 交叉编译
-date: 2019-01-21 17:32:18
-updated: 2019-03-19 04:50:18
-tags:
-- golang
-- 编译</p>
-
-<h2 id="permalink-articles-2019-01-21-1548063138055">permalink: /articles/2019/01/21/1548063138055</h2>
-
-<p><img src="https://img.hacpai.com/bing/20180804.jpg?imageView2/1/w/960/h/520/interlace/1/q/100" alt="" /></p>
-
-<p>Golang 支持交叉编译，在一个平台上生成另一个平台的可执行程序
-&gt; GOOS：目标平台的操作系统（darwin、freebsd、linux、windows）<br />
-&gt; GOARCH：目标平台的体系架构（386、amd64、arm）<br />
-&gt; 交叉编译不支持 CGO 所以要禁用它</p>
-
-<pre><code class="language-sh"># for linux
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
-
-# for windows
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build .
-
-# for mac
-CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build .
-</code></pre>
-
-                
-              </div>
-
-              
-
-            </article>
-          
-        </div>
-        
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/post/page/1">&larr; 上一页</a>
-              </li>
-            
-            
-              <li class="next">
-                <a href="/post/page/3">下一页 &rarr;</a>
-              </li>
-            
-          </ul>
-        
-      </div>
-    <div align="center" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-
-<ul class="pagination">
-    
-    <li class="page-item">
-        <a href="/post/" class="page-link" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
-    </li>
-    
-    <li class="page-item">
-    <a href="/post/" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
-    </li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item"><a class="page-link" href="/post/">1</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item active"><a class="page-link" href="/post/page/2/">2</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item"><a class="page-link" href="/post/page/3/">3</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item"><a class="page-link" href="/post/page/4/">4</a></li>
-    
-    
-    <li class="page-item">
-    <a href="/post/page/3/" class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-    </li>
-    
-    <li class="page-item">
-        <a href="/post/page/4/" class="page-link" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
-    </li>
-    
-</ul>
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      </div>
-    </div>
-  </div>
-
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-              <li>
-                <a href="mailto:rootzouhl@gmail.com" title="Email me">
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a href="https://github.com/zou2699" title="GitHub">
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-          
-          <li>
-            <a href="https://blog.zouhl.com/index.xml" title="RSS">
-              <span class="fa-stack fa-lg">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-              </span>
-            </a>
-          </li>
-          
-        </ul>
-        <p class="credits copyright text-muted">
-        &copy;2017-2018
-          
-            
-              <a href="https://zouhl.com">zouhl</a>
-            
-          
-          
-          
-            &nbsp;&bull;&nbsp;
-            <a href="https://blog.zouhl.com/">易来易碎</a>
-          
-        </p>
-
-        
-        <p class="credits theme-by text-muted">
-          由 <a href="http://gohugo.io">Hugo v0.54.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/rootsongjc/beautifulhugo">Beautiful Hugo</a> 移植自 <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
-</footer>
-
-
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
-<script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
   (function() {
-    var cx = '008867044216506799499:pboytpfdouc';
-    var gcse = document.createElement('script');
-    gcse.type = 'text/javascript';
-    gcse.async = true;
-    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(gcse, s);
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
   })();
 </script>
 
@@ -707,7 +370,5 @@ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build .
 
 
 
-
-  </body>
+</body>
 </html>
-

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>elasticsearch on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/elasticsearch/</link>
+    <description>Recent content in elasticsearch on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Jan 2019 15:19:16 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。</title>
+      <link>http://blog.zouhl.com/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Wed, 16 Jan 2019 15:19:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/</guid>
+      <description>&lt;p&gt;基于elasticsearch + logstash + kafka + filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

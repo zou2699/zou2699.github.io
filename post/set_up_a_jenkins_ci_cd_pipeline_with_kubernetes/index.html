@@ -5,30 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <title> Set Up a Jenkins CI/CD Pipeline with Kubernetes - zouhl&#39;s blog</title>
   <meta name="description" content="zouhl&#39;s blog" />
-  <meta property="og:title" content="易来易碎" />
-  <meta name="twitter:title" content="易来易碎" />
-  <meta name="description" content="title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
-permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。
-jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server
-使用helm安装jenkins  创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。  kind: PersistentVolume apiVersion: v1 metadata: name: jenkins-pv spec: # selector: # jenkins: master # storageClassName: jenkins-pv capacity: storage: 10Gi accessModes: - ReadWriteOnce persistentVolumeReclaimPolicy: Retain hostPath: path: &quot;/data/jenkins&quot;   使用helm安装jenkins  helm install --name jenkins stable/jenkins  如果开启了rbac可以使用helm upgrade jenkins stable/jenkins --set rbac.">
-  <meta property="og:description" content="title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
-permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。
-jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server
-使用helm安装jenkins  创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。  kind: PersistentVolume apiVersion: v1 metadata: name: jenkins-pv spec: # selector: # jenkins: master # storageClassName: jenkins-pv capacity: storage: 10Gi accessModes: - ReadWriteOnce persistentVolumeReclaimPolicy: Retain hostPath: path: &quot;/data/jenkins&quot;   使用helm安装jenkins  helm install --name jenkins stable/jenkins  如果开启了rbac可以使用helm upgrade jenkins stable/jenkins --set rbac.">
-  <meta name="twitter:description" content="title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
-permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用， …">
+  <meta property="og:title" content="Set Up a Jenkins CI/CD Pipeline with Kubernetes" />
+  <meta name="twitter:title" content="Set Up a Jenkins CI/CD Pipeline with Kubernetes" />
+  <meta name="description" content="使用Jenkins进行持续构建与发布应用到kubernetes集群中">
+  <meta property="og:description" content="使用Jenkins进行持续构建与发布应用到kubernetes集群中">
+  <meta name="twitter:description" content="使用Jenkins进行持续构建与发布应用到kubernetes集群中">
   <meta name="author" content="zouhl"/>
   <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="twitter:card" content="summary" />
   <meta property="og:url" content="https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="易来易碎" />
+  <meta property="og:site_name" content="Tux" />
 
   <meta name="generator" content="Hugo 0.54.0" />
   <link rel="canonical" href="https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/" />
-  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="Tux">
   <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -129,7 +122,7 @@ if (!doNotTrack) {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+      <a class="navbar-brand" href="https://blog.zouhl.com">Tux</a>
     </div>
     <div class="collapse navbar-collapse" id="main-navbar">
       <ul class="nav navbar-nav navbar-right">
@@ -148,10 +141,13 @@ if (!doNotTrack) {
               <div class="navlinks-children">
                 
                 
-                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                  <a href="https://blog.zouhl.com/tags/kubernetes">kubernetes</a>
                 
                 
                   <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/linux">linux</a>
                 
               </div>
             </li>
@@ -159,7 +155,7 @@ if (!doNotTrack) {
         
           
             <li>
-              <a title="About" href="/page/about/">About</a>
+              <a title="Tags" href="/tags">Tags</a>
               
               
             </li>
@@ -167,7 +163,7 @@ if (!doNotTrack) {
         
           
             <li>
-              <a title="Tags" href="/tags">Tags</a>
+              <a title="About" href="/page/about/">About</a>
               
               
             </li>
@@ -190,8 +186,8 @@ if (!doNotTrack) {
     <div class="avatar-container">
       <div class="avatar-img-border">
         
-          <a title="易来易碎" href="https://blog.zouhl.com/">
-            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          <a title="Tux" href="https://blog.zouhl.com">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="Tux" />
           </a>
         
       </div>
@@ -207,7 +203,7 @@ if (!doNotTrack) {
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">搜索 易来易碎</h4>
+          <h4 class="modal-title">搜索 Tux</h4>
         </div>
         <div class="modal-body">
           <gcse:search></gcse:search>
@@ -230,7 +226,60 @@ if (!doNotTrack) {
 
 
 
-  <div class="intro-header"></div>
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://ws4.sinaimg.cn/large/006tKfTcgy1g1lw28ki6wj30u01901l2.jpg" data-img-desc-1="pap.er"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="page-heading">
+                
+                  
+                     <h1>Set Up a Jenkins CI/CD Pipeline with Kubernetes</h1>
+                     
+                     
+                  
+                  
+                  
+                    
+                      <h2 align="center" class="post-subheading">使用Jenkins进行持续构建与发布应用到kubernetes集群中</h2>
+                    
+                  
+                  
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="post-heading">
+                <h1 align="center">Set Up a Jenkins CI/CD Pipeline with Kubernetes</h1>
+                
+                  
+                    <h2 align="center" class="post-subheading">使用Jenkins进行持续构建与发布应用到kubernetes集群中</h2>
+                  
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
     
@@ -242,10 +291,18 @@ if (!doNotTrack) {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Sun Mar 3, 2019</h4>
     </section>
     <h5 id="wc">1200 Words|Read in about 6 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://blog.zouhl.com/tags/jenkins/">jenkins</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/devops/">devops</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/kubernetes/">kubernetes</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/ci/">ci</a> &nbsp;
     </h5>
 </div>
 
@@ -258,7 +315,6 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#permalink-articles-2019-03-03-1551603125319">permalink: /articles/2019/03/03/1551603125319</a></li>
 <li><a href="#使用helm安装jenkins">使用helm安装jenkins</a></li>
 <li><a href="#配置jenkins">配置jenkins</a></li>
 <li><a href="#进行构建">进行构建</a></li>
@@ -271,17 +327,7 @@ if (!doNotTrack) {
   
 
 
-                
-
-<p>title: Set Up a Jenkins CI/CD Pipeline with Kubernetes
-date: 2019-03-03 16:52:05
-updated: 2019-03-30 07:00:57
-tags:
-- jenkins
-- devops
-- k8s</p>
-
-<h2 id="permalink-articles-2019-03-03-1551603125319">permalink: /articles/2019/03/03/1551603125319</h2>
+                <p>本文将介绍 jenkins 在kubernetes下的CI/CD发布流程。</p>
 
 <p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g0ppydxbdsj218n0uftlp.jpg" alt="imagepng" /></p>
 
@@ -672,23 +718,33 @@ Page
 <p>代码的发布和构建只要按照步骤来，即可。</p>
 
 <p>既然jenkins在k8s中，就要遵循其设计的理念，使用容器进行构建，而不是传统的ssh。</p>
-
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                    <a href="https://blog.zouhl.com/post/k8s_-_%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/" data-toggle="tooltip" data-placement="top" title="k8s - 基于nginx-ingress的灰度发布">&larr; 前一篇</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://blog.zouhl.com/post/hackintosh/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
                  
+                <h2>See Also</h2>
+                <ul>
+                    
+                    <li><a href="/post/k8s_-_%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/">k8s - 基于nginx-ingress的灰度发布</a></li>
+                    
+                    <li><a href="/post/k8s_-_helm/">k8s - helm</a></li>
+                    
+                    <li><a href="/post/k8s_-_dashboard/">k8s - dashboard</a></li>
+                    
+                    <li><a href="/post/k8s-object/">k8s-object</a></li>
+                    
+                    <li><a href="/post/k8s_-_configmap/">k8s - ConfigMap</a></li>
+                    
+                </ul>
+                
             </div>
             
             
@@ -696,10 +752,18 @@ Page
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Sun Mar 3, 2019</h4>
     </section>
     <h5 id="wc">1200 Words|Read in about 6 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://blog.zouhl.com/tags/jenkins/">jenkins</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/devops/">devops</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/kubernetes/">kubernetes</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/ci/">ci</a> &nbsp;
     </h5>
 </div>
 
@@ -781,7 +845,7 @@ Page
           
           
             &nbsp;&bull;&nbsp;
-            <a href="https://blog.zouhl.com/">易来易碎</a>
+            <a href="https://blog.zouhl.com">Tux</a>
           
         </p>
 
@@ -818,6 +882,8 @@ Page
 </script>
 
 
+
+  <script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dcc84aa6f68caf"></script>
 
 
 

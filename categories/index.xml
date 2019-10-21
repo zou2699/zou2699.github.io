@@ -1,40 +1,102 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on 易来易碎</title>
-    <link>https://blog.zouhl.com/categories/</link>
-    <description>Recent content in Categories on 易来易碎</description>
+    <title>Categories on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/categories/</link>
+    <description>Recent content in Categories on Tux - zouhl&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
-    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
+    <language>en</language>
     
-	<atom:link href="https://blog.zouhl.com/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://blog.zouhl.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hugo</title>
-      <link>https://blog.zouhl.com/categories/hugo/</link>
-      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/categories/hugo/</guid>
+      <title>Mac</title>
+      <link>http://blog.zouhl.com/categories/mac/</link>
+      <pubDate>Fri, 22 Feb 2019 12:26:21 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/mac/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Test Categories</title>
-      <link>https://blog.zouhl.com/categories/test-categories/</link>
+      <title>cncf</title>
+      <link>http://blog.zouhl.com/categories/cncf/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/cncf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dns</title>
+      <link>http://blog.zouhl.com/categories/dns/</link>
+      <pubDate>Thu, 16 May 2019 11:19:57 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/dns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>elasticsearch</title>
+      <link>http://blog.zouhl.com/categories/elasticsearch/</link>
+      <pubDate>Wed, 16 Jan 2019 15:19:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/elasticsearch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>golang</title>
+      <link>http://blog.zouhl.com/categories/golang/</link>
+      <pubDate>Mon, 18 Feb 2019 20:08:01 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>http://blog.zouhl.com/categories/hugo/</link>
+      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>http://blog.zouhl.com/categories/kubernetes/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>http://blog.zouhl.com/categories/linux/</link>
+      <pubDate>Thu, 16 May 2019 11:19:57 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>test-categories</title>
+      <link>http://blog.zouhl.com/categories/test-categories/</link>
       <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/categories/test-categories/</guid>
+      
+      <guid>http://blog.zouhl.com/categories/test-categories/</guid>
       <description></description>
     </item>
     
     <item>
       <title>工具</title>
-      <link>https://blog.zouhl.com/categories/%E5%B7%A5%E5%85%B7/</link>
+      <link>http://blog.zouhl.com/categories/%E5%B7%A5%E5%85%B7/</link>
       <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/categories/%E5%B7%A5%E5%85%B7/</guid>
+      
+      <guid>http://blog.zouhl.com/categories/%E5%B7%A5%E5%85%B7/</guid>
       <description></description>
     </item>
     

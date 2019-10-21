@@ -1,481 +1,315 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on 易来易碎</title>
-    <link>https://blog.zouhl.com/post/</link>
-    <description>Recent content in Posts on 易来易碎</description>
+    <title>Posts on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/post/</link>
+    <description>Recent content in Posts on Tux - zouhl&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
-    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
-    <lastBuildDate>Sun, 14 Oct 2018 17:50:31 +0800</lastBuildDate>
+    <language>en</language>
+    <lastBuildDate>Thu, 30 May 2019 15:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://blog.zouhl.com/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://blog.zouhl.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Golang常用链接</title>
-      <link>https://blog.zouhl.com/post/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</link>
-      <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</guid>
-      <description>&lt;p&gt;这是我使用golang经常用到的链接。&lt;/p&gt;</description>
+      <title>使用Kubernetes，Istio和Helm实现金丝雀发布</title>
+      <link>http://blog.zouhl.com/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</guid>
+      <description>作者 Maninderjit (Mani) Bindra | 译者 宋歌 |查看原文 编者按 本文阐述了如何使用Helm和Istio实现手动金丝雀发布。 我近期工作的项目目标是为微服务应用的金丝雀/分</description>
     </item>
     
     <item>
-      <title>迁移到hugo</title>
-      <link>https://blog.zouhl.com/post/%E8%BF%81%E7%A7%BB%E5%88%B0hugo/</link>
-      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E8%BF%81%E7%A7%BB%E5%88%B0hugo/</guid>
-      <description>&lt;p&gt;blog的一些说明&lt;/p&gt;</description>
+      <title>kubectl jsonpath简介</title>
+      <link>http://blog.zouhl.com/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Wed, 22 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/</guid>
+      <description>JSONPath 支持 JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数： $ 运算符是可选的，因为表达式默认情况下始终从根对象开始。 我</description>
     </item>
     
     <item>
-      <title>First Post</title>
-      <link>https://blog.zouhl.com/post/first-post/</link>
-      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/first-post/</guid>
+      <title>Istio简介</title>
+      <link>http://blog.zouhl.com/post/istio%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Tue, 21 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/istio%E7%AE%80%E4%BB%8B/</guid>
+      <description>前言 什么是服务网格？ 在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。 服务网格（Ser</description>
+    </item>
+    
+    <item>
+      <title>Xip.io 内网dns解析方案</title>
+      <link>http://blog.zouhl.com/post/xip.io/</link>
+      <pubDate>Thu, 16 May 2019 11:19:57 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/xip.io/</guid>
+      <description>&lt;p&gt;使用xip.io实现在内网的域名解析&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>tmux使用笔记</title>
+      <link>http://blog.zouhl.com/post/tmux%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Tue, 14 May 2019 11:20:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/tmux%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;p&gt;tmux 快捷键记录&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>采用istio实现灰度发布 金丝雀发布</title>
+      <link>http://blog.zouhl.com/post/2019-04-09-%E4%BD%BF%E7%94%A8istio%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Tue, 09 Apr 2019 14:36:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/2019-04-09-%E4%BD%BF%E7%94%A8istio%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</guid>
       <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>Photoswipe Gallery Sample</title>
-      <link>https://blog.zouhl.com/post/2017-03-20-photoswipe-gallery-sample/</link>
-      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2017-03-20-photoswipe-gallery-sample/</guid>
-      <description>&lt;p&gt;Beautiful Hugo adds a few custom shortcodes created by &lt;a href=&#34;https://www.liwen.id.au/heg/&#34;&gt;Li-Wen Yip&lt;/a&gt; and &lt;a href=&#34;https://github.com/GjjvdBurg/HugoPhotoSwipe&#34;&gt;Gert-Jan van den Berg&lt;/a&gt; for making galleries with &lt;a href=&#34;http://photoswipe.com&#34;&gt;PhotoSwipe&lt;/a&gt; .&lt;/p&gt;
+      <title>Drone 安装配置指南</title>
+      <link>http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Tue, 02 Apr 2019 16:32:07 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</guid>
+      <description>&lt;p&gt;本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Set Up a Jenkins CI/CD Pipeline with Kubernetes</title>
+      <link>http://blog.zouhl.com/post/setupajenkinscicdpipelinewithkubernetes/</link>
+      <pubDate>Sun, 03 Mar 2019 16:52:05 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/setupajenkinscicdpipelinewithkubernetes/</guid>
+      <description>&lt;p&gt;本文将介绍 jenkins 在kubernetes下的CI/CD发布流程。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - 基于nginx-ingress的灰度发布</title>
+      <link>http://blog.zouhl.com/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Wed, 27 Feb 2019 13:15:32 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</guid>
+      <description>&lt;p&gt;本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - helm</title>
+      <link>http://blog.zouhl.com/post/k8s-helm/</link>
+      <pubDate>Tue, 26 Feb 2019 21:43:28 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-helm/</guid>
+      <description>&lt;p&gt;本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - dashboard</title>
+      <link>http://blog.zouhl.com/post/k8s-dashboard/</link>
+      <pubDate>Tue, 26 Feb 2019 10:46:19 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-dashboard/</guid>
+      <description>&lt;p&gt;本文将介绍如何较正确的在kubernetes下使用dashboard。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - object</title>
+      <link>http://blog.zouhl.com/post/k8s-object/</link>
+      <pubDate>Mon, 25 Feb 2019 15:10:25 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-object/</guid>
+      <description>&lt;p&gt;本文将介绍kubernetes下的常用的object&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - ConfigMap</title>
+      <link>http://blog.zouhl.com/post/k8s-configmap/</link>
+      <pubDate>Mon, 25 Feb 2019 13:57:23 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-configmap/</guid>
+      <description>前言 其实ConfigMap功能在Kubernetes1.2版本的时候就有了，许多应用程序会从配置文件、命令行参数或环境变量中读取配置信息。这</description>
+    </item>
+    
+    <item>
+      <title>https 证书自动更新</title>
+      <link>http://blog.zouhl.com/post/https%E8%AF%81%E4%B9%A6%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/</link>
+      <pubDate>Sat, 23 Feb 2019 12:08:55 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/https%E8%AF%81%E4%B9%A6%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/</guid>
+      <description>&lt;p&gt;本文将介绍如何使用acme签发证书及自动renew。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hackintosh</title>
+      <link>http://blog.zouhl.com/post/hackintosh/</link>
+      <pubDate>Fri, 22 Feb 2019 12:26:21 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/hackintosh/</guid>
+      <description>&lt;p&gt;折腾 hackintosh 过程中的一些笔记。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>一个命令行下载音乐的小工具</title>
+      <link>http://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Mon, 18 Feb 2019 20:08:01 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/</guid>
+      <description>&lt;p&gt;一个在终端进行跨平台的音乐搜索和下载的小工具。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>基于rancher 1.6的企业级微服务平台</title>
+      <link>http://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</link>
+      <pubDate>Sun, 10 Feb 2019 16:30:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</guid>
+      <description>&lt;p&gt;一个简单稳定的企业级微服务架构&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go 中的 log，json 常用方法</title>
+      <link>http://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84logjson%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Sun, 10 Feb 2019 15:54:32 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84logjson%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+      <description>&lt;p&gt;自定义golang中的log格式及输出位置， 以及json解析的2种常用方式&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>golang中的test和bench样例</title>
+      <link>http://blog.zouhl.com/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/</link>
+      <pubDate>Sun, 10 Feb 2019 15:31:54 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/</guid>
+      <description>&lt;p&gt;golang中代码测试和基准测试的一些说明和例子&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>go中的并发模式</title>
+      <link>http://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Wed, 06 Feb 2019 19:54:53 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;p&gt;介绍goroutine及其中共享资源的几种方式。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>一些笔记</title>
+      <link>http://blog.zouhl.com/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 28 Jan 2019 21:40:03 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;p&gt;记录一些时常用到，但又记不住的东西。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>curl获取天气和公网ip</title>
+      <link>http://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/</link>
+      <pubDate>Sat, 26 Jan 2019 10:25:22 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/</guid>
+      <description>&lt;p&gt;常用的curl命令。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>windows下GCC编译器问题</title>
+      <link>http://blog.zouhl.com/post/windows%E4%B8%8Bgcc%E7%BC%96%E8%AF%91%E5%99%A8%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 25 Jan 2019 14:21:11 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/windows%E4%B8%8Bgcc%E7%BC%96%E8%AF%91%E5%99%A8%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;在windows平台下安装GCC编译器&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>mac Command Line Tools问题</title>
+      <link>http://blog.zouhl.com/post/%E6%9B%B4%E6%96%B0macos%E5%90%8E%E4%B8%A2%E5%A4%B1xcode/</link>
+      <pubDate>Tue, 22 Jan 2019 20:07:46 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E6%9B%B4%E6%96%B0macos%E5%90%8E%E4%B8%A2%E5%A4%B1xcode/</guid>
+      <description>&lt;p&gt;更新MacOS后，Command Line Tools 出问题。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>测试磁盘IOPS</title>
+      <link>http://blog.zouhl.com/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/</link>
+      <pubDate>Tue, 22 Jan 2019 19:16:12 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/</guid>
+      <description>&lt;p&gt;IOPS是Input/Output Operations per Second，即每秒能处理的I/O个数，用于表示块存储处理读写（输出/输入）的能力。如果要部署事务密集型应用，典型场景比如数据库类业务应用，需要关注IOPS性能。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>golang 交叉编译</title>
+      <link>http://blog.zouhl.com/post/golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/</link>
+      <pubDate>Mon, 21 Jan 2019 17:32:18 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/</guid>
+      <description>&lt;p&gt;Golang 支持交叉编译，在一个平台上生成另一个平台的可执行程序&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。</title>
+      <link>http://blog.zouhl.com/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Wed, 16 Jan 2019 15:19:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/</guid>
+      <description>&lt;p&gt;基于elasticsearch + logstash + kafka + filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>markdown 使用小结</title>
+      <link>http://blog.zouhl.com/post/markdown%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</link>
+      <pubDate>Tue, 15 Jan 2019 19:56:50 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/markdown%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;
 
+&lt;div class=&#34;admonition note&#34;&gt;&lt;p class=&#34;admonition-title&#34;&gt;I&amp;#39;m title!&lt;/p&gt;
+  &lt;p&gt;biu biu biu.&lt;/p&gt;
 
+&lt;p&gt;&lt;details class=&#34;admonition note&#34;&gt;&lt;summary class=&#34;admonition-title&#34;&gt;note&lt;/summary&gt;
+  &lt;p&gt;biu biu biu.&lt;/p&gt;&lt;/p&gt;
 
-&lt;div class=&#34;gallery caption-position-bottom caption-effect-fade hover-effect-zoom hover-transition&#34; itemscope itemtype=&#34;http://schema.org/ImageGallery&#34;&gt;
-	  
-  
-&lt;link rel=&#34;stylesheet&#34; href=&#34;https://blog.zouhl.com/css/hugo-easy-gallery.css&#34; /&gt;
-&lt;div class=&#34;box&#34; &gt;
-  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
-    &lt;div class=&#34;img&#34; style=&#34;background-image: url(&#39;/img/hexagon-thumb.jpg&#39;);&#34;&gt;
-      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://blog.zouhl.com/img/hexagon-thumb.jpg&#34; /&gt;
-    &lt;/div&gt;
-    &lt;a href=&#34;https://blog.zouhl.com/img/hexagon.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
-  &lt;/figure&gt;
+&lt;p&gt;&lt;/details&gt;&lt;/p&gt;
+
+&lt;div class=&#34;admonition example&#34;&gt;
+  &lt;p&gt;Without title.&lt;/p&gt;
+
 &lt;/div&gt;
-  
 
-&lt;div class=&#34;box&#34; &gt;
-  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
-    &lt;div class=&#34;img&#34; style=&#34;background-image: url(&#39;/img/sphere-thumb.jpg&#39;);&#34;&gt;
-      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://blog.zouhl.com/img/sphere-thumb.jpg&#34; alt=&#34;Sphere&#34;/&gt;
-    &lt;/div&gt;
-      &lt;figcaption&gt;
-          &lt;p&gt;Sphere&lt;/p&gt;
-      &lt;/figcaption&gt;
-    &lt;a href=&#34;https://blog.zouhl.com/img/sphere.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
-  &lt;/figure&gt;
 &lt;/div&gt;
-  
 
-&lt;div class=&#34;box&#34; &gt;
-  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
-    &lt;div class=&#34;img&#34; style=&#34;background-image: url(&#39;/img/triangle-thumb.jpg&#39;);&#34;&gt;
-      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://blog.zouhl.com/img/triangle-thumb.jpg&#34; alt=&#34;This is a long comment about a triangle&#34;/&gt;
-    &lt;/div&gt;
-      &lt;figcaption&gt;
-          &lt;p&gt;Triangle&lt;/p&gt;
-      &lt;/figcaption&gt;
-    &lt;a href=&#34;https://blog.zouhl.com/img/triangle.jpg&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
-  &lt;/figure&gt;
-&lt;/div&gt;
+&lt;div class=&#39;align-center&#39;&gt;
+  &lt;h2 id=&#34;center&#34;&gt;center&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.zouhl.com/img/sphere.jpg&#34; alt=&#34;img&#34; title=&#34;img&#34; /&gt;&lt;/p&gt;
 
 &lt;/div&gt;</description>
     </item>
     
     <item>
-      <title>Big Image Sample</title>
-      <link>https://blog.zouhl.com/post/2017-03-07-bigimg-sample/</link>
-      <pubDate>Tue, 07 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2017-03-07-bigimg-sample/</guid>
-      <description>&lt;p&gt;The image banners at the top of the page are refered to as &amp;ldquo;bigimg&amp;rdquo; in this theme. They are optional, and one more more can be specified. If more than one is specified, the images rotate every 10 seconds. In the front matter, bigimgs are specified using an array of hashes.&lt;/p&gt;</description>
+      <title>Golang常用链接</title>
+      <link>http://blog.zouhl.com/post/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</link>
+      <pubDate>Sun, 14 Oct 2018 17:50:31 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E5%B8%B8%E7%94%A8%E9%93%BE%E6%8E%A5/</guid>
+      <description>&lt;p&gt;这是我使用golang经常用到的链接。&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>Math Sample</title>
-      <link>https://blog.zouhl.com/post/2017-03-05-math-sample/</link>
-      <pubDate>Sun, 05 Mar 2017 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2017-03-05-math-sample/</guid>
-      <description>&lt;p&gt;KaTeX can be used to generate complex math formulas server-side.&lt;/p&gt;
-
-&lt;p&gt;$$
-\phi = \frac{(1+\sqrt{5})}{2} = 1.6180339887\cdots
-$$&lt;/p&gt;
-
-&lt;p&gt;Additional details can be found on &lt;a href=&#34;https://github.com/Khan/KaTeX&#34;&gt;GitHub&lt;/a&gt; or on the &lt;a href=&#34;http://tiddlywiki.com/plugins/tiddlywiki/katex/&#34;&gt;Wiki&lt;/a&gt;.&lt;/p&gt;</description>
+      <title>迁移到hugo</title>
+      <link>http://blog.zouhl.com/post/%E8%BF%81%E7%A7%BB%E5%88%B0hugo/</link>
+      <pubDate>Sat, 13 Oct 2018 17:54:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E8%BF%81%E7%A7%BB%E5%88%B0hugo/</guid>
+      <description>&lt;p&gt;blog的一些说明&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>Code Sample</title>
-      <link>https://blog.zouhl.com/post/2016-03-08-code-sample/</link>
-      <pubDate>Tue, 08 Mar 2016 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2016-03-08-code-sample/</guid>
-      <description>&lt;p&gt;The following are two code samples using syntax highlighting.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Flake it till you make it</title>
-      <link>https://blog.zouhl.com/post/2015-02-26-flake-it-till-you-make-it/</link>
-      <pubDate>Thu, 26 Feb 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-02-26-flake-it-till-you-make-it/</guid>
-      <description>Under what circumstances should we step off a path? When is it essential that we finish what we start? If I bought a bag of peanuts and had an allergic reaction, no one would fault me if I threw it out. If I ended a relationship with a woman who hit me, no one would say that I had a commitment problem. But if I walk away from a seemingly secure route because my soul has other ideas, I am a flake?</description>
-    </item>
-    
-    <item>
-      <title>Test markdown</title>
-      <link>https://blog.zouhl.com/post/2015-02-20-test-markdown/</link>
-      <pubDate>Fri, 20 Feb 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-02-20-test-markdown/</guid>
-      <description>You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&amp;rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
-Here is some bold text
-Here is a secondary heading Here&amp;rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?</description>
-    </item>
-    
-    <item>
-      <title>To be</title>
-      <link>https://blog.zouhl.com/post/2015-02-13-hamlet-monologue/</link>
-      <pubDate>Fri, 13 Feb 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-02-13-hamlet-monologue/</guid>
-      <description>To be, or not to be&amp;ndash;that is the question: Whether &amp;lsquo;tis nobler in the mind to suffer The slings and arrows of outrageous fortune Or to take arms against a sea of troubles And by opposing end them. To die, to sleep&amp;ndash; No more&amp;ndash;and by a sleep to say we end The heartache, and the thousand natural shocks That flesh is heir to. &amp;lsquo;Tis a consummation Devoutly to be wished. To die, to sleep&amp;ndash; To sleep&amp;ndash;perchance to dream: ay, there&amp;rsquo;s the rub, For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause.</description>
-    </item>
-    
-    <item>
-      <title>Dear diary</title>
-      <link>https://blog.zouhl.com/post/2015-01-27-dear-diary/</link>
-      <pubDate>Tue, 27 Jan 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-01-27-dear-diary/</guid>
-      <description>What is it with that Mary girl? Dragging me to school every day. As if I had a choice. What you don&amp;rsquo;t hear in those nursery rhymes is that she starves me if I don&amp;rsquo;t go to school with her; it&amp;rsquo;s the only way I can stay alive! I&amp;rsquo;m thinking about being adopted by Little Bo Peep, sure I may get lost, but anything is better than being with Mary and those little brats at school (shudder, shudder).</description>
-    </item>
-    
-    <item>
-      <title>Soccer</title>
-      <link>https://blog.zouhl.com/post/2015-01-19-soccer/</link>
-      <pubDate>Mon, 19 Jan 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-01-19-soccer/</guid>
-      <description>From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&amp;rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.</description>
-    </item>
-    
-    <item>
-      <title>Pirates arrrr</title>
-      <link>https://blog.zouhl.com/post/2015-01-15-pirates/</link>
-      <pubDate>Thu, 15 Jan 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-01-15-pirates/</guid>
-      <description>Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.</description>
-    </item>
-    
-    <item>
-      <title>First post!</title>
-      <link>https://blog.zouhl.com/post/2015-01-04-first-post/</link>
-      <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-01-04-first-post/</guid>
-      <description>This is my first post, how exciting!</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/hackintosh/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/hackintosh/</guid>
-      <description>title: Hackintosh date: 2019-02-22 12:26:21 updated: 2019-03-27 08:20:31 tags: - hackintosh - 黑苹果
-permalink: /hackintosh Hackintosh（黑苹果）的一些索引 * tonymacx86 购买指南及相关教程 https://www.tonymacx86.com/buyersguide/building-a-customac-hackintosh-the-ultimate-buyers-guide * 硬件指南 http://bbs.pcbeta.com/viewthread-1799271-1-1.html * 相关clover汇总 https://github.com/sqlsec/clover * 自用的 xps13 clover 地址 https://github.com/hoanX/xps13-9360-i7-7560u</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/set_up_a_jenkins_ci_cd_pipeline_with_kubernetes/</guid>
-      <description>title: Set Up a Jenkins CI/CD Pipeline with Kubernetes date: 2019-03-03 16:52:05 updated: 2019-03-30 07:00:57 tags: - jenkins - devops - k8s
-permalink: /articles/2019/03/03/1551603125319 以下内容仅是个人测试所用，如有不妥，可在下方评论留言，评论可能需要科学上网😂。
-jenkins在k8s下，可以实现节点自动调度，无需关注节点，且可以直接使用内部的api-server
-使用helm安装jenkins  创建一个pv，因为容器是无状态的，需要创建一个volume，用于存放jenkins的一些配置信息。  kind: PersistentVolume apiVersion: v1 metadata: name: jenkins-pv spec: # selector: # jenkins: master # storageClassName: jenkins-pv capacity: storage: 10Gi accessModes: - ReadWriteOnce persistentVolumeReclaimPolicy: Retain hostPath: path: &amp;quot;/data/jenkins&amp;quot;   使用helm安装jenkins  helm install --name jenkins stable/jenkins  如果开启了rbac可以使用helm upgrade jenkins stable/jenkins --set rbac.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/curl%E8%8E%B7%E5%8F%96%E5%A4%A9%E6%B0%94%E5%92%8C%E5%85%AC%E7%BD%91ip/</guid>
-      <description> title: curl获取天气和公网ip date: 2019-01-26 10:25:22 updated: 2019-03-19 04:50:18 tags: - linux
-permalink: /articles/2019/01/26/1548469522081 获取ip地址
-curl ipinfo.io curl cip.cc  获取天气
-curl wttr.in  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/elasticsearch_&#43;_logstash_&#43;_kafka_&#43;_filebeat_%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/</guid>
-      <description>title: elasticsearch + logstash + kafka + filebeat 的集群搭建及相关优化。 date: 2019-01-16 15:19:16 updated: 2019-03-16 08:32:56 tags: - elasticsearch - elk - logstash
-permalink: /articles/2019/01/16/1547623156236 elasticsearch + logstash + kafka + filebeat 简介 graph TD A[logFile] --&amp;gt;|filebeat| B(kafka) B --&amp;gt; C{logstash} C --&amp;gt;|index1| D C --&amp;gt;|index2| D C --&amp;gt;|index3| D[Elasticsearch]  Elasticsearch是一个基于Lucene的搜索引擎。它提供了一个分布式，多租户 -能够全文搜索与发动机HTTP Web界面和无架构JSON文件。
-Elasticsearch与名为Logstash的数据收集和日志解析引擎以及名为Kibana的分析和可视化平台一起开发。这三种产品设计用作集成解决方案，称为“弹性堆栈”（以前称为“ELK堆栈”）。
-Elasticsearch可用于搜索各种文档。它提供可扩展的搜索，近实时搜索，并支持多租户。[2] “Elasticsearch是分布式的，这意味着索引可以分为多个分片，每个分片可以有零个或多个副本。每个节点托管一个或多个分片，并充当协调器，将操作委托给正确的分片。重新平衡和路由是自动完成的“。[2]相关数据通常存储在同一索引中，该索引由一个或多个主分片和零个或多个副本分片组成。创建索引后，无法更改主分片的数量
-Elasticsearch cluster status: http://172.18.4.42:9200/_cluster/health  配置详解
-data node 如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器 node.master: false node.data: true</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
-      <description>title: go 中的 log，json 常用方法 date: 2019-02-10 15:54:32 updated: 2019-03-19 04:50:17 tags: - golang - log - json
-permalink: /articles/2019/02/10/1549785272463 log 下面是log包一些常用的格式配置
-const ( Ldate = 1 &amp;lt;&amp;lt; iota // the date in the local time zone: 2009/01/23 Ltime // the time in the local time zone: 01:23:23 Lmicroseconds // microsecond resolution: 01:23:23.123123. assumes Ltime. Llongfile // full file name and line number: /a/b/c/d.go:23 Lshortfile // final file name element and line number: d.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/golang_%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/golang_%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/</guid>
-      <description> title: golang 交叉编译 date: 2019-01-21 17:32:18 updated: 2019-03-19 04:50:18 tags: - golang - 编译
-permalink: /articles/2019/01/21/1548063138055 Golang 支持交叉编译，在一个平台上生成另一个平台的可执行程序 &amp;gt; GOOS：目标平台的操作系统（darwin、freebsd、linux、windows）
-&amp;gt; GOARCH：目标平台的体系架构（386、amd64、arm）
-&amp;gt; 交叉编译不支持 CGO 所以要禁用它
-# for linux CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build . # for windows CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build . # for mac CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build .  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/golang%E4%B8%AD%E7%9A%84test%E5%92%8Cbench%E6%A0%B7%E4%BE%8B/</guid>
-      <description>title: golang中的test和bench样例 date: 2019-02-10 15:31:54 updated: 2019-03-19 04:50:08 tags: - golang - test - bench
-permalink: /articles/2019/02/10/1549783914482 test bench 常用命令 使用 go test 进行测试和基准测试，-run 和 -bench 支持正则表达式来过滤函数名
- 测试必须以Test开头，测试文件总以_test.go作为文件名的结尾； 例子必须以Example开头且SendJson这个函数或方法必须存在，既能用于测试也能用于文档； 基准测试必须以Benchmark开头；
-  go test -v -run=&amp;ldquo;TestSendJson&amp;rdquo; go test -v -run=&amp;ldquo;ExampleSendJson&amp;rdquo; go test -v -run=&amp;ldquo;none&amp;rdquo; -bench=&amp;ldquo;BenchmarkSprintf&amp;rdquo; -benchmem  样例 Test // Sample test to show how to test the execution of an // internal endpoint. package handlers_test import ( &amp;quot;encoding/json&amp;quot; &amp;quot;net/http&amp;quot; &amp;quot;net/http/httptest&amp;quot; &amp;quot;testing&amp;quot; &amp;quot;github.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/</guid>
-      <description>title: go中的并发模式 date: 2019-02-06 19:54:53 updated: 2019-03-19 04:49:52 tags: - golang - goroutine
-permalink: /articles/2019/02/06/1549454093604 goroutine 并发（concurrency）不是并行（parallelism）。并行是让不同的代码片段同时在不同的物理处 理器上执行。并行的关键是同时做很多事情，而并发是指同时管理很多事情，这些事情可能只做 了一半就被暂停去做别的事情了。在很多情况下，并发的效果比并行好，因为操作系统和硬件的 总资源一般很少，但能支持系统同时做很多事情。这种“使用较少的资源做更多的事情”的哲学， 也是指导 Go 语言设计的哲学。
-如果希望让 goroutine 并行，必须使用多于一个逻辑处理器。当有多个逻辑处理器时，调度器 会将 goroutine 平等分配到每个逻辑处理器上。这会让 goroutine 在不同的线程上运行。不过要想真 的实现并行的效果，用户需要让自己的程序运行在有多个物理处理器的机器上。否则，哪怕 Go 语言运行时使用多个线程，goroutine 依然会在同一个物理处理器上并发运行，达不到并行的效果。
-如下图所示，展示了在一个逻辑处理器上并发运行goroutine和在两个逻辑处理器上并行运行两个并 发的 goroutine 之间的区别。调度器包含一些聪明的算法，这些算法会随着 Go 语言的发布被更新 和改进，所以不推荐盲目修改语言运行时对逻辑处理器的默认设置。
-​ 基于调度器的内部算法，一个正运行的 goroutine 在工作结束前，可以被停止并重新调度。 调度器这样做的目的是防止某个 goroutine 长时间占用逻辑处理器。当 goroutine 占用时间过长时， 调度器会停止当前正运行的 goroutine，并给其他可运行的 goroutine 运行的机会。
-​ 如下图所示，从逻辑处理器的角度展示了这一场景。在第 1 步，调度器开始运行 goroutine A，而 goroutine B 在运行队列里等待调度。之后，在第 2 步，调度器交换了 goroutine A 和 goroutine B。 由于 goroutine A 并没有完成工作，因此被放回到运行队列。之后，在第 3 步，goroutine B 完成 了它的工作并被系统销毁。这也让 goroutine A 继续之前的工作。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/https_%E8%AF%81%E4%B9%A6%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/https_%E8%AF%81%E4%B9%A6%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/</guid>
-      <description>title: https 证书自动更新 date: 2019-02-23 12:08:55 updated: 2019-03-29 23:09:07 tags: - linux - https - 证书
-permalink: /articles/2019/02/23/1550894935339 acme.sh 项目地址 https://github.com/Neilpang/acme.sh.git
-我的使用样例 官方支持的mode很多，我这里使用的是DNS mode。 首次使用下面的例子进行证书生成，之后acme会保存你的配置，并在crontab定期更新证书，更新之后会触发nginx force-reload，无需人工干预，让你的个人网站不回出现因为证书过期，二无法访问的问题。
-$ cat acme_zouhl.xyz.sh #!/bin/sh export Ali_Key=&amp;quot;&amp;quot; export Ali_Secret=&amp;quot;&amp;quot; /root/.acme.sh/acme.sh --issue \ --dns dns_ali \ -d *.zouhl.com -d zouhl.com \ -d *.zouhl.xyz -d zouhl.xyz \ --fullchain-file /opt/cert/zouhl.xyz/fullchain.pem \ --key-file /opt/cert/zouhl.xyz/privkey.pem \ --reloadcmd &amp;quot;systemctl force-reload nginx.service&amp;quot; \ --debug \ # --force  证书信息查看 openssl x509部分命令</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/k8s-object/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/k8s-object/</guid>
-      <description>title: k8s-object date: 2019-02-25 15:10:25 updated: 2019-03-30 09:50:36 tags: - k8s
-permalink: /articles/2019/02/25/1551078625910  原文链接: https://jimmysong.io/kubernetes-handbook/concepts/objects.html
-Objects  以下列举的内容都是 kubernetes 中的 Object，这些对象都可以在 yaml 文件中作为一种 API 类型来配置。
- Pod Node Namespace Service Volume PersistentVolume Deployment Secret StatefulSet DaemonSet ServiceAccount ReplicationController ReplicaSet Job CronJob SecurityContext ResourceQuota LimitRange HorizontalPodAutoscaling Ingress ConfigMap Label CustomResourceDefinition Role ClusterRole  我将它们简单的分类为以下几种资源对象：
-   类别 名称     资源对象 Pod、ReplicaSet、ReplicationController、Deployment、StatefulSet、DaemonSet、Job、CronJob、HorizontalPodAutoscaling、Node、Namespace、Service、Ingress、Label、CustomResourceDefinition   存储对象 Volume、PersistentVolume、Secret、ConfigMap   策略对象 SecurityContext、ResourceQuota、LimitRange   身份对象 ServiceAccount、Role、ClusterRole    理解 kubernetes 中的对象 在 Kubernetes 系统中，Kubernetes 对象 是持久化的条目。Kubernetes 使用这些条目去表示整个集群的状态。特别地，它们描述了如下信息：</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/k8s_-_configmap/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/k8s_-_configmap/</guid>
-      <description>title: k8s - ConfigMap date: 2019-02-25 13:57:23 updated: 2019-03-28 22:28:46 tags: - k8s
-permalink: /articles/2019/02/25/1551074243229 前言 其实ConfigMap功能在Kubernetes1.2版本的时候就有了，许多应用程序会从配置文件、命令行参数或环境变量中读取配置信息。这些配置信息需要与docker image解耦，你总不能每修改一个配置就重做一个image吧？ConfigMap API给我们提供了向容器中注入配置信息的机制，ConfigMap可以被用来保存单个属性，也可以用来保存整个配置文件或者JSON二进制大对象。 https://jimmysong.io/posts/kubernetes-configmap-introduction/</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/k8s_-_dashboard/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/k8s_-_dashboard/</guid>
-      <description>title: k8s - dashboard date: 2019-02-26 10:46:19 updated: 2019-03-28 11:21:29 tags: - k8s - dashboard
-permalink: /articles/2019/02/26/1551149179363 更换k8s-dashboard证书 生成证书 # root @ k8s-master in ~/k8s/dashboard [9:51:34] $ openssl genrsa -des3 -passout pass:x -out dashboard.pass.key 2048 Generating RSA private key, 2048 bit long modulus .....+++ .........................+++ e is 65537 (0x10001) # root @ k8s-master in ~/k8s/dashboard [9:51:36] $ ls dashboard.pass.key # root @ k8s-master in ~/k8s/dashboard [9:51:38] $ openssl rsa -passin pass:x -in dashboard.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/k8s_-_helm/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/k8s_-_helm/</guid>
-      <description>title: k8s - helm date: 2019-02-26 21:43:28 updated: 2019-03-28 11:22:37 tags: - k8s - helm
-permalink: /articles/2019/02/26/1551188608751 使用helm管理kubernetes应用 Helm是一个kubernetes应用的包管理工具，用来管理 charts&amp;ndash; 预先配置好的安装包资源，有点类似于Ubuntu的APT和CentOS中的yum。
-Helm chart是用来封装kubernetes原生应用程序的yaml文件，可以在你部署应用的时候自定义应用程序的一些metadata，便与应用程序的分发。
-Helm和charts的主要作用：
- 应用程序封装 版本管理 依赖检查 便于应用程序分发  安装helm 前提要求
- Kubernetes1.5以上版本 集群可访问到的镜像仓库 执行helm命令的主机可以访问到kubernetes集群  安装步骤
-首先需要安装helm客户端
-curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get &amp;gt; get_helm.sh chmod 700 get_helm.sh ./get_helm.sh  创建tiller的serviceaccount和clusterrolebinding
-kubectl create serviceaccount --namespace kube-system tiller kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller  然后安装helm服务端tiller
-helm init  （目前最新版v2.8.2，可以使用阿里云镜像，如： helm init --upgrade -i registry.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/k8s_-_%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/k8s_-_%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</guid>
-      <description>title: k8s - 基于nginx-ingress的灰度发布 date: 2019-02-27 13:15:32 updated: 2019-03-30 15:55:40 tags: - k8s - ingress - 灰度发布
-permalink: /articles/2019/02/27/1551244532415 假设当前线上环境我们已经有一套服务app-old对外提供7层服务，此时我们修复了一些问题，需要灰度发布上线一个新的版本app-new，但是我们又不希望简单直接地将所有客户端流量切换到新版本app-new中，而是希望仅仅切换20%的流量到新版本app-new中，待运行一段时间稳定，将所有的流量切换到app-new服务中后，再平滑地下线掉app-old服务。
-针对以上多种不同的应用发布需求，K8S Ingress Controller支持了多种流量切分方式：
- 基于Request Header的流量切分，适用于灰度发布以及AB测试场景
- 基于Cookie的流量切分，适用于灰度发布以及AB测试场景
- 基于Query Param的流量切分，适用于灰度发布以及AB测试场景
- 基于服务权重的流量切分，适用于蓝绿发布场景
-  以下测试基于服务权重的流量切分，也可以将nginx.ingress.kubernetes.io/canary-weight: &amp;quot;30&amp;quot;改为基于header的流量切分。
-准备老版本程序 老版本程序app-old
-app-old.yaml
-apiVersion: extensions/v1beta1 kind: Deployment metadata: name: app-old spec: replicas: 2 selector: matchLabels: run: app-old template: metadata: labels: run: app-old spec: containers: - image: zouhl/app:v2.1 imagePullPolicy: Always name: app-old ports: - containerPort: 80 protocol: TCP restartPolicy: Always --- apiVersion: v1 kind: Service metadata: name: app-old spec: ports: - port: 80 protocol: TCP targetPort: 80 selector: run: app-old sessionAffinity: None type: NodePor  老版本的ingress</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/markdown_%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/markdown_%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</guid>
-      <description>&lt;p&gt;title: markdown 使用小结
-date: 2019-01-15 19:56:50
-updated: 2019-03-11 07:55:28
-tags:
-- markdown&lt;/p&gt;
-
-&lt;h2 id=&#34;permalink-articles-2019-01-15-1547553410921&#34;&gt;permalink: /articles/2019/01/15/1547553410921&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://img.hacpai.com/bing/20180105.jpg?imageView2/1/w/960/h/520/interlace/1/q/100&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This is a test post.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/windows%E4%B8%8Bgcc%E7%BC%96%E8%AF%91%E5%99%A8%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/windows%E4%B8%8Bgcc%E7%BC%96%E8%AF%91%E5%99%A8%E9%97%AE%E9%A2%98/</guid>
-      <description>title: windows下GCC编译器问题 date: 2019-01-25 14:21:11 updated: 2019-03-19 10:09:31 tags: - golang - win
-permalink: /articles/2019/01/25/1548397271262 go编译sqlite3时报错，因为path里没有gcc
-github.com/mattn/go-sqlite3 cc1.exe: sorry, unimplemented: 64-bit mode not compiled in  解决方法 mingw地址 下载安装完成后，把安装目录下的bin加入到环境变量里。然后新开一个终端，执行gcc -v，测试效果</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/</guid>
-      <description> title: 一个小工具 date: 2019-02-18 20:08:01 updated: 2019-03-27 23:01:29 tags: - golang
-permalink: /articles/2019/02/18/1550892667026 一个下载网易云和QQ音乐的命令行工具 当前支持网易云和QQ音乐的搜索和并发下载。
-项目地址 https://github.com/zou2699/music-sd
-下载安装  编译安装  第一步，安装go的基础的环境，然后编译
-go get -d github.com/zou2699/music-sd cd $GOPATH/src/github.com/zou2699/music-sd go build .   直接使用编译好二进制包 直接使用编译好的二进制包，无需任何环境，当前支持提供64位的windows，macOS及linux。  Usage search and download </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E4%B8%80%E4%BA%9B%E7%AC%94%E8%AE%B0/</guid>
-      <description> title: 一些笔记 date: 2019-01-28 21:40:03 updated: 2019-03-19 04:50:17 tags: - linux - tools
-permalink: /articles/2019/01/28/1548682803474 一些笔记 烂记性，好笔头
-screen翻页 使用screen让程序在后台运行比较方便，但是查看程序输出时，需要用到下面的快捷键。 * [激活翻页]Ctrl+A+[ * [上下翻页]Ctrl-u,Ctrl+d
-ssh-add key 使用ssh-add key之后，再次使用ssh连接服务器，就不用再输入密码了。
-快速安装docker export VERSION=18.06 &amp;amp;&amp;amp; curl -sSL get.docker.com | sh  开启docker镜像加速 sudo mkdir -p /etc/docker sudo tee /etc/docker/daemon.json &amp;lt;&amp;lt;-&#39;EOF&#39; { &amp;quot;registry-mirrors&amp;quot;: [&amp;quot;https://q5h1h10k.mirror.aliyuncs.com&amp;quot;] } EOF sudo systemctl daemon-reload sudo systemctl restart docker  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/%E5%85%B3%E4%BA%8E/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E5%85%B3%E4%BA%8E/</guid>
-      <description>title: 关于 date: 2019-01-15 19:53:26 updated: 2019-03-30 12:23:39 tags: - Pipe - 关于
-permalink: /about 本博客基于Pipe修改，去除了社区的接口。
-去除了自带的评论，接入了disqus的评论。 https证书使用acme自动更新。 后台程序使用golang + mysql/sqlite。 前端使用了go的模板和vue。
-关于 喜爱linux，golang，docker，k8s等。 地址：四川成都 邮箱：rootzouhl@gmail.com Github: https://github.com/zou2699</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher_1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher_1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</guid>
-      <description>title: 基于rancher 1.6的企业级微服务平台 date: 2019-02-10 16:30:16 updated: 2019-03-25 21:16:16 tags: - rancher - docker - spring-boot
-permalink: /articles/2019/02/10/1549787416831 概要 Rancher是一个开源的企业级容器管理平台。通过 Rancher，企业再也不必自己使用一系列的开源软件去从头搭建容器服务平台。Rancher 提供了在生产环境中使用的管理 Docker 和 Kubernetes 的全栈化容器部署与管理平台。
-rancher中文介绍
-本文不介绍 rancher 的基本组成及原理，k8s也不涉及，因为1.6基于的Cattle容器编排调度引擎。
-主要介绍基于 spring boot 的微服务架构及CI/CD。同样适用于golang的微服务
-简要架构 如下图，是一个简单的流程图，dev提交代码，触发自动构建docker镜像以及通过rancer-cli更新rancher上面的服务。
-微服务相关组件 微服务中的服务注册和发现以及网关都是很重要的。
-对于小型公司没有时间及能力开发自己的插件，只有使用国外开源的一些组件。
-对于spring-boot，服务注册机发现可以使用eureka，网关可以使用zuul。
-这套产品使用起来很简单，也比较稳定。前期规划的很好的话，可以说是非常的适用。
-总而言之，学习成本低，简单，适用，稳定，但是可扩展性低，且rancher2.0已经指定k8s为编排引擎。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/%E6%9B%B4%E6%96%B0macos%E5%90%8E%E4%B8%A2%E5%A4%B1xcode/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E6%9B%B4%E6%96%B0macos%E5%90%8E%E4%B8%A2%E5%A4%B1xcode/</guid>
-      <description> title: 更新MacOS后，丢失xcode date: 2019-01-22 20:07:46 updated: 2019-03-29 21:32:40 tags: - xrun - mac
-permalink: /articles/2019/01/22/1548158866078  原因：就是每次MacOS更新都会自动卸载xcode。 解决方案：在terminal运行 xcode-select –install。就是手动重装xcode，然后用xcode-select --install来安装一些xcode插件。  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://blog.zouhl.com/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98iops/</guid>
-      <description>title: 测试磁盘IOPS date: 2019-01-22 19:16:12 updated: 2019-03-19 04:50:00 tags: - 磁盘 - IOPS
-permalink: /articles/2019/01/22/1548155772422 磁盘IOPS 测试随机写IOPS，运行以下命令： fio -direct=1 -iodepth=128 -rw=randwrite -ioengine=libaio -bs=4k -size=1G -numjobs=1 -runtime=1000 -group_reporting -filename=iotest -name=Rand_Write_Testing  测试随机读IOPS，运行以下命令： fio -direct=1 -iodepth=128 -rw=randread -ioengine=libaio -bs=4k -size=1G -numjobs=1 -runtime=1000 -group_reporting -filename=iotest -name=Rand_Read_Testing  测试顺序写吞吐量，运行以下命令： fio -direct=1 -iodepth=64 -rw=write -ioengine=libaio -bs=1024k -size=1G -numjobs=1 -runtime=1000 -group_reporting -filename=iotest -name=Write_PPS_Testing  测试顺序读吞吐量，运行以下命令： fio -direct=1 -iodepth=64 -rw=read -ioengine=libaio -bs=1024k -size=1G -numjobs=1 -runtime=1000 -group_reporting -filename=iotest -name=Read_PPS_Testing  相关参数    参数 说明     -direct=1 表示测试时忽略I/O缓存，数据直写。   -iodepth=128 表示使用AIO时，同时发出I/O数的上限为128。   -rw=randwrite 表示测试时的读写策略为随机写（random writes）。作其它测试时可以设置为：</description>
+      <title>First Post</title>
+      <link>http://blog.zouhl.com/post/first-post/</link>
+      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/first-post/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
     </item>
     
   </channel>

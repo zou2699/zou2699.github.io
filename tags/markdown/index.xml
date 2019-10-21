@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Markdown on 易来易碎</title>
-    <link>https://blog.zouhl.com/tags/markdown/</link>
-    <description>Recent content in Markdown on 易来易碎</description>
+    <title>markdown on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/markdown/</link>
+    <description>Recent content in markdown on Tux - zouhl&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <managingEditor>rootzouhl@gmail.com (zouhl)</managingEditor>
-    <webMaster>rootzouhl@gmail.com (zouhl)</webMaster>
-    <lastBuildDate>Thu, 11 Oct 2018 20:48:05 +0800</lastBuildDate>
+    <language>en</language>
+    <lastBuildDate>Tue, 15 Jan 2019 19:56:50 +0000</lastBuildDate>
     
-	<atom:link href="https://blog.zouhl.com/tags/markdown/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://blog.zouhl.com/tags/markdown/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>First Post</title>
-      <link>https://blog.zouhl.com/post/first-post/</link>
-      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/first-post/</guid>
-      <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
+      <title>markdown 使用小结</title>
+      <link>http://blog.zouhl.com/post/markdown%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</link>
+      <pubDate>Tue, 15 Jan 2019 19:56:50 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/markdown%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;
+
+&lt;div class=&#34;admonition note&#34;&gt;&lt;p class=&#34;admonition-title&#34;&gt;I&amp;#39;m title!&lt;/p&gt;
+  &lt;p&gt;biu biu biu.&lt;/p&gt;
+
+&lt;p&gt;&lt;details class=&#34;admonition note&#34;&gt;&lt;summary class=&#34;admonition-title&#34;&gt;note&lt;/summary&gt;
+  &lt;p&gt;biu biu biu.&lt;/p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/details&gt;&lt;/p&gt;
+
+&lt;div class=&#34;admonition example&#34;&gt;
+  &lt;p&gt;Without title.&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class=&#39;align-center&#39;&gt;
+  &lt;h2 id=&#34;center&#34;&gt;center&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.zouhl.com/img/sphere.jpg&#34; alt=&#34;img&#34; title=&#34;img&#34; /&gt;&lt;/p&gt;
+
+&lt;/div&gt;</description>
     </item>
     
     <item>
-      <title>Test markdown</title>
-      <link>https://blog.zouhl.com/post/2015-02-20-test-markdown/</link>
-      <pubDate>Fri, 20 Feb 2015 00:00:00 +0000</pubDate>
-      <author>rootzouhl@gmail.com (zouhl)</author>
-      <guid>https://blog.zouhl.com/post/2015-02-20-test-markdown/</guid>
-      <description>You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&amp;rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
-Here is some bold text
-Here is a secondary heading Here&amp;rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?</description>
+      <title>First Post</title>
+      <link>http://blog.zouhl.com/post/first-post/</link>
+      <pubDate>Thu, 11 Oct 2018 20:48:05 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/first-post/</guid>
+      <description>&lt;p&gt;This is a test post.&lt;/p&gt;</description>
     </item>
     
   </channel>

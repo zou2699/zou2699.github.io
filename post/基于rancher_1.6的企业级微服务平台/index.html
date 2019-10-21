@@ -5,44 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 易来易碎 - zouhl&#39;s blog</title>
+  <title> 基于rancher 1.6的企业级微服务平台 - zouhl&#39;s blog</title>
   <meta name="description" content="zouhl&#39;s blog" />
-  <meta property="og:title" content="易来易碎" />
-  <meta name="twitter:title" content="易来易碎" />
-  <meta name="description" content="title: 基于rancher 1.6的企业级微服务平台 date: 2019-02-10 16:30:16 updated: 2019-03-25 21:16:16 tags: - rancher - docker - spring-boot
-permalink: /articles/2019/02/10/1549787416831 概要 Rancher是一个开源的企业级容器管理平台。通过 Rancher，企业再也不必自己使用一系列的开源软件去从头搭建容器服务平台。Rancher 提供了在生产环境中使用的管理 Docker 和 Kubernetes 的全栈化容器部署与管理平台。
-rancher中文介绍
-本文不介绍 rancher 的基本组成及原理，k8s也不涉及，因为1.6基于的Cattle容器编排调度引擎。
-主要介绍基于 spring boot 的微服务架构及CI/CD。同样适用于golang的微服务
-简要架构 如下图，是一个简单的流程图，dev提交代码，触发自动构建docker镜像以及通过rancer-cli更新rancher上面的服务。
-微服务相关组件 微服务中的服务注册和发现以及网关都是很重要的。
-对于小型公司没有时间及能力开发自己的插件，只有使用国外开源的一些组件。
-对于spring-boot，服务注册机发现可以使用eureka，网关可以使用zuul。
-这套产品使用起来很简单，也比较稳定。前期规划的很好的话，可以说是非常的适用。
-总而言之，学习成本低，简单，适用，稳定，但是可扩展性低，且rancher2.0已经指定k8s为编排引擎。">
-  <meta property="og:description" content="title: 基于rancher 1.6的企业级微服务平台 date: 2019-02-10 16:30:16 updated: 2019-03-25 21:16:16 tags: - rancher - docker - spring-boot
-permalink: /articles/2019/02/10/1549787416831 概要 Rancher是一个开源的企业级容器管理平台。通过 Rancher，企业再也不必自己使用一系列的开源软件去从头搭建容器服务平台。Rancher 提供了在生产环境中使用的管理 Docker 和 Kubernetes 的全栈化容器部署与管理平台。
-rancher中文介绍
-本文不介绍 rancher 的基本组成及原理，k8s也不涉及，因为1.6基于的Cattle容器编排调度引擎。
-主要介绍基于 spring boot 的微服务架构及CI/CD。同样适用于golang的微服务
-简要架构 如下图，是一个简单的流程图，dev提交代码，触发自动构建docker镜像以及通过rancer-cli更新rancher上面的服务。
-微服务相关组件 微服务中的服务注册和发现以及网关都是很重要的。
-对于小型公司没有时间及能力开发自己的插件，只有使用国外开源的一些组件。
-对于spring-boot，服务注册机发现可以使用eureka，网关可以使用zuul。
-这套产品使用起来很简单，也比较稳定。前期规划的很好的话，可以说是非常的适用。
-总而言之，学习成本低，简单，适用，稳定，但是可扩展性低，且rancher2.0已经指定k8s为编排引擎。">
-  <meta name="twitter:description" content="title: 基于rancher 1.6的企业级微服务平台 date: 2019-02-10 16:30:16 updated: 2019-03-25 21:16:16 tags: - rancher - docker - spring-boot
-permalink: /articles/2019/02/10/1549787416831 概要 Rancher是一个开源的企业级容器管理平台。 …">
+  <meta property="og:title" content="基于rancher 1.6的企业级微服务平台" />
+  <meta name="twitter:title" content="基于rancher 1.6的企业级微服务平台" />
+  <meta name="description" content="一个简单稳定的企业级微服务架构">
+  <meta property="og:description" content="一个简单稳定的企业级微服务架构">
+  <meta name="twitter:description" content="一个简单稳定的企业级微服务架构">
   <meta name="author" content="zouhl"/>
   <link href='https://blog.zouhl.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="twitter:card" content="summary" />
   <meta property="og:url" content="https://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher_1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="易来易碎" />
+  <meta property="og:site_name" content="Tux" />
 
   <meta name="generator" content="Hugo 0.54.0" />
   <link rel="canonical" href="https://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher_1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" />
-  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="易来易碎">
+  <link rel="alternate" href="https://blog.zouhl.com/index.xml" type="application/rss+xml" title="Tux">
   <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -143,7 +122,7 @@ if (!doNotTrack) {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://blog.zouhl.com/">易来易碎</a>
+      <a class="navbar-brand" href="https://blog.zouhl.com">Tux</a>
     </div>
     <div class="collapse navbar-collapse" id="main-navbar">
       <ul class="nav navbar-nav navbar-right">
@@ -162,10 +141,13 @@ if (!doNotTrack) {
               <div class="navlinks-children">
                 
                 
-                  <a href="https://blog.zouhl.com/tags/k8s">kubernetes</a>
+                  <a href="https://blog.zouhl.com/tags/kubernetes">kubernetes</a>
                 
                 
                   <a href="https://blog.zouhl.com/tags/golang">golang</a>
+                
+                
+                  <a href="https://blog.zouhl.com/tags/linux">linux</a>
                 
               </div>
             </li>
@@ -173,7 +155,7 @@ if (!doNotTrack) {
         
           
             <li>
-              <a title="About" href="/page/about/">About</a>
+              <a title="Tags" href="/tags">Tags</a>
               
               
             </li>
@@ -181,7 +163,7 @@ if (!doNotTrack) {
         
           
             <li>
-              <a title="Tags" href="/tags">Tags</a>
+              <a title="About" href="/page/about/">About</a>
               
               
             </li>
@@ -204,8 +186,8 @@ if (!doNotTrack) {
     <div class="avatar-container">
       <div class="avatar-img-border">
         
-          <a title="易来易碎" href="https://blog.zouhl.com/">
-            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="易来易碎" />
+          <a title="Tux" href="https://blog.zouhl.com">
+            <img class="avatar-img" src="https://blog.zouhl.com/img/avatar-icon.png" alt="Tux" />
           </a>
         
       </div>
@@ -221,7 +203,7 @@ if (!doNotTrack) {
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">搜索 易来易碎</h4>
+          <h4 class="modal-title">搜索 Tux</h4>
         </div>
         <div class="modal-body">
           <gcse:search></gcse:search>
@@ -244,7 +226,55 @@ if (!doNotTrack) {
 
 
 
-  <div class="intro-header"></div>
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://zouhl.com/wallpaper.jpg" data-img-desc-1="bing"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="page-heading">
+                
+                  
+                     <h1>基于rancher 1.6的企业级微服务平台</h1>
+                     
+                    <span class="post-meta">
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="post-heading">
+                <h1 align="center">基于rancher 1.6的企业级微服务平台</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
     
@@ -256,10 +286,16 @@ if (!doNotTrack) {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Sun Feb 10, 2019</h4>
     </section>
     <h5 id="wc">100 Words|Read in about 1 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://blog.zouhl.com/tags/rancher/">rancher</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/spring-boot/">spring-boot</a> &nbsp;
     </h5>
 </div>
 
@@ -269,17 +305,7 @@ if (!doNotTrack) {
   
 
 
-                
-
-<p>title: 基于rancher 1.6的企业级微服务平台
-date: 2019-02-10 16:30:16
-updated: 2019-03-25 21:16:16
-tags:
-- rancher
-- docker
-- spring-boot</p>
-
-<h2 id="permalink-articles-2019-02-10-1549787416831">permalink: /articles/2019/02/10/1549787416831</h2>
+                <p>一个简单稳定的企业级微服务架构</p>
 
 <h2 id="概要">概要</h2>
 
@@ -308,17 +334,16 @@ tags:
 <p>这套产品使用起来很简单，也比较稳定。前期规划的很好的话，可以说是非常的适用。</p>
 
 <p>总而言之，学习成本低，简单，适用，稳定，但是可扩展性低，且rancher2.0已经指定k8s为编排引擎。</p>
-
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://blog.zouhl.com/post/%E6%9B%B4%E6%96%B0macos%E5%90%8E%E4%B8%A2%E5%A4%B1xcode/" data-toggle="tooltip" data-placement="top" title="">&larr; 前一篇</a>
+                    <a href="https://blog.zouhl.com/post/go_%E4%B8%AD%E7%9A%84_logjson_%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" data-toggle="tooltip" data-placement="top" title="go 中的 log，json 常用方法">&larr; 前一篇</a>
                 </li>
                  
                 <li class="next">
-                    <a href="https://blog.zouhl.com/post/%E5%85%B3%E4%BA%8E/" data-toggle="tooltip" data-placement="top" title="">后一篇 &rarr;</a>
+                    <a href="https://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/" data-toggle="tooltip" data-placement="top" title="一个命令行下载音乐的小工具">后一篇 &rarr;</a>
                 </li>
                 
             </ul>
@@ -332,10 +357,16 @@ tags:
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Sun Feb 10, 2019</h4>
     </section>
     <h5 id="wc">100 Words|Read in about 1 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://blog.zouhl.com/tags/rancher/">rancher</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://blog.zouhl.com/tags/spring-boot/">spring-boot</a> &nbsp;
     </h5>
 </div>
 
@@ -417,7 +448,7 @@ tags:
           
           
             &nbsp;&bull;&nbsp;
-            <a href="https://blog.zouhl.com/">易来易碎</a>
+            <a href="https://blog.zouhl.com">Tux</a>
           
         </p>
 
@@ -454,6 +485,8 @@ tags:
 </script>
 
 
+
+  <script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59dcc84aa6f68caf"></script>
 
 
 

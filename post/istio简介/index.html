@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Istio简介 - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="前言 什么是服务网格？ 在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。 服务网格（Ser" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/istio%E7%AE%80%E4%BB%8B/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Istio简介" />
+<meta property="og:description" content="前言 什么是服务网格？ 在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。 服务网格（Ser" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/istio%E7%AE%80%E4%BB%8B/" />
+<meta property="article:published_time" content="2019-05-21T09:39:11&#43;08:00"/>
+<meta property="article:modified_time" content="2019-05-21T09:39:11&#43;08:00"/>
+
+<meta itemprop="name" content="Istio简介">
+<meta itemprop="description" content="前言 什么是服务网格？ 在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。 服务网格（Ser">
+
+
+<meta itemprop="datePublished" content="2019-05-21T09:39:11&#43;08:00" />
+<meta itemprop="dateModified" content="2019-05-21T09:39:11&#43;08:00" />
+<meta itemprop="wordCount" content="4239">
+
+
+
+<meta itemprop="keywords" content="kubernetes,istio,mesh," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Istio简介"/>
+<meta name="twitter:description" content="前言 什么是服务网格？ 在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。 服务网格（Ser"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Istio简介</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-05-21 Tue </span>
+        <div class="post-category">
+            <a href="/categories/kubernetes/"> kubernetes </a>
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 4239 words </span>
+          <span class="more-meta"> 9 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前言">前言</a>
+<ul>
+<li><a href="#什么是服务网格">什么是服务网格？</a></li>
+<li><a href="#为什么要使用-istio">为什么要使用 Istio？</a></li>
+</ul></li>
+<li><a href="#istio核心功能">Istio核心功能</a>
+<ul>
+<li><a href="#流量管理">流量管理</a></li>
+<li><a href="#安全">安全</a></li>
+<li><a href="#可观察性">可观察性</a></li>
+<li><a href="#平台支持">平台支持</a></li>
+<li><a href="#集成和定制">集成和定制</a></li>
+</ul></li>
+<li><a href="#istio架构">Istio架构</a>
+<ul>
+<li><a href="#envoy">Envoy</a></li>
+<li><a href="#mixer">Mixer</a></li>
+<li><a href="#pilot">Pilot</a></li>
+<li><a href="#citadel">Citadel</a></li>
+<li><a href="#galley">Galley</a></li>
+</ul></li>
+<li><a href="#组件作用">组件作用</a>
+<ul>
+<li><a href="#流量管理-pilot">流量管理 — pilot</a></li>
+</ul></li>
+<li><a href="#请求路由">请求路由</a>
+<ul>
+<li><a href="#服务之间的通讯">服务之间的通讯</a></li>
+<li><a href="#ingress-和-egress">Ingress 和 Egress</a></li>
+</ul></li>
+<li><a href="#服务发现和负载均衡">服务发现和负载均衡</a></li>
+<li><a href="#故障处理">故障处理</a></li>
+<li><a href="#故障注入">故障注入</a></li>
+<li><a href="#规则配置">规则配置</a>
+<ul>
+<li><a href="#安全-1">安全</a>
+<ul>
+<li><a href="#pki">PKI</a>
+<ul>
+<li><a href="#kubernetes-方案">Kubernetes 方案</a></li>
+<li><a href="#本地机器方案">本地机器方案</a></li>
+<li><a href="#kubernetes-中的代理节点">Kubernetes 中的代理节点</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#策略和遥测">策略和遥测</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="前言">前言</h2>
+
+<h3 id="什么是服务网格">什么是服务网格？</h3>
+
+<p>在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。</p>
+
+<p>服务网格（Service Mesh）这个术语通常用于描述构成这些应用程序的微服务网络以及应用之间的交互。随着规模和复杂性的增长，服务网格越来越难以理解和管理。它的需求包括服务发现、负载均衡、故障恢复、指标收集和监控以及通常更加复杂的运维需求，例如 A/B 测试、金丝雀发布、限流、访问控制和端到端认证等。</p>
+
+<p>Istio 提供了一个完整的解决方案，通过为整个服务网格提供行为洞察和操作控制来满足微服务应用程序的多样化需求。</p>
+
+<h3 id="为什么要使用-istio">为什么要使用 Istio？</h3>
+
+<p>Istio 提供一种简单的方式来为已部署的服务建立网络，该网络具有负载均衡、服务间认证、监控等功能，只需要对服务的代码进行<a href="https://istio.io/zh/docs/tasks/telemetry/distributed-tracing/overview/#understanding-what-happened">一点</a>或不需要做任何改动。想要让服务支持 Istio，只需要在您的环境中部署一个特殊的 sidecar 代理，使用 Istio 控制平面功能配置和管理代理，拦截微服务之间的所有网络通信：</p>
+
+<ul>
+<li>HTTP、gRPC、WebSocket 和 TCP 流量的自动负载均衡。</li>
+<li>通过丰富的路由规则、重试、故障转移和故障注入，可以对流量行为进行细粒度控制。</li>
+<li>可插入的策略层和配置 API，支持访问控制、速率限制和配额。</li>
+<li>对出入集群入口和出口中所有流量的自动度量指标、日志记录和追踪。</li>
+<li>通过强大的基于身份的验证和授权，在集群中实现安全的服务间通信。</li>
+</ul>
+
+<p>Istio 旨在实现可扩展性，满足各种部署需求。</p>
+
+<h2 id="istio核心功能">Istio核心功能</h2>
+
+<p>Istio 在服务网络中统一提供了许多关键功能：</p>
+
+<h3 id="流量管理">流量管理</h3>
+
+<p>通过简单的规则配置和流量路由，您可以控制服务之间的流量和 API 调用。Istio 简化了断路器、超时和重试等服务级别属性的配置，并且可以轻松设置 A/B测试、金丝雀部署和基于百分比的流量分割的分阶段部署等重要任务。</p>
+
+<p>通过更好地了解您的流量和开箱即用的故障恢复功能，您可以在问题出现之前先发现问题，使调用更可靠，并且使您的网络更加强大——无论您面临什么条件。</p>
+
+<h3 id="安全">安全</h3>
+
+<p>Istio 的安全功能使开发人员可以专注于应用程序级别的安全性。Istio 提供底层安全通信信道，并大规模管理服务通信的认证、授权和加密。使用Istio，服务通信在默认情况下是安全的，它允许您跨多种协议和运行时一致地实施策略——所有这些都很少或根本不需要应用程序更改。</p>
+
+<p>虽然 Istio 与平台无关，但将其与 Kubernetes（或基础架构）网络策略结合使用，其优势会更大，包括在网络和应用层保护 pod 间或服务间通信的能力。</p>
+
+<h3 id="可观察性">可观察性</h3>
+
+<p>Istio 强大的追踪、监控和日志记录可让您深入了解服务网格部署。通过 Istio 的监控功能，可以真正了解服务性能如何影响上游和下游的功能，而其自定义仪表板可以提供对所有服务性能的可视性，并让您了解该性能如何影响您的其他进程。</p>
+
+<p>Istio 的 Mixer 组件负责策略控制和遥测收集。它提供后端抽象和中介，将 Istio 的其余部分与各个基础架构后端的实现细节隔离开来，并为运维提供对网格和基础架构后端之间所有交互的细粒度控制。</p>
+
+<p>所有这些功能可以让您可以更有效地设置、监控和实施服务上的 SLO。当然，最重要的是，您可以快速有效地检测和修复问题。</p>
+
+<h3 id="平台支持">平台支持</h3>
+
+<p>Istio 是独立于平台的，旨在运行在各种环境中，包括跨云、内部部署、Kubernetes、Mesos 等。您可以在 Kubernetes 上部署 Istio 或具有 Consul 的 Nomad 上部署。Istio 目前支持：</p>
+
+<ul>
+<li>在 Kubernetes 上部署的服务</li>
+<li>使用 Consul 注册的服务</li>
+<li>在虚拟机上部署的服务</li>
+</ul>
+
+<h3 id="集成和定制">集成和定制</h3>
+
+<p>策略执行组件可以扩展和定制，以便与现有的 ACL、日志、监控、配额、审计等方案集成。</p>
+
+<h2 id="istio架构">Istio架构</h2>
+
+<p>Istio 服务网格逻辑上分为<strong>数据平面</strong>和<strong>控制平面</strong>。</p>
+
+<ul>
+<li><strong>数据平面</strong>由一组以 sidecar 方式部署的智能代理（<a href="https://www.envoyproxy.io/">Envoy</a>）组成。这些代理可以调节和控制微服务及 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/">Mixer</a> 之间所有的网络通信。</li>
+<li><strong>控制平面</strong>负责管理和配置代理来路由流量。此外控制平面配置 Mixer 以实施策略和收集遥测数据。</li>
+</ul>
+
+<p>下图显示了构成每个面板的不同组件：</p>
+
+<p><a href="https://istio.io/docs/concepts/what-is-istio/arch.svg"><img src="https://istio.io/docs/concepts/what-is-istio/arch.svg" alt="基于 Istio 的应用程序架构概览" /></a></p>
+
+<p>Istio 架构</p>
+
+<h3 id="envoy">Envoy</h3>
+
+<p>Istio 使用 <a href="https://www.envoyproxy.io/">Envoy</a> 代理的扩展版本，Envoy 是以 C++ 开发的高性能代理，用于调解服务网格中所有服务的所有入站和出站流量。Envoy 的许多内置功能被 Istio 发扬光大，例如：</p>
+
+<ul>
+<li>动态服务发现</li>
+<li>负载均衡</li>
+<li>TLS 终止</li>
+<li>HTTP/2 &amp; gRPC 代理</li>
+<li>熔断器</li>
+<li>健康检查、基于百分比流量拆分的灰度发布</li>
+<li>故障注入</li>
+<li>丰富的度量指标</li>
+</ul>
+
+<p>Envoy 被部署为 <strong>sidecar</strong>，和对应服务在同一个 Kubernetes pod 中。这允许 Istio 将大量关于流量行为的信号作为<a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#属性">属性</a>提取出来，而这些属性又可以在 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/">Mixer</a> 中用于执行策略决策，并发送给监控系统，以提供整个网格行为的信息。</p>
+
+<p>Sidecar 代理模型还可以将 Istio 的功能添加到现有部署中，而无需重新构建或重写代码。可以阅读更多来了解为什么我们在<a href="https://istio.io/zh/docs/concepts/what-is-istio/#设计目标">设计目标</a>中选择这种方式。</p>
+
+<h3 id="mixer">Mixer</h3>
+
+<p><a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/">Mixer</a> 是一个独立于平台的组件，负责在服务网格上执行访问控制和使用策略，并从 Envoy 代理和其他服务收集遥测数据。代理提取请求级<a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#属性">属性</a>，发送到 Mixer 进行评估。有关属性提取和策略评估的更多信息，请参见 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#配置模型">Mixer 配置</a>。</p>
+
+<p>Mixer 中包括一个灵活的插件模型，使其能够接入到各种主机环境和基础设施后端，从这些细节中抽象出 Envoy 代理和 Istio 管理的服务。</p>
+
+<h3 id="pilot">Pilot</h3>
+
+<p><a href="https://istio.io/zh/docs/concepts/traffic-management/#pilot-和-envoy">Pilot</a> 为 Envoy sidecar 提供服务发现功能，为智能路由（例如 A/B 测试、金丝雀部署等）和弹性（超时、重试、熔断器等）提供流量管理功能。它将控制流量行为的高级路由规则转换为特定于 Envoy 的配置，并在运行时将它们传播到 sidecar。</p>
+
+<p>Pilot 将平台特定的服务发现机制抽象化并将其合成为符合 <a href="https://github.com/envoyproxy/data-plane-api">Envoy 数据平面 API</a> 的任何 sidecar 都可以使用的标准格式。这种松散耦合使得 Istio 能够在多种环境下运行（例如，Kubernetes、Consul、Nomad），同时保持用于流量管理的相同操作界面。</p>
+
+<h3 id="citadel">Citadel</h3>
+
+<p><a href="https://istio.io/zh/docs/concepts/security/">Citadel</a> 通过内置身份和凭证管理赋能强大的服务间和最终用户身份验证。可用于升级服务网格中未加密的流量，并为运维人员提供基于服务标识而不是网络控制的强制执行策略的能力。从 0.5 版本开始，Istio 支持<a href="https://istio.io/zh/docs/concepts/security/#认证">基于角色的访问控制</a>，以控制谁可以访问您的服务，而不是基于不稳定的三层或四层网络标识。</p>
+
+<h3 id="galley">Galley</h3>
+
+<p>Galley 代表其他的 Istio 控制平面组件，用来验证用户编写的 Istio API 配置。随着时间的推移，Galley 将接管 Istio 获取配置、 处理和分配组件的顶级责任。它将负责将其他的 Istio 组件与从底层平台（例如 Kubernetes）获取用户配置的细节中隔离开来。</p>
+
+<h2 id="组件作用">组件作用</h2>
+
+<h3 id="流量管理-pilot">流量管理 — pilot</h3>
+
+<p>Istio 流量管理的核心组件是 <a href="https://istio.io/zh/docs/concepts/traffic-management/#pilot-和-envoy">Pilot</a>，它管理和配置部署在特定 Istio 服务网格中的所有 Envoy 代理实例。它允许您指定在 Envoy 代理之间使用什么样的路由流量规则，并配置故障恢复功能，如超时、重试和熔断器。它还维护了网格中所有服务的规范模型，并使用这个模型通过发现服务让 Envoy 了解网格中的其他实例。</p>
+
+<p>每个 Envoy 实例都会维护<a href="https://istio.io/zh/docs/concepts/traffic-management/#服务发现和负载均衡">负载均衡信息</a>信息，这些信息来自 Pilot 以及对负载均衡池中其他实例的定期健康检查。从而允许其在目标实例之间智能分配流量，同时遵循其指定的路由规则。</p>
+
+<p>Pilot 负责管理通过 Istio 服务网格发布的 Envoy 实例的生命周期。</p>
+
+<p><a href="https://istio.io/docs/concepts/traffic-management/PilotAdapters.svg"><img src="https://istio.io/docs/concepts/traffic-management/PilotAdapters.svg" alt="Pilot 架构" /></a></p>
+
+<p>Pilot 架构</p>
+
+<p>如上图所示，在网格中 Pilot 维护了一个服务的规则表示并独立于底层平台。Pilot中的特定于平台的适配器负责适当地填充这个规范模型。例如，在 Pilot 中的 Kubernetes 适配器实现了必要的控制器，来观察 Kubernetes API 服务器，用于更改 pod 的注册信息、入口资源以及存储流量管理规则的第三方资源。这些数据被转换为规范表示。然后根据规范表示生成特定的 Envoy 的配置。</p>
+
+<p>Pilot 公开了用于服务发现 、负载均衡池和路由表的动态更新的 API。</p>
+
+<p>运维人员可以通过 <a href="https://istio.io/docs/reference/config/networking/">Pilot 的 Rules API</a> 指定高级流量管理规则。这些规则被翻译成低级配置，并通过 discovery API 分发到 Envoy 实例。</p>
+
+<blockquote>
+<h2 id="请求路由">请求路由</h2>
+
+<h3 id="服务之间的通讯">服务之间的通讯</h3>
+
+<h3 id="ingress-和-egress">Ingress 和 Egress</h3>
+
+<h2 id="服务发现和负载均衡">服务发现和负载均衡</h2>
+
+<h2 id="故障处理">故障处理</h2>
+
+<h2 id="故障注入">故障注入</h2>
+
+<h2 id="规则配置">规则配置</h2>
+
+<ul>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/"><code>VirtualService</code></a> 在 Istio 服务网格中定义路由规则，控制路由如何路由到服务上。</li>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/destination-rule/"><code>DestinationRule</code></a> 是 <code>VirtualService</code> 路由生效后，配置应用与请求的策略集。</li>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/"><code>ServiceEntry</code></a> 是通常用于在 Istio 服务网格之外启用对服务的请求。</li>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/gateway/"><code>Gateway</code></a> 为 HTTP/TCP 流量配置负载均衡器，最常见的是在网格的边缘的操作，以启用应用程序的入口流量。</li>
+</ul>
+</blockquote>
+
+<h3 id="安全-1">安全</h3>
+
+<p>将单一应用程序分解为微服务可提供各种好处，包括更好的灵活性、可伸缩性以及服务复用的能力。但是，微服务也有特殊的安全需求：</p>
+
+<ul>
+<li>为了抵御中间人攻击，需要流量加密。</li>
+<li>为了提供灵活的服务访问控制，需要双向 TLS 和细粒度的访问策略。</li>
+<li>要审核谁在什么时候做了什么，需要审计工具。</li>
+</ul>
+
+<p>Istio 中的安全性涉及多个组件：</p>
+
+<ul>
+<li><p><strong>Citadel</strong> 用于密钥和证书管理</p></li>
+
+<li><p><strong>Sidecar 和周边代理</strong> 实现客户端和服务器之间的安全通信</p></li>
+
+<li><p><strong>Pilot</strong> 将<a href="https://istio.io/zh/docs/concepts/security/#授权策略">授权策略</a>和<a href="https://istio.io/zh/docs/concepts/security/#安全命名">安全命名信息</a>分发给代理</p></li>
+
+<li><p><strong>Mixer</strong> 管理授权和审计</p></li>
+</ul>
+
+<p><a href="https://istio.io/docs/concepts/security/architecture.svg"><img src="https://istio.io/docs/concepts/security/architecture.svg" alt="Istio 安全架构" /></a></p>
+
+<p>Istio 安全架构</p>
+
+<p>在下面的部分中，我们将详细介绍 Istio 安全功能。</p>
+
+<h4 id="pki">PKI</h4>
+
+<p>Istio PKI 建立在 Istio Citadel 之上，可为每个工作负载安全地提供强大的工作负载标识。 Istio 使用 X.509 证书来携带 <a href="https://spiffe.io/">SPIFFE</a> 格式的身份。 PKI 还可以大规模自动化密钥和证书轮换。</p>
+
+<p>Istio 支持在 Kubernetes pod 和本地计算机上运行的服务。 目前，我们为每个方案使用不同的证书密钥配置机制。</p>
+
+<h5 id="kubernetes-方案">Kubernetes 方案</h5>
+
+<ol>
+<li>Citadel 监视 Kubernetes <code>apiserver</code>，为每个现有和新的服务帐户创建 SPIFFE 证书和密钥对。Citadel 将证书和密钥对存储为 <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secret</a>。</li>
+<li>创建 pod 时，Kubernetes 会根据其服务帐户通过 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#secret">Kubernetes secret volume</a> 将证书和密钥对挂载到 pod。</li>
+<li>Citadel 监视每个证书的生命周期，并通过重写 Kubernetes 秘密自动轮换证书。</li>
+<li>Pilot 生成<a href="https://istio.io/zh/docs/concepts/security/#安全命名">安全命名</a>信息，该信息定义了哪些 Service Account 可以运行哪些服务。Pilot 然后将安全命名信息传递给 envoy sidecar。</li>
+</ol>
+
+<h5 id="本地机器方案">本地机器方案</h5>
+
+<ol>
+<li>Citadel 创建 gRPC 服务来接受<a href="https://en.wikipedia.org/wiki/Certificate_signing_request">证书签名请求</a>（CSR）。</li>
+<li>节点代理生成私钥和 CSR，并将 CSR 及其凭据发送给 Citadel 进行签名。</li>
+<li>Citadel 验证 CSR 承载的凭证，并签署 CSR 以生成证书。</li>
+<li>节点代理将从 Citadel 接收的证书和私钥发送给 Envoy。</li>
+<li>上述 CSR 过程会定期重复进行证书和密钥轮换。</li>
+</ol>
+
+<h5 id="kubernetes-中的代理节点">Kubernetes 中的代理节点</h5>
+
+<p>Istio 提供了在 Kubernetes 中使用节点代理进行证书和密钥分配的选项，如下图所示。请注意，本地计算机的标识提供流程是相同的，因此我们仅描述 Kubernetes 方案。</p>
+
+<p><a href="https://istio.io/docs/concepts/security/node_agent.svg"><img src="https://istio.io/docs/concepts/security/node_agent.svg" alt="PKI 与 Kubernetes 中的节点代理" /></a></p>
+
+<p>PKI 与 Kubernetes 中的节点代理</p>
+
+<p>流程如下：</p>
+
+<ol>
+<li><p>Citadel 创建一个 gRPC 服务来接受 CSR 请求。</p></li>
+
+<li><p>Envoy 通过 Envoy secret 发现服务（SDS）API 发送证书和密钥请求。</p></li>
+
+<li><p>收到 SDS 请求后，节点代理会创建私钥和 CSR，并将 CSR 及其凭据发送给 Citadel 进行签名。</p></li>
+
+<li><p>Citadel 验证 CSR 中携带的凭证，并签署 CSR 以生成证书。</p></li>
+
+<li><p>节点代理通过 Envoy SDS API 将从 Citadel 接收的证书和私钥发送给 Envoy。</p></li>
+
+<li><p>上述 CSR 过程会定期重复进行证书和密钥轮换。</p></li>
+</ol>
+
+<h3 id="策略和遥测">策略和遥测</h3>
+
+<p>Mixer 是负责提供策略控制和遥测收集的 Istio 组件：</p>
+
+<p><a href="https://istio.io/docs/concepts/policies-and-telemetry/topology-without-cache.svg"><img src="https://istio.io/docs/concepts/policies-and-telemetry/topology-without-cache.svg" alt="Mixer 拓扑" /></a></p>
+
+<p>Mixer 拓扑</p>
+
+<p>在每次请求执行先决条件检查之前以及在每次报告遥测请求之后，Envoy sidecar 在逻辑上调用 Mixer。 该 Sidecar 具有本地缓存，从而可以在缓存中执行相对较大比例的前提条件检查。此外，sidecar 缓冲出站遥测，使其实际上不需要经常调用 Mixer。</p>
+
+<p>在高层上，Mixer 提供：</p>
+
+<ul>
+<li><strong>后端抽象</strong>。Mixer 隔离 Istio 的其余部分和各个基础设施后端的实现细节。</li>
+<li><strong>中介</strong>。Mixer 允许运维对网格和基础设施后端之间的所有交互进行细化控制。</li>
+</ul>
+
+<p>除了这些纯粹的功能方面，Mixer 还具有如下所述的<a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#可靠性和延迟">可靠性和可扩展性</a>方面的优势。</p>
+
+<p>策略执行和遥测收集完全由配置驱动。可以<a href="https://istio.io/zh/docs/setup/kubernetes/install/helm/">完全禁用这些功能</a>，并免除在 Istio 部署中运行 Mixer 组件的必要性。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-05-21 Tue
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kubernetes/">kubernetes</a>
+          <a href="/tags/istio/">istio</a>
+          <a href="/tags/mesh/">mesh</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">kubectl jsonpath简介</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/xip.io/">
+            <span class="next-text nav-default">Xip.io 内网dns解析方案</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-05-21 09:39:11 \x2b0800 CST',
+        title: 'Istio简介',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

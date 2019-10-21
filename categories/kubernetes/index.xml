@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>kubernetes on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/categories/kubernetes/</link>
+    <description>Recent content in kubernetes on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 30 May 2019 15:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用Kubernetes，Istio和Helm实现金丝雀发布</title>
+      <link>http://blog.zouhl.com/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Thu, 30 May 2019 15:00:00 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%BD%BF%E7%94%A8kubernetesistio%E5%92%8Chelm%E5%AE%9E%E7%8E%B0%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/</guid>
+      <description>作者 Maninderjit (Mani) Bindra | 译者 宋歌 |查看原文 编者按 本文阐述了如何使用Helm和Istio实现手动金丝雀发布。 我近期工作的项目目标是为微服务应用的金丝雀/分</description>
+    </item>
+    
+    <item>
+      <title>kubectl jsonpath简介</title>
+      <link>http://blog.zouhl.com/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Wed, 22 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/kubectl-jsonpath%E7%AE%80%E4%BB%8B/</guid>
+      <description>JSONPath 支持 JSONPath 模板由 {} 包起来的 JSONPath 表达式组成。 除了原始的 JSONPath 语法之外，我们还添加了三个函数： $ 运算符是可选的，因为表达式默认情况下始终从根对象开始。 我</description>
+    </item>
+    
+    <item>
+      <title>Istio简介</title>
+      <link>http://blog.zouhl.com/post/istio%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Tue, 21 May 2019 09:39:11 +0800</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/istio%E7%AE%80%E4%BB%8B/</guid>
+      <description>前言 什么是服务网格？ 在从单体应用程序向分布式微服务架构的转型过程中，开发人员和运维人员面临诸多挑战，使用 Istio 可以解决这些问题。 服务网格（Ser</description>
+    </item>
+    
+    <item>
+      <title>Set Up a Jenkins CI/CD Pipeline with Kubernetes</title>
+      <link>http://blog.zouhl.com/post/setupajenkinscicdpipelinewithkubernetes/</link>
+      <pubDate>Sun, 03 Mar 2019 16:52:05 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/setupajenkinscicdpipelinewithkubernetes/</guid>
+      <description>&lt;p&gt;本文将介绍 jenkins 在kubernetes下的CI/CD发布流程。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - 基于nginx-ingress的灰度发布</title>
+      <link>http://blog.zouhl.com/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</link>
+      <pubDate>Wed, 27 Feb 2019 13:15:32 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-%E5%9F%BA%E4%BA%8Enginx-ingress%E7%9A%84%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/</guid>
+      <description>&lt;p&gt;本文将介绍如何在kubernetes下使用ingress实现灰度发布、蓝绿发布。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - helm</title>
+      <link>http://blog.zouhl.com/post/k8s-helm/</link>
+      <pubDate>Tue, 26 Feb 2019 21:43:28 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-helm/</guid>
+      <description>&lt;p&gt;本文将介绍如何helm安装kubernetes的应用，以及如何使用helm构建自己的应用。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - dashboard</title>
+      <link>http://blog.zouhl.com/post/k8s-dashboard/</link>
+      <pubDate>Tue, 26 Feb 2019 10:46:19 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-dashboard/</guid>
+      <description>&lt;p&gt;本文将介绍如何较正确的在kubernetes下使用dashboard。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - object</title>
+      <link>http://blog.zouhl.com/post/k8s-object/</link>
+      <pubDate>Mon, 25 Feb 2019 15:10:25 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-object/</guid>
+      <description>&lt;p&gt;本文将介绍kubernetes下的常用的object&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>k8s - ConfigMap</title>
+      <link>http://blog.zouhl.com/post/k8s-configmap/</link>
+      <pubDate>Mon, 25 Feb 2019 13:57:23 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-configmap/</guid>
+      <description>前言 其实ConfigMap功能在Kubernetes1.2版本的时候就有了，许多应用程序会从配置文件、命令行参数或环境变量中读取配置信息。这</description>
+    </item>
+    
+    <item>
+      <title>基于rancher 1.6的企业级微服务平台</title>
+      <link>http://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</link>
+      <pubDate>Sun, 10 Feb 2019 16:30:16 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E5%9F%BA%E4%BA%8Erancher1.6%E7%9A%84%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</guid>
+      <description>&lt;p&gt;一个简单稳定的企业级微服务架构&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

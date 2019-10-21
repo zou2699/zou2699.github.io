@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dashboard on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/dashboard/</link>
+    <description>Recent content in dashboard on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 26 Feb 2019 10:46:19 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/dashboard/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>k8s - dashboard</title>
+      <link>http://blog.zouhl.com/post/k8s-dashboard/</link>
+      <pubDate>Tue, 26 Feb 2019 10:46:19 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/k8s-dashboard/</guid>
+      <description>&lt;p&gt;本文将介绍如何较正确的在kubernetes下使用dashboard。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

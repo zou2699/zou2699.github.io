@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Drone 安装配置指南 - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。
+" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Drone 安装配置指南" />
+<meta property="og:description" content="本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/2019-04-2-drone%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" />
+<meta property="article:published_time" content="2019-04-02T16:32:07&#43;08:00"/>
+<meta property="article:modified_time" content="2019-04-02T16:32:07&#43;08:00"/>
+
+<meta itemprop="name" content="Drone 安装配置指南">
+<meta itemprop="description" content="本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。">
+
+
+<meta itemprop="datePublished" content="2019-04-02T16:32:07&#43;08:00" />
+<meta itemprop="dateModified" content="2019-04-02T16:32:07&#43;08:00" />
+<meta itemprop="wordCount" content="4896">
+
+
+
+<meta itemprop="keywords" content="kubernetes,drone,devops,CICD," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Drone 安装配置指南"/>
+<meta name="twitter:description" content="本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Drone 安装配置指南</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-04-02 Tue </span>
+        <div class="post-category">
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 4896 words </span>
+          <span class="more-meta"> 10 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#drone-安装及使用说明">Drone 安装及使用说明</a>
+<ul>
+<li><a href="#部署">部署</a>
+<ul>
+<li><a href="#使用docker-compose安装在docker上">使用docker-compose安装在docker上</a></li>
+<li><a href="#使用-helm-安装在kubernetes上">使用 helm 安装在kubernetes上</a></li>
+</ul></li>
+<li><a href="#使用drone-kubernetes-secrets插件">使用drone/kubernetes-secrets插件</a></li>
+<li><a href="#使用-drone-yml">使用 .drone.yml</a></li>
+<li><a href="#使用helm插件">使用helm插件</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本文将介绍如何在kubernetes下安装和优化drone，以及使用helm插件来管理kubernetes下面的应用。</p>
+
+<h1 id="drone-安装及使用说明">Drone 安装及使用说明</h1>
+
+<h2 id="部署">部署</h2>
+
+<h3 id="使用docker-compose安装在docker上">使用docker-compose安装在docker上</h3>
+
+<p>根据个人的情况，修改下面的参数，然后使用下面的docker-compose.yml就可以了。</p>
+
+<p>对应的host需要能接受来自github的webhook</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
+</span><span class="w"></span>services<span class="p">:</span><span class="w">
+</span><span class="w">  </span>drone-server<span class="p">:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>drone/drone<span class="p">:</span><span class="m">1.0</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;127.0.0.1:8085:80&#34;</span><span class="w">
+</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>/var/lib/drone<span class="p">:</span>/data<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>/var/run/docker.sock<span class="p">:</span>/var/run/docker.sock<span class="w">
+</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_OPEN=<span class="kc">true</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_USER_CREATE=username<span class="p">:</span>admin<span class="p">,</span>admin<span class="p">:</span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_SERVER_HOST=&lt;your<span class="w"> </span>host<span class="sd">&gt;
+</span><span class="sd">      - DRONE_GITHUB_SERVER=https://github.com</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_GITHUB_CLIENT_ID=&lt;your<span class="w"> </span>GITHUB_CLIENT_ID<span class="sd">&gt;
+</span><span class="sd">      - DRONE_GITHUB_CLIENT_SECRET=&lt;your GITHUB_CLIENT_SECRET&gt;</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_DEBUG=<span class="kc">true</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_GITHUB=<span class="kc">true</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_PROVIDER=github<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_RPC_SECRET=&lt;random<span class="w"> </span>strings<span class="w"> </span><span class="m">1</span><span class="sd">&gt;
+</span><span class="sd">  drone-agent:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>drone/agent<span class="p">:</span><span class="m">1.0</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>/var/run/docker.sock<span class="p">:</span>/var/run/docker.sock<span class="w">
+</span><span class="w">    </span>depends_on<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>drone-server<span class="w">
+</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_RPC_SERVER=&lt;your<span class="w"> </span>host<span class="sd">&gt;
+</span><span class="sd">      - DRONE_RPC_SECRET=&lt;random strings 1&gt;</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DRONE_DEBUG=<span class="kc">true</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>DOCKER_HOST=tcp<span class="p">:</span>//docker-bind<span class="p">:</span><span class="m">2375</span><span class="w">
+</span><span class="w">  </span>docker-bind<span class="p">:</span><span class="w">
+</span><span class="w">     </span>image<span class="p">:</span><span class="w"> </span>docker<span class="p">:</span>dind<span class="w">
+</span><span class="w">     </span>privileged<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">     </span>command<span class="p">:</span><span class="w"> </span>--storage-driver=overlay</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="使用-helm-安装在kubernetes上">使用 helm 安装在kubernetes上</h3>
+
+<p>从git上获取最新的charts到本地，然后修改values.yaml上对应的字段，主要是修改image的版本及sourceControl下的相关配置。</p>
+
+<p>需提前装备好pv，以及将gitlab的clientSecretKey保存到对应的namespace下面的secret。</p>
+
+<p>然后执行下面的命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">helm upgrade --install drone --namespace devops-cicd --debug . --dry-run
+<span class="c1"># 如更新了image tag不生效，可执行下面的语句</span>
+helm upgrade --install drone --namespace devops-cicd --debug . --dry-run --reset-values</code></pre></td></tr></table>
+</div>
+</div>
+<blockquote>
+<p>kubernetes平台下面是使用server + scheduler/kube实现的，如需进行相应的修改，可以参考<a href="https://sourcegraph.com/github.com/drone/drone@2a3ffc7/-/blob/cmd/drone-server/inject_scheduler.go#L20:26">官方源码</a>中的变量格式，然后注入到server下面的env中即可。</p>
+</blockquote>
+
+<p>下面的为values.yml中的一些配置，仅作参考。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span><span class="lnt">263
+</span><span class="lnt">264
+</span><span class="lnt">265
+</span><span class="lnt">266
+</span><span class="lnt">267
+</span><span class="lnt">268
+</span><span class="lnt">269
+</span><span class="lnt">270
+</span><span class="lnt">271
+</span><span class="lnt">272
+</span><span class="lnt">273
+</span><span class="lnt">274
+</span><span class="lnt">275
+</span><span class="lnt">276
+</span><span class="lnt">277
+</span><span class="lnt">278
+</span><span class="lnt">279
+</span><span class="lnt">280
+</span><span class="lnt">281
+</span><span class="lnt">282
+</span><span class="lnt">283
+</span><span class="lnt">284
+</span><span class="lnt">285
+</span><span class="lnt">286
+</span><span class="lnt">287
+</span><span class="lnt">288
+</span><span class="lnt">289
+</span><span class="lnt">290
+</span><span class="lnt">291
+</span><span class="lnt">292
+</span><span class="lnt">293
+</span><span class="lnt">294
+</span><span class="lnt">295
+</span><span class="lnt">296
+</span><span class="lnt">297
+</span><span class="lnt">298
+</span><span class="lnt">299
+</span><span class="lnt">300
+</span><span class="lnt">301
+</span><span class="lnt">302
+</span><span class="lnt">303
+</span><span class="lnt">304
+</span><span class="lnt">305
+</span><span class="lnt">306
+</span><span class="lnt">307
+</span><span class="lnt">308
+</span><span class="lnt">309
+</span><span class="lnt">310
+</span><span class="lnt">311
+</span><span class="lnt">312
+</span><span class="lnt">313
+</span><span class="lnt">314
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">images<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## The official drone (server) image, change tag to use a different version.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://hub.docker.com/r/drone/drone/tags/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>server<span class="p">:</span><span class="w">
+</span><span class="w">    </span>repository<span class="p">:</span><span class="w"> </span><span class="s2">&#34;docker.io/drone/drone&#34;</span><span class="w">
+</span><span class="w">    </span>tag<span class="p">:</span><span class="w"> </span><span class="m">1.0</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>pullPolicy<span class="p">:</span><span class="w"> </span>IfNotPresent<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## The official drone (agent) image, change tag to use a different version.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://hub.docker.com/r/drone/agent/tags/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>agent<span class="p">:</span><span class="w">
+</span><span class="w">    </span>repository<span class="p">:</span><span class="w"> </span><span class="s2">&#34;docker.io/drone/agent&#34;</span><span class="w">
+</span><span class="w">    </span>tag<span class="p">:</span><span class="w"> </span><span class="m">1.0</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>pullPolicy<span class="p">:</span><span class="w"> </span>IfNotPresent<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## The official docker (dind) image, change tag to use a different version.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://hub.docker.com/r/library/docker/tags/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>dind<span class="p">:</span><span class="w">
+</span><span class="w">    </span>repository<span class="p">:</span><span class="w"> </span><span class="s2">&#34;docker.io/library/docker&#34;</span><span class="w">
+</span><span class="w">    </span>tag<span class="p">:</span><span class="w"> </span><span class="m">18.06</span>.<span class="m">1</span>-ce-dind<span class="w">
+</span><span class="w">    </span>pullPolicy<span class="p">:</span><span class="w"> </span>IfNotPresent<span class="w">
+</span><span class="w">
+</span><span class="w"></span>service<span class="p">:</span><span class="w">
+</span><span class="w">  </span>httpPort<span class="p">:</span><span class="w"> </span><span class="m">80</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## If service.type is not set to NodePort, the following statement</span><span class="w">
+</span><span class="w">  </span><span class="c">## will be ignored.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># nodePort: 32015</span><span class="w">
+</span><span class="w">  </span>nodePort<span class="p">:</span><span class="w"> </span><span class="m">32015</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Service type can be set to ClusterIP, NodePort or LoadBalancer.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c">#type: ClusterIP</span><span class="w">
+</span><span class="w">  </span>type<span class="p">:</span><span class="w"> </span>NodePort<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Specify a load balancer IP address to use if your provider supports it.</span><span class="w">
+</span><span class="w">  </span><span class="c"># loadBalancerIP:</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Drone Service annotations</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># annotations:</span><span class="w">
+</span><span class="w">  </span><span class="c">#   service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http</span><span class="w">
+</span><span class="w">  </span><span class="c">#   service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:xx-xxxx-x:xxxxxxxxxxx:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx</span><span class="w">
+</span><span class="w">  </span><span class="c">#   external-dns.alpha.kubernetes.io/hostname: drone.domain.tld.</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## set to true if you want to expose drone&#39;s GRPC via the service (for external access)</span><span class="w">
+</span><span class="w">  </span>exposeGRPC<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>ingress<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## If true, Drone Ingress will be created.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>sourceControl<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## your source control provider: github,gitlab,gitea,gogs,bitbucketCloud,bitbucketServer</span><span class="w">
+</span><span class="w">  </span>provider<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gitlab<span class="w">
+</span><span class="w">  </span><span class="c">## secret containing your source control provider secrets, keys provided below.</span><span class="w">
+</span><span class="w">  </span><span class="c">## if left blank will assume a secret based on the release name of the chart.</span><span class="w">
+</span><span class="w">  </span>secret<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## Fill in the correct values for your chosen source control provider</span><span class="w">
+</span><span class="w">  </span><span class="c">## Any key in this list with the suffix `Key` will be fetched from the</span><span class="w">
+</span><span class="w">  </span><span class="c">## secret named above, if not provided the secret will default to</span><span class="w">
+</span><span class="w">  </span><span class="c">## `&lt;fullName&gt;-source-control`</span><span class="w">
+</span><span class="w">  </span>github<span class="p">:</span><span class="w">
+</span><span class="w">    </span>clientID<span class="p">:</span><span class="w">
+</span><span class="w">    </span>clientSecretKey<span class="p">:</span><span class="w"> </span>clientSecret<span class="w">
+</span><span class="w">    </span>server<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//github.com<span class="w">
+</span><span class="w">  </span>gitlab<span class="p">:</span><span class="w">
+</span><span class="w">    </span>clientID<span class="p">:</span><span class="w"> </span>d4e6ead64e6f26219c9f9522bbf9d5a04d8e038110bd97834351fde75acc789a<span class="w">
+</span><span class="w">    </span>clientSecretKey<span class="p">:</span><span class="w"> </span>clientSecret<span class="w"> 
+</span><span class="w">    </span>server<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//gitlab.foobar.com<span class="w">
+</span><span class="w">  </span>gitea<span class="p">:</span><span class="w">
+</span><span class="w">    </span>server<span class="p">:</span><span class="w">
+</span><span class="w">  </span>gogs<span class="p">:</span><span class="w">
+</span><span class="w">    </span>server<span class="p">:</span><span class="w">
+</span><span class="w">  </span>bitbucketCloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>clientID<span class="p">:</span><span class="w">
+</span><span class="w">    </span>clientSecret<span class="p">:</span><span class="w"> </span>clientSecret<span class="w">
+</span><span class="w">  </span>bitbucketServer<span class="p">:</span><span class="w">
+</span><span class="w">    </span>server<span class="p">:</span><span class="w">
+</span><span class="w">    </span>consumerKey<span class="p">:</span><span class="w"> </span>consumerKey<span class="w">
+</span><span class="w">    </span>privateKey<span class="p">:</span><span class="w"> </span>privateKey<span class="w">
+</span><span class="w">    </span>username<span class="p">:</span><span class="w">
+</span><span class="w">    </span>passwordKey<span class="p">:</span><span class="w"> </span>password<span class="w">
+</span><span class="w">
+</span><span class="w"></span>server<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## If not set, it will be autofilled with the cluster host.</span><span class="w">
+</span><span class="w">  </span><span class="c">## Host shoud be just the hostname.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># host: &#34;drone.domain.io&#34;</span><span class="w">
+</span><span class="w">  </span>host<span class="p">:</span><span class="w"> </span><span class="s2">&#34;10.0.60.26:32015&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## protocol should be http or https</span><span class="w">
+</span><span class="w">  </span>protocol<span class="p">:</span><span class="w"> </span>http<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Initial admin user</span><span class="w">
+</span><span class="w">  </span><span class="c">## Leaving this blank may make it impossible to log into drone.</span><span class="w">
+</span><span class="w">  </span><span class="c">## Set to a valid oauth user from your git/oauth server</span><span class="w">
+</span><span class="w">  </span><span class="c">## For more complex user creation you can use env variables below instead.</span><span class="w">
+</span><span class="w">  </span>adminUser<span class="p">:</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Configures Drone to authenticate when cloning public repositories. This is only required</span><span class="w">
+</span><span class="w">  </span><span class="c">## when your source code management system (e.g. GitHub Enterprise) has private mode enabled.</span><span class="w">
+</span><span class="w">  </span><span class="c">#alwaysAuth: false</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Configures drone to use kubernetes to run pipelines rather than agents, if enabled</span><span class="w">
+</span><span class="w">  </span><span class="c">## will not deploy any agents.</span><span class="w">
+</span><span class="w">  </span>kubernetes<span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="c">## set to true if you want drone to use kubernetes to run pipelines</span><span class="w">
+</span><span class="w">    </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">    </span><span class="c">## you can run pipeline jobs in another namespace, if you choose to do this</span><span class="w">
+</span><span class="w">    </span><span class="c">## you&#39;ll need to create that namespace manually.</span><span class="w">
+</span><span class="w">   </span><span class="c"># namespace:</span><span class="w">
+</span><span class="w">    </span><span class="c">## alternative service account to create to create drone pipelines. this account</span><span class="w">
+</span><span class="w">    </span><span class="c">## will be given cluster-admin rights.</span><span class="w">
+</span><span class="w">    </span><span class="c">## if not set the rights will be given to the default drone service account name.</span><span class="w">
+</span><span class="w">    </span><span class="c"># pipelineServiceAccount:</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Drone server configuration.</span><span class="w">
+</span><span class="w">  </span><span class="c">## Values in here get injected as environment variables.</span><span class="w">
+</span><span class="w">  </span><span class="c">## You can set up remote database servers etc using environment</span><span class="w">
+</span><span class="w">  </span><span class="c">## variables.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://docs.drone.io/reference/server/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>env<span class="p">:</span><span class="w">
+</span><span class="w">    </span>DRONE_LOGS_DEBUG<span class="p">:</span><span class="w"> </span><span class="s2">&#34;false&#34;</span><span class="w">
+</span><span class="w">    </span>DRONE_DATABASE_DRIVER<span class="p">:</span><span class="w"> </span><span class="s2">&#34;sqlite3&#34;</span><span class="w">
+</span><span class="w">    </span>DRONE_DATABASE_DATASOURCE<span class="p">:</span><span class="w"> </span><span class="s2">&#34;/var/lib/drone/drone.sqlite&#34;</span><span class="w">
+</span><span class="w">    </span>DRONE_SECRET_SECRET<span class="p">:</span><span class="w"> </span><span class="s2">&#34;1b8e384d9ce5b355501a326182e8ea45&#34;</span><span class="w">
+</span><span class="w">    </span>DRONE_SECRET_ENDPOINT<span class="p">:</span><span class="w"> </span><span class="s2">&#34;http://drone-kubernetes-secrets&#34;</span><span class="w">
+</span><span class="w">    </span>DRONE_USER_CREATE<span class="p">:</span><span class="w"> </span><span class="s2">&#34;username:jenkins,admin:true&#34;</span><span class="w">
+</span><span class="w">    </span><span class="c">#DRONE_RUNNER_IMAGE: &#34;harbor.foobar.com/devops/drone-controller:1.0.0&#34;</span><span class="w">
+</span><span class="w">    </span>DRONE_KUBERNETES_IMAGE<span class="p">:</span><span class="w"> </span><span class="s2">&#34;harbor.foobar.com/devops/drone-controller:1.0.0&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Secret environment variables are configured in `server.envSecrets`.</span><span class="w">
+</span><span class="w">  </span><span class="c">## Each item in `server.envSecrets` references a Kubernetes Secret.</span><span class="w">
+</span><span class="w">  </span><span class="c">## These Secrets should be created before they are referenced.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># envSecrets:</span><span class="w">
+</span><span class="w">  </span><span class="c">#   # The name of a Kubernetes Secret</span><span class="w">
+</span><span class="w">  </span><span class="c">#   drone-server-secrets:</span><span class="w">
+</span><span class="w">  </span><span class="c">#     # A list of Secret keys to include as environment variables</span><span class="w">
+</span><span class="w">  </span><span class="c">#     - DRONE_GITHUB_SECRET</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Additional server annotations.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## CPU and memory limits for drone server</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>resources<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">  </span><span class="c">#  requests:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    memory: 32Mi</span><span class="w">
+</span><span class="w">  </span><span class="c">#    cpu: 40m</span><span class="w">
+</span><span class="w">  </span><span class="c">#  limits:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    memory: 2Gi</span><span class="w">
+</span><span class="w">  </span><span class="c">#    cpu: 1</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Use an alternate scheduler, e.g. &#34;stork&#34;.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># schedulerName:</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Pod scheduling preferences.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>affinity<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Node labels for pod assignment</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/user-guide/node-selection</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>nodeSelector<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## additional siecar containers, e. g. for a database proxy, such as Google&#39;s cloudsql-proxy.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ex: https://github.com/kubernetes/charts/tree/master/stable/keycloak</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>extraContainers<span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">
+</span><span class="sd">  ## additional volumes, e. g. for secrets used in an extraContainers.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>extraVolumes<span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">
+</span><span class="sd">agent:</span><span class="w">
+</span><span class="w">  </span><span class="c">## Drone agent configuration.</span><span class="w">
+</span><span class="w">  </span><span class="c">## Values in here get injected as environment variables.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://docs.drone.io/reference/agent/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>env<span class="p">:</span><span class="w">
+</span><span class="w">    </span>DRONE_LOGS_DEBUG<span class="p">:</span><span class="w"> </span><span class="s2">&#34;false&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Number of drone agent replicas</span><span class="w">
+</span><span class="w">  </span>replicas<span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Additional agent annotations.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>annotations<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## CPU and memory limits for drone agent</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>resources<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">  </span><span class="c">#  requests:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    memory: 32Mi</span><span class="w">
+</span><span class="w">  </span><span class="c">#    cpu: 40m</span><span class="w">
+</span><span class="w">  </span><span class="c">#  limits:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    memory: 2Gi</span><span class="w">
+</span><span class="w">  </span><span class="c">#    cpu: 1</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Liveness and readiness probe values</span><span class="w">
+</span><span class="w">  </span><span class="c">## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes</span><span class="w">
+</span><span class="w">  </span><span class="c">## drone agent does not currently have a health endpoint to check against.</span><span class="w">
+</span><span class="w">  </span>livenessProbe<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">  </span>readinessProbe<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Use an alternate scheduler, e.g. &#34;stork&#34;.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># schedulerName:</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Pod scheduling preferences.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>affinity<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Node labels for pod assignment</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://kubernetes.io/docs/user-guide/node-selection</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>nodeSelector<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">
+</span><span class="w"></span>dind<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## Enable or disable DinD</span><span class="w">
+</span><span class="w">  </span><span class="c">## If disabled, the drone agent will spawn docker containers on the host. Pay</span><span class="w">
+</span><span class="w">  </span><span class="c">## attention to the fact that we can&#39;t enforce resource constraints in that case.</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Values in here get injected as environment variables to DinD.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: http://readme.drone.io/admin/installation-reference</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c">#  env:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    DRONE_DEBUG: &#34;false&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Allowing custom command and args to DinD</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://discourse.drone.io/t/docker-mtu-problem/1207</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c">#  command: &#39;[&#34;/bin/sh&#34;]&#39;</span><span class="w">
+</span><span class="w">  </span><span class="c">#  args: &#39;[&#34;-c&#34;, &#34;dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --mtu=1350&#34;]&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## Docker storage driver.</span><span class="w">
+</span><span class="w">  </span><span class="c">## Your DinD instance should be using the same driver as your host.</span><span class="w">
+</span><span class="w">  </span><span class="c">## ref: https://docs.docker.com/engine/userguide/storagedriver/selectadriver/</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>driver<span class="p">:</span><span class="w"> </span>overlay2<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## CPU and memory limits for dind</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span>resources<span class="p">:</span><span class="w"> </span>{}<span class="w">
+</span><span class="w">  </span><span class="c">#  requests:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    memory: 32Mi</span><span class="w">
+</span><span class="w">  </span><span class="c">#    cpu: 40m</span><span class="w">
+</span><span class="w">  </span><span class="c">#  limits:</span><span class="w">
+</span><span class="w">  </span><span class="c">#    memory: 2Gi</span><span class="w">
+</span><span class="w">  </span><span class="c">#    cpu: 1</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c">## Enable scraping of the /metrics endpoint for Prometheus</span><span class="w">
+</span><span class="w"></span>metrics<span class="p">:</span><span class="w">
+</span><span class="w">  </span>prometheus<span class="p">:</span><span class="w">
+</span><span class="w">    </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c">## Enable persistence using Persistent Volume Claims</span><span class="w">
+</span><span class="w"></span><span class="c">## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/</span><span class="w">
+</span><span class="w"></span><span class="c">##</span><span class="w">
+</span><span class="w"></span>persistence<span class="p">:</span><span class="w">
+</span><span class="w">  </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## A manually managed Persistent Volume and Claim</span><span class="w">
+</span><span class="w">  </span><span class="c">## Requires persistence.enabled: true</span><span class="w">
+</span><span class="w">  </span><span class="c">## If defined, PVC must be created manually before volume will be bound</span><span class="w">
+</span><span class="w">  </span>existingClaim<span class="p">:</span><span class="w"> </span>drone-pvc<span class="w">
+</span><span class="w">
+</span><span class="w">  </span><span class="c">## rabbitmq data Persistent Volume Storage Class</span><span class="w">
+</span><span class="w">  </span><span class="c">## If defined, storageClassName: &lt;storageClass&gt;</span><span class="w">
+</span><span class="w">  </span><span class="c">## If set to &#34;-&#34;, storageClassName: &#34;&#34;, which disables dynamic provisioning</span><span class="w">
+</span><span class="w">  </span><span class="c">## If undefined (the default) or set to null, no storageClassName spec is</span><span class="w">
+</span><span class="w">  </span><span class="c">##   set, choosing the default provisioner.  (gp2 on AWS, standard on</span><span class="w">
+</span><span class="w">  </span><span class="c">##   GKE, AWS &amp; OpenStack)</span><span class="w">
+</span><span class="w">  </span><span class="c">##</span><span class="w">
+</span><span class="w">  </span><span class="c"># storageClass: &#34;-&#34;</span><span class="w">
+</span><span class="w">  </span>accessMode<span class="p">:</span><span class="w"> </span>ReadWriteOnce<span class="w">
+</span><span class="w">  </span>size<span class="p">:</span><span class="w"> </span>2Gi<span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c">## Uncomment this if you want to set a specific shared secret between</span><span class="w">
+</span><span class="w"></span><span class="c">## the agents and servers, otherwise this will be auto-generated.</span><span class="w">
+</span><span class="w"></span><span class="c">##</span><span class="w">
+</span><span class="w"></span><span class="c"># sharedSecret: supersecret</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>rbac<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## Specifies whether RBAC resources should be created</span><span class="w">
+</span><span class="w">  </span>create<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">  </span><span class="c">## RBAC api version (v1, v1beta1, or v1alpha1)</span><span class="w">
+</span><span class="w">  </span>apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w">
+</span><span class="w"></span>serviceAccount<span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="c">## Specifies whether a ServiceAccount should be created</span><span class="w">
+</span><span class="w">  </span>create<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">  </span><span class="c">## The name of the ServiceAccount to use.</span><span class="w">
+</span><span class="w">  </span><span class="c">## If not set and create is true, a name is generated using the fullname template</span><span class="w">
+</span><span class="w">  </span>name<span class="p">:</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>到此基本已完成kubernetes下drone的安装。</p>
+
+<h2 id="使用drone-kubernetes-secrets插件">使用drone/kubernetes-secrets插件</h2>
+
+<p>默认drone对应的secret是和repo进行绑定的，这样的话，每个repo都需要添加secret，而且后期变更也比较麻烦。这里我们将secret 保存在kubernetes里， 使用 drone/kubernetes-secrets 来读取对应的secret。<a href="https://docs.drone.io/extend/secrets/kubernetes/install/">官方文档</a>下只有docker的安装方式，需要自己修改成kubernetes下的deployment。</p>
+
+<p>安装完成后需要再drone-server下面添加</p>
+
+<p><em>DRONE_SECRET_SECRET</em> 和 <em>DRONE_SECRET_ENDPOINT</em></p>
+
+<p>具体参数可以参见<a href="https://github.com/drone/drone-kubernetes-secrets">官网的源码</a> 以及<a href="https://discourse.drone.io/t/kubernetes-external-secrets-not-work/3546/6">这篇讨论</a></p>
+
+<p>然后将drone的secret保存到对应的namespace下面的secret里。（需要进行base64加密）</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1g1mx4417vwj213g0h1t9r.jpg" alt="" /></p>
+
+<h2 id="使用-drone-yml">使用 .drone.yml</h2>
+
+<p>drone默认读取repo的根目录下<strong>.drone.yml</strong></p>
+
+<p>.drone.yml里保存对应的pipeline</p>
+
+<p>默认的第一步是clone代码，然后build code，build and push image，最后面是用helm部署到kubernetes下面。</p>
+
+<p>下面是我用到的yml，需要将对应的image地址换成官方的或者自己harbor的地址。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml">kind<span class="p">:</span><span class="w"> </span>pipeline<span class="w">
+</span><span class="w"></span>name<span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c">#clone:</span><span class="w">
+</span><span class="w"></span><span class="c">#  depth: 50</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c"># code build --&gt; docker build and docker push --&gt; deploy</span><span class="w">
+</span><span class="w"></span><span class="c"># 使用drone，需要修改drone.yml和charts下面的values.yml</span><span class="w">
+</span><span class="w"></span><span class="c"># 默认push到dev即会进行构建，在提交信息里加入 [CI SKIP] 即可跳过本次构建</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>steps<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>backend<span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>harbor.foobar.com/devops/jenkins<span class="p">:</span>jnlp-<span class="m">1.0</span>.<span class="m">0</span><span class="w">
+</span><span class="w">    </span>commands<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>mvn<span class="w"> </span>clean<span class="w"> </span>package<span class="w"> </span>-Dmaven.test.skip=<span class="kc">true</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>publish<span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>plugins/docker<span class="w">
+</span><span class="w">    </span>settings<span class="p">:</span><span class="w">
+</span><span class="w">      </span>username<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_docker_username<span class="w">
+</span><span class="w">      </span>password<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_docker_password<span class="w">
+</span><span class="w">      </span>insecure<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>repo<span class="p">:</span><span class="w"> </span><span class="m">127.0</span>.<span class="m">0.1</span>/cloud/${DRONE_REPO_NAME}<span class="w">
+</span><span class="w">      </span>registry<span class="p">:</span><span class="w"> </span><span class="m">127.0</span>.<span class="m">0.1</span><span class="w">
+</span><span class="w">      </span>dockerfile<span class="p">:</span><span class="w"> </span>Dockerfile<span class="w">
+</span><span class="w">      </span>tags<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>latest<span class="w">
+</span><span class="w">        </span>-<span class="w"> </span><span class="s2">&#34;${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}&#34;</span><span class="w">
+</span><span class="w">    </span>when<span class="p">:</span><span class="w">
+</span><span class="w">      </span>event<span class="p">:</span><span class="w"> </span>push<span class="w">
+</span><span class="w">      </span>branch<span class="p">:</span><span class="w"> </span>dev<span class="w">
+</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>publish_tag<span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>plugins/docker<span class="w">
+</span><span class="w">    </span>settings<span class="p">:</span><span class="w">
+</span><span class="w">      </span>username<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_docker_username<span class="w">
+</span><span class="w">      </span>password<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_docker_password<span class="w">
+</span><span class="w">      </span>insecure<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>repo<span class="p">:</span><span class="w"> </span><span class="m">127.0</span>.<span class="m">0.1</span>/cloud/${DRONE_REPO_NAME}<span class="w">
+</span><span class="w">      </span>registry<span class="p">:</span><span class="w"> </span><span class="m">127.0</span>.<span class="m">0.1</span><span class="w">
+</span><span class="w">      </span>dockerfile<span class="p">:</span><span class="w"> </span>Dockerfile<span class="w">
+</span><span class="w">      </span>tags<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span><span class="s2">&#34;${DRONE_TAG##v}&#34;</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span><span class="s2">&#34;${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}&#34;</span><span class="w">
+</span><span class="w">    </span>when<span class="p">:</span><span class="w">
+</span><span class="w">      </span>event<span class="p">:</span><span class="w"> </span>tag<span class="w">
+</span><span class="w">      </span>branch<span class="p">:</span><span class="w"> </span>master<span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c"># namespace默认是foobar-cloud</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>helm_deploy<span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>harbor.foobar.com/devops/drone-helm<span class="w">
+</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>DEV_API_SERVER<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_api_server<span class="w">
+</span><span class="w">      </span>DEV_KUBERNETES_TOKEN<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_kubernetes_token<span class="w">
+</span><span class="w">    </span>settings<span class="p">:</span><span class="w">
+</span><span class="w">      </span>skip_tls_verify<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>debug<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>client_only<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>stable_repo_url<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//kubernetes.oss-cn-hangzhou.aliyuncs.com/charts<span class="w">
+</span><span class="w">      </span>prefix<span class="p">:</span><span class="w"> </span>DEV<span class="w">
+</span><span class="w">      </span>chart<span class="p">:</span><span class="w"> </span>./charts/app<span class="w">
+</span><span class="w">      </span>values<span class="p">:</span><span class="w"> </span>version=${DRONE_BRANCH}-${DRONE_COMMIT_SHA<span class="p">:</span><span class="m">0</span><span class="p">:</span><span class="m">7</span>}<span class="p">,</span>image.tag=${DRONE_BRANCH}-${DRONE_COMMIT_SHA<span class="p">:</span><span class="m">0</span><span class="p">:</span><span class="m">7</span>}<span class="p">,</span>image.repository=harbor.foobar.com/cloud/${DRONE_REPO_NAME}<span class="w">
+</span><span class="w">      </span>namespace<span class="p">:</span><span class="w"> </span>foobar-cloud<span class="w">
+</span><span class="w">      </span>release<span class="p">:</span><span class="w"> </span><span class="s2">&#34;${DRONE_BRANCH}-${DRONE_REPO_NAME}&#34;</span><span class="w">
+</span><span class="w">    </span>when<span class="p">:</span><span class="w">
+</span><span class="w">      </span>event<span class="p">:</span><span class="w"> </span>push<span class="w">
+</span><span class="w">      </span>branch<span class="p">:</span><span class="w"> </span>dev<span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c"># 以下的secret来自kubernetes对面的secret，通过上述的插件读取</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>secret<span class="w">
+</span><span class="w"></span>name<span class="p">:</span><span class="w"> </span>dev_api_server<span class="w">
+</span><span class="w"></span>get<span class="p">:</span><span class="w">
+</span><span class="w">  </span>path<span class="p">:</span><span class="w"> </span>drone-k8s-secrets<span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>url<span class="w">
+</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>secret<span class="w">
+</span><span class="w"></span>name<span class="p">:</span><span class="w"> </span>dev_kubernetes_token<span class="w">
+</span><span class="w"></span>get<span class="p">:</span><span class="w">
+</span><span class="w">  </span>path<span class="p">:</span><span class="w"> </span>drone-k8s-secrets<span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>token<span class="w">
+</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>secret<span class="w">
+</span><span class="w"></span>name<span class="p">:</span><span class="w"> </span>dev_docker_username<span class="w">
+</span><span class="w"></span>get<span class="p">:</span><span class="w">
+</span><span class="w">  </span>path<span class="p">:</span><span class="w"> </span>drone-k8s-secrets<span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>username<span class="w">
+</span><span class="w">
+</span><span class="w"></span>---<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>secret<span class="w">
+</span><span class="w"></span>name<span class="p">:</span><span class="w"> </span>dev_docker_password<span class="w">
+</span><span class="w"></span>get<span class="p">:</span><span class="w">
+</span><span class="w">  </span>path<span class="p">:</span><span class="w"> </span>drone-k8s-secrets<span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>password</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="使用helm插件">使用helm插件</h2>
+
+<p>上面的最后一步就是利用helm插件，将对面的程序部署到kubernets中。</p>
+
+<p>下面将介绍helm模板的一些使用，建议先<a href="http://plugins.drone.io/ipedrazas/drone-helm/">阅读官方的文档</a>。</p>
+
+<p>下面是我用到的yml，需要根据个人的情况进行更改。</p>
+
+<p><code>stable_repo_url</code>请保留，否者<code>helm init</code>将因为某些原因失败。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yml" data-lang="yml"><span class="c"># namespace默认是foobar-cloud</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>helm_deploy<span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>harbor.foobar.com/devops/drone-helm<span class="w">
+</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>DEV_API_SERVER<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_api_server<span class="w">
+</span><span class="w">      </span>DEV_KUBERNETES_TOKEN<span class="p">:</span><span class="w">
+</span><span class="w">        </span>from_secret<span class="p">:</span><span class="w"> </span>dev_kubernetes_token<span class="w">
+</span><span class="w">    </span>settings<span class="p">:</span><span class="w">
+</span><span class="w">      </span>skip_tls_verify<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>debug<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>client_only<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span>stable_repo_url<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//kubernetes.oss-cn-hangzhou.aliyuncs.com/charts<span class="w">
+</span><span class="w">      </span>prefix<span class="p">:</span><span class="w"> </span>DEV<span class="w">
+</span><span class="w">      </span>chart<span class="p">:</span><span class="w"> </span>./charts/app<span class="w">
+</span><span class="w">      </span>values<span class="p">:</span><span class="w"> </span>version=${DRONE_BRANCH}-${DRONE_COMMIT_SHA<span class="p">:</span><span class="m">0</span><span class="p">:</span><span class="m">7</span>}<span class="p">,</span>image.tag=${DRONE_BRANCH}-${DRONE_COMMIT_SHA<span class="p">:</span><span class="m">0</span><span class="p">:</span><span class="m">7</span>}<span class="p">,</span>image.repository=harbor.foobar.com/cloud/${DRONE_REPO_NAME}<span class="w">
+</span><span class="w">      </span>namespace<span class="p">:</span><span class="w"> </span>foobar-cloud<span class="w">
+</span><span class="w">      </span>release<span class="p">:</span><span class="w"> </span><span class="s2">&#34;${DRONE_BRANCH}-${DRONE_REPO_NAME}&#34;</span><span class="w">
+</span><span class="w">    </span>when<span class="p">:</span><span class="w">
+</span><span class="w">      </span>event<span class="p">:</span><span class="w"> </span>push</code></pre></td></tr></table>
+</div>
+</div>
+<p>这个插件执行的内容为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">helm init
+helm upgrade --install RELEASE CHART</code></pre></td></tr></table>
+</div>
+</div>
+<p>settings下面values部分就是替换chart下面values.yml中的变量。</p>
+
+<p>部署完成后，我们可以helm更方便的进行管理drone部署的程序，可以进行回滚和更新。</p>
+
+<blockquote>
+<p>相关代码存放在<a href="https://github.com/zou2699/drone-demo">github</a></p>
+</blockquote>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-04-02 Tue
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/kubernetes/">kubernetes</a>
+          <a href="/tags/drone/">drone</a>
+          <a href="/tags/devops/">devops</a>
+          <a href="/tags/cicd/">CICD</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/2019-04-09-%E4%BD%BF%E7%94%A8istio%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83-%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">采用istio实现灰度发布 金丝雀发布</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/setupajenkinscicdpipelinewithkubernetes/">
+            <span class="next-text nav-default">Set Up a Jenkins CI/CD Pipeline with Kubernetes</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-04-02 16:32:07 \x2b0800 CST',
+        title: 'Drone 安装配置指南',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

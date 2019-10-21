@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>music on Tux - zouhl&#39;s Blog</title>
+    <link>http://blog.zouhl.com/tags/music/</link>
+    <description>Recent content in music on Tux - zouhl&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 18 Feb 2019 20:08:01 +0000</lastBuildDate>
+    
+	<atom:link href="http://blog.zouhl.com/tags/music/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>一个命令行下载音乐的小工具</title>
+      <link>http://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Mon, 18 Feb 2019 20:08:01 +0000</pubDate>
+      
+      <guid>http://blog.zouhl.com/post/%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7/</guid>
+      <description>&lt;p&gt;一个在终端进行跨平台的音乐搜索和下载的小工具。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

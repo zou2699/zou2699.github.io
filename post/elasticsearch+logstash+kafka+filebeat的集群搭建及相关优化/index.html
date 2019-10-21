@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。 - Tux - zouhl&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="zouhl" /><meta name="description" content="基于elasticsearch &#43; logstash &#43; kafka &#43; filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。
+" /><meta name="keywords" content="kubernetes, golang, docker, linux, devops, ci/cd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0 with theme even" />
+
+
+<link rel="canonical" href="http://blog.zouhl.com/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.707271db.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。" />
+<meta property="og:description" content="基于elasticsearch &#43; logstash &#43; kafka &#43; filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.zouhl.com/post/elasticsearch&#43;logstash&#43;kafka&#43;filebeat%E7%9A%84%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E5%8F%8A%E7%9B%B8%E5%85%B3%E4%BC%98%E5%8C%96/" />
+<meta property="article:published_time" content="2019-01-16T15:19:16&#43;00:00"/>
+<meta property="article:modified_time" content="2019-01-16T15:19:16&#43;00:00"/>
+
+<meta itemprop="name" content="elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。">
+<meta itemprop="description" content="基于elasticsearch &#43; logstash &#43; kafka &#43; filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。">
+
+
+<meta itemprop="datePublished" content="2019-01-16T15:19:16&#43;00:00" />
+<meta itemprop="dateModified" content="2019-01-16T15:19:16&#43;00:00" />
+<meta itemprop="wordCount" content="1718">
+
+
+
+<meta itemprop="keywords" content="elasticsearch,elk,logstash," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。"/>
+<meta name="twitter:description" content="基于elasticsearch &#43; logstash &#43; kafka &#43; filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Tux</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/post">
+        <li class="mobile-menu-item">Blog</li>
+      </a><a href="/categories/cncf">
+        <li class="mobile-menu-item">Cloud Native</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Tux</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/post">Blog</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/cncf">Cloud Native</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">elasticsearch &#43; logstash &#43; kafka &#43; filebeat 的集群搭建及相关优化。</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-16 Wed </span>
+        <div class="post-category">
+            <a href="/categories/elasticsearch/"> elasticsearch </a>
+            <a href="/categories/cncf/"> cncf </a>
+            </div>
+          <span class="more-meta"> 1718 words </span>
+          <span class="more-meta"> 4 mins read </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> times read </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#elasticsearch-logstash-kafka-filebeat">elasticsearch + logstash + kafka + filebeat</a>
+<ul>
+<li><a href="#简介">简介</a></li>
+<li><a href="#elasticsearch">Elasticsearch</a>
+<ul>
+<li><a href="#data-node">data node</a></li>
+<li><a href="#master-node">master node</a></li>
+<li><a href="#client-node">client node</a></li>
+</ul></li>
+<li><a href="#filebeat">filebeat</a></li>
+<li><a href="#kafka">kafka</a></li>
+<li><a href="#logstash">logstash</a></li>
+<li><a href="#kibana">kibana</a></li>
+<li><a href="#other">other</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>基于elasticsearch + logstash + kafka + filebeat的日志收集及近实时处理的集群介绍及搭建，基于rancher1.6平台。</p>
+
+<p><img src="https://img.hacpai.com/bing/20180512.jpg?imageView2/1/w/960/h/520/interlace/1/q/100" alt="" /></p>
+
+<h1 id="elasticsearch-logstash-kafka-filebeat">elasticsearch + logstash + kafka + filebeat</h1>
+
+<h2 id="简介">简介</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-mermaid" data-lang="mermaid"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mermaid" data-lang="mermaid">graph TD
+A[logFile] --&gt;|filebeat| B(kafka)
+B --&gt; C{logstash}
+C --&gt;|index1| D
+C --&gt;|index2| D
+C --&gt;|index3| D[Elasticsearch]</code></pre></td></tr></table>
+</div>
+</div>
+<p><strong>Elasticsearch</strong>是一个基于<a href="https://en.wikipedia.org/wiki/Lucene">Lucene</a>的<a href="https://en.wikipedia.org/wiki/Search_engine_(computing)">搜索引擎</a>。它提供了一个分布式，<a href="https://en.wikipedia.org/wiki/Multitenancy">多租户</a> -能够<a href="https://en.wikipedia.org/wiki/Full-text_search">全文搜索</a>与发动机<a href="https://en.wikipedia.org/wiki/HTTP">HTTP</a> Web界面和无架构<a href="https://en.wikipedia.org/wiki/JSON">JSON</a>文件。</p>
+
+<p>Elasticsearch与名为Logstash的数据收集和日志解析引擎以及名为Kibana的分析和可视化平台<a href="https://en.wikipedia.org/wiki/Kibana">一起开发</a>。这三种产品设计用作集成解决方案，称为<strong>“弹性堆栈”</strong>（以前称为“ELK堆栈”）。</p>
+
+<p>Elasticsearch可用于搜索各种文档。它提供可扩展的搜索，近<a href="https://en.wikipedia.org/wiki/Real-time_search">实时搜索</a>，并支持<a href="https://en.wikipedia.org/wiki/Multitenancy">多租户</a>。[<a href="https://en.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-2">2]</a> “Elasticsearch是分布式的，这意味着索引可以分为多个分<a href="https://en.wikipedia.org/wiki/Shard_(database_architecture)">片</a>，每个分<a href="https://en.wikipedia.org/wiki/Shard_(database_architecture)">片</a>可以有零个或多个副本。每个节点托管一个或多个分片，并充当协调器，将操作委托给正确的分片。重新平衡和路由是自动完成的“。[<a href="https://en.wikipedia.org/wiki/Elasticsearch#cite_note-offizsite-2">2]</a>相关数据通常存储在同一索引中，该索引由一个或多个主分片和零个或多个副本分片组成。创建索引后，无法更改主分片的数量</p>
+
+<h2 id="elasticsearch">Elasticsearch</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">cluster status:
+http://172.18.4.42:9200/_cluster/health</code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="https://ww1.sinaimg.cn/large/b77abccagy1fxgt8zuoecj212i07h0tl.jpg" alt="" /></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/43437056">配置详解</a></p>
+
+<h3 id="data-node">data node</h3>
+
+<p>如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器
+node.master: false
+node.data: true</p>
+
+<h3 id="master-node">master node</h3>
+
+<p>如果想让节点成为主节点,且不存储任何数据,并保有空闲资源,可作为协调器
+node.master: true
+node.data: false</p>
+
+<h3 id="client-node">client node</h3>
+
+<p>如果想让节点既不称为主节点,又不成为数据节点,那么可将他作为搜索器,从节点中获取数据,生成搜索结果等
+node.master: false
+node.data: false</p>
+
+<h2 id="filebeat">filebeat</h2>
+
+<p>从文件读取日志，通过tag进行标记，用于区分不同的日志，最后输出到kafka。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="c">#输入</span><span class="w">
+</span><span class="w"></span>-<span class="w"> </span>type<span class="p">:</span><span class="w"> </span>log<span class="w">
+</span><span class="w">  </span>paths<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>/var/log/amp/<span class="cp">*.log</span><span class="w">
+</span><span class="w">  </span>tags<span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;amp-log&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">  </span>fields_under_root<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">  </span>document_type<span class="p">:</span><span class="w"> </span>amp-log<span class="w">
+</span><span class="w">  </span>ignore_older<span class="p">:</span><span class="w"> </span>24h<span class="w">
+</span><span class="w"></span><span class="c">#输出</span><span class="w">
+</span><span class="w"></span>output.kafka<span class="p">:</span><span class="w">
+</span><span class="w">  </span>hosts<span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;kafka-broker-1:9092&#34;</span><span class="p">,</span><span class="s2">&#34;kafka-broker-2:9092&#34;</span><span class="p">,</span><span class="s2">&#34;kafka-broker-3:9092&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">  </span>topic<span class="p">:</span><span class="w"> </span>logstash<span class="w">
+</span><span class="w">  </span>required_acks<span class="p">:</span><span class="w"> </span><span class="m">1</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="kafka">kafka</h2>
+
+<p>用于临时存储filebeat收集来的日志。</p>
+
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ADVERTISE_PUB_IP</td>
+<td>true</td>
+</tr>
+
+<tr>
+<td>JVMFLAGS</td>
+<td>-Xmx2048m -Xms2048m</td>
+</tr>
+
+<tr>
+<td>KAFKA_REPLICATION_FACTOR（副本数量）</td>
+<td>3</td>
+</tr>
+
+<tr>
+<td>KAFKA_LOG_RETENTION_HOURS（日志过期时间）</td>
+<td>24</td>
+</tr>
+
+<tr>
+<td>KAFKA_NUM_PARTITIONS（topic分区数量）</td>
+<td>10</td>
+</tr>
+
+<tr>
+<td>ZK_SERVICE</td>
+<td>ZK_SERVICE</td>
+</tr>
+</tbody>
+</table>
+
+<p><img src="https://ws1.sinaimg.cn/large/b77abccagy1fz8gfil2p0j20kt09xwer.jpg" alt="" /></p>
+
+<h2 id="logstash">logstash</h2>
+
+<p>从kafka读取日志，使用正则过去日志信息，之后结构化日志，存入elasticsearch。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-mermaid" data-lang="mermaid"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-mermaid" data-lang="mermaid">graph LR
+A[INPUT] --&gt;|kafka| B(filter)
+B --&gt;|tags| C{output}
+C --&gt;|index1| D
+C --&gt;|index2| D[Elasticsearch]</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="c"># 从kafka读取日志</span><span class="w">
+</span><span class="w"></span>input<span class="w"> </span>{<span class="w">
+</span><span class="w">  </span><span class="c"># beats {</span><span class="w">
+</span><span class="w">  </span><span class="c">#    port =&gt; &#34;5044&#34;</span><span class="w">
+</span><span class="w">  </span><span class="c"># }</span><span class="w">
+</span><span class="w">  </span>kafka<span class="w"> </span>{<span class="w">
+</span><span class="w">    </span>bootstrap_servers<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092&#34;</span><span class="w">
+</span><span class="w">    </span>topics<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;logstash&#34;</span><span class="w">
+</span><span class="w">    </span>group_id<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;logstash-group-01&#34;</span><span class="w">
+</span><span class="w">    </span>consumer_threads<span class="w"> </span>=&gt;<span class="w"> </span><span class="m">5</span><span class="w">
+</span><span class="w">    </span>decorate_events<span class="w"> </span>=&gt;<span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">    </span>auto_offset_reset<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;latest&#34;</span><span class="w"> </span><span class="c"># 从最新的偏移量开始消费</span><span class="w">
+</span><span class="w">    </span>codec<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;json&#34;</span><span class="w">
+</span><span class="w">  </span>}<span class="w">
+</span><span class="w"></span><span class="c"># 结构化日志并清洗日志</span><span class="w">
+</span><span class="w"></span>filter<span class="w"> </span>{<span class="w">
+</span><span class="w">  </span>if<span class="w"> </span><span class="s2">&#34;amp-log&#34;</span><span class="w"> </span>in<span class="w"> </span><span class="p">[</span>tags<span class="p">]</span><span class="w"> </span>{<span class="w">
+</span><span class="w">     </span>grok<span class="w"> </span>{<span class="w">
+</span><span class="w">       </span>match<span class="w"> </span>=&gt;<span class="w"> </span>{<span class="w"> </span><span class="s2">&#34;message&#34;</span><span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;%{TIMESTAMP_ISO8601:timestamp} \[%{DATA:threadname}\] %{WORD:level}\s+%{DATA:topic}:%{GREEDYDATA:jsondata}&#34;</span><span class="w"> </span>}<span class="w">
+</span><span class="w">    </span>}<span class="w">
+</span><span class="w">     </span>json<span class="w"> </span>{<span class="w">
+</span><span class="w">       </span>source<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;jsondata&#34;</span><span class="w">
+</span><span class="w">       </span><span class="c">#target =&gt; &#34;parsedJson&#34;</span><span class="w">
+</span><span class="w">       </span>remove_field=&gt;<span class="p">[</span><span class="s2">&#34;jsondata&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">    </span>}<span class="w">
+</span><span class="w">     </span>date<span class="w"> </span>{<span class="w">
+</span><span class="w">       </span>match<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="s2">&#34;timestamp&#34;</span><span class="p">,</span><span class="s2">&#34;YYYY-MM-dd HH:mm:ss.SSS&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">       </span>target<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&#34;@timestamp&#34;</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="w">    </span>}<span class="w">
+</span><span class="w">     </span>ruby<span class="w"> </span>{<span class="w">
+</span><span class="w">       </span>code=&gt;<span class="s2">&#34;event.set(&#39;index_day&#39;, event.get(&#39;@timestamp&#39;).time.localtime.strftime(&#39;%Y.%m.%d&#39;))&#34;</span><span class="w">
+</span><span class="w">    </span>}<span class="w">
+</span><span class="w">     </span>mutate<span class="w"> </span>{<span class="w">
+</span><span class="w">       </span>remove_field<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="s2">&#34;timestamp&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">       </span>remove_field<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="s2">&#34;message&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">       </span>remove_field<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="s2">&#34;threadname&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">   </span>}<span class="w">
+</span><span class="w">     </span>if<span class="w"> </span><span class="s2">&#34;success&#34;</span><span class="w"> </span>in<span class="w"> </span><span class="p">[</span>topic<span class="p">]</span><span class="w"> </span>{<span class="w">
+</span><span class="w">      </span>mutate<span class="w"> </span>{<span class="w"> </span>add_tag<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&#34;monitor-success&#34;</span><span class="w"> </span><span class="p">]</span><span class="w"> </span>}<span class="w">
+</span><span class="w">   </span>}<span class="w">
+</span><span class="w">     </span>else<span class="w"> </span>if<span class="w"> </span><span class="s2">&#34;repeat&#34;</span><span class="w"> </span>in<span class="w"> </span><span class="p">[</span>topic<span class="p">]</span><span class="w"> </span>{<span class="w">
+</span><span class="w">      </span>mutate<span class="w"> </span>{<span class="w"> </span>add_tag<span class="w"> </span>=&gt;<span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&#34;monitor-repeat&#34;</span><span class="w"> </span><span class="p">]</span><span class="w"> </span>}<span class="w">
+</span><span class="w">   </span>}<span class="w">
+</span><span class="w"></span>}<span class="w">
+</span><span class="w"></span>}<span class="w">
+</span><span class="w"></span><span class="c"># 输出到elasticsearch</span><span class="w">
+</span><span class="w"></span>output<span class="w"> </span>{<span class="w">
+</span><span class="w">   </span>if<span class="w"> </span><span class="s2">&#34;monitor-success&#34;</span><span class="w"> </span>in<span class="w"> </span><span class="p">[</span>tags<span class="p">]</span><span class="w"> </span>{<span class="w">
+</span><span class="w">        </span>elasticsearch<span class="w"> </span>{<span class="w">
+</span><span class="w">          </span>hosts<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;elasticsearch:9200&#34;</span><span class="w">
+</span><span class="w">          </span>index<span class="w"> </span>=&gt;<span class="w"> </span><span class="s2">&#34;amp-success-%{index_day}&#34;</span><span class="w">
+</span><span class="w">        </span>}<span class="w">
+</span><span class="w">    </span>}<span class="w">
+</span><span class="w"></span>}</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="kibana">kibana</h2>
+
+<p>用于查询elasticsearch的数据，监控elasticsearch的监控状态</p>
+
+<p><img src="https://ww1.sinaimg.cn/large/b77abccagy1fxgtam3rd8j21bt0pqn0e.jpg" alt="" /></p>
+
+<p><img src="https://ww1.sinaimg.cn/large/b77abccagy1fxgtawz6g7j20sy0fcjti.jpg" alt="" /></p>
+
+<h2 id="other">other</h2>
+
+<p>配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 索引写入缓存
+</span><span class="c1"></span><span class="nx">indices</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="nx">index_buffer_size</span><span class="p">=</span><span class="mi">20</span><span class="o">%</span> 
+<span class="nx">indices</span><span class="p">.</span><span class="nx">memory</span><span class="p">.</span><span class="nx">min_index_buffer_size</span><span class="p">=</span><span class="mi">96</span><span class="nx">m</span>
+<span class="c1">// 存活超时时间
+</span><span class="c1"></span><span class="nx">discovery</span><span class="p">.</span><span class="nx">zen</span><span class="p">.</span><span class="nx">fd</span><span class="p">.</span><span class="nx">ping_timeout</span><span class="p">=</span><span class="mi">120</span><span class="nx">s</span>
+<span class="c1">// 存活超时重试次数
+</span><span class="c1"></span><span class="nx">discovery</span><span class="p">.</span><span class="nx">zen</span><span class="p">.</span><span class="nx">fd</span><span class="p">.</span><span class="nx">ping_retries</span><span class="p">=</span><span class="mi">6</span>
+<span class="c1">// 节点间存活检测间隔
+</span><span class="c1"></span><span class="nx">discovery</span><span class="p">.</span><span class="nx">zen</span><span class="p">.</span><span class="nx">fd</span><span class="p">.</span><span class="nx">ping_interval</span><span class="p">=</span><span class="mi">30</span><span class="nx">s</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>索引模板配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="err">//</span> <span class="err">刷新间隔，merge线程数</span>
+<span class="err">PUT</span> <span class="err">/_template/adv_logs</span> 
+<span class="p">{</span>
+  <span class="nt">&#34;index_patterns&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;aap-*&#34;</span><span class="p">,</span> <span class="s2">&#34;amp-*&#34;</span><span class="p">],</span> 
+  <span class="nt">&#34;order&#34;</span><span class="p">:</span>    <span class="mi">1</span><span class="p">,</span> 
+  <span class="nt">&#34;settings&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&#34;refresh_interval&#34;</span><span class="p">:</span> <span class="s2">&#34;60s&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;merge&#34;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;scheduler&#34;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&#34;max_thread_count&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>	
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>kafka</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># alter partition</span>
+bin/kafka-topics.sh --zookeeper zk:2181 --alter --topic logstash --partitions <span class="m">5</span>
+
+<span class="c1"># list topics</span>
+bin/kafka-topics.sh --zookeeper zk:2181 --list
+
+<span class="c1"># describe topic</span> 
+bin/kafka-topics.sh --zookeeper zk:2181 --topic logstash --describe
+
+<span class="c1"># describe consumer</span> 
+bin/kafka-consumer-groups.sh --bootstrap-server <span class="m">127</span>.0.0.1:9092 --group logstash-group-01 --describe</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">zouhl</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2019-01-16 Wed
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/elasticsearch/">elasticsearch</a>
+          <a href="/tags/elk/">elk</a>
+          <a href="/tags/logstash/">logstash</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/golang%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">golang 交叉编译</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        <a class="next" href="/post/markdown%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/">
+            <span class="next-text nav-default">markdown 使用小结</span>
+            <span class="next-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      var gitalk = new Gitalk({
+        id: '2019-01-16 15:19:16 \x2b0000 UTC',
+        title: 'elasticsearch \x2b logstash \x2b kafka \x2b filebeat 的集群搭建及相关优化。',
+        clientID: 'fcb9740ee0c4a802351f',
+        clientSecret: '41a1e96fcc35e5f1c9ca76947d966938604442a1',
+        repo: 'blog-comments',
+        owner: 'zou2699',
+        admin: ['zou2699'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    
+    
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">zouhl</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-127266354-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?050971f78205824d73aa3a498ee0842b";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
